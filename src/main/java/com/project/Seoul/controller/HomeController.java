@@ -19,7 +19,7 @@ public class HomeController {
     }
 
     @GetMapping("/home")
-    public String homepage(Model model) throws JsonProcessingException {
+    public String homepage(Model model) {
         List<CultureInfo> list = homeService.getAllCultureInfoApi();
 
         model.addAttribute("list", list);

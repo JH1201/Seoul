@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seoul Party Info</title>
+    <title>Seoul Event</title>
     <style>
         * { box-sizing: border-box; }
         body { font-family: Arial, sans-serif; }
@@ -75,8 +75,8 @@
 <div class="sort-part">
     <!-- 옵션들이 담길 드롭다운 컨테이너, 기본적으로 숨겨져 있습니다 -->
     <select id="sortOptions" onchange="sort()">
-        <option value="favorites">즐겨찾기</option>
-        <option value="all">전체</option>
+        <option value="favorites">전체</option>
+        <option value="all">즐겨찾기</option>
         <option value="1">1월</option>
         <option value="2">2월</option>
         <option value="1">3월</option>
@@ -107,7 +107,9 @@
     <div th:each="cultureInfo : ${list}" class="item">
         <div class="star">★</div>
         <!--<span th:text="${cultureInfo.getTITLE()}"></span>-->
-        <img th:src="${cultureInfo.getMAIN_IMG()}" alt="Cultural Event Image" width="150" height="170">
+        <a th:href="@{/eventInfo(title=${cultureInfo.getTITLE()}, lot=${cultureInfo.getLAT()} ,lat=${cultureInfo.getLOT()})}">
+            <img th:src="${cultureInfo.getMAIN_IMG()}" alt="Cultural Event Image" width="150" height="170">
+        </a>
     </div>
 </div>
 

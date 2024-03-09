@@ -25,5 +25,22 @@ public class HomeService {
 
         return curtureInfoList;
     }
+
+    public CultureInfo getOneCultureInfoApi(String title) {
+        // 모든 문화 정보를 가져온다.
+        List<CultureInfo> cultureInfoList = getAllCultureInfoApi();
+
+        // 리스트를 순회하면서 title과 일치하는 객체를 찾는다.
+        for (CultureInfo cultureInfo : cultureInfoList) {
+            if (cultureInfo.getTITLE().equals(title)) {
+                // 일치하는 객체를 찾았으므로 반환한다.
+                return cultureInfo;
+            }
+        }
+
+        // 일치하는 객체를 찾지 못했으므로 null 반환 또는 예외 처리
+        return null; // 혹은 적절한 예외를 발생시키기
+    }
+
 }
 
