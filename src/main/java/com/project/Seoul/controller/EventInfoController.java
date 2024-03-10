@@ -21,9 +21,21 @@ public class EventInfoController {
                                 Model model) {
 
         CultureInfo oneCultureInfoApi = homeService.getOneCultureInfoApi(title);
+/*
+        System.out.println("TITLE = " + oneCultureInfoApi.getTITLE());
+        System.out.println("LAT = " + oneCultureInfoApi.getLAT());
+        System.out.println("LOT = " + oneCultureInfoApi.getLOT());
+
+        System.out.println("GUNAME = " + oneCultureInfoApi.getGUNAME());
+
+ */
+
         model.addAttribute("title", oneCultureInfoApi.getTITLE());
+        model.addAttribute("homePage", oneCultureInfoApi.getORG_LINK());
+        model.addAttribute("detail", oneCultureInfoApi.getHMPG_ADDR());
         model.addAttribute("lat", oneCultureInfoApi.getLAT());
         model.addAttribute("lot", oneCultureInfoApi.getLOT());
+
 
 
         return "/homepage/eventInfo";

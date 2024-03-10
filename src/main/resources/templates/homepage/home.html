@@ -107,9 +107,10 @@
     <div th:each="cultureInfo : ${list}" class="item">
         <div class="star">★</div>
         <!--<span th:text="${cultureInfo.getTITLE()}"></span>-->
-        <a th:href="@{/eventInfo(title=${cultureInfo.getTITLE()}, lot=${cultureInfo.getLAT()} ,lat=${cultureInfo.getLOT()})}">
+        <a th:href="@{/eventInfo(title=${cultureInfo.getTITLE()})}">
             <img th:src="${cultureInfo.getMAIN_IMG()}" alt="Cultural Event Image" width="150" height="170">
         </a>
+
     </div>
 </div>
 

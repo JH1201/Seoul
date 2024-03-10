@@ -11,5 +11,6 @@ public class CulturalEventInfo {
     private int list_total_count;
     private List<CultureInfo> row;
 
+
     // getters and setters
 }

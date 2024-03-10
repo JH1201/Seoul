@@ -1,6 +1,5 @@
 package com.project.Seoul.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.project.Seoul.domain.CultureInfo;
 import com.project.Seoul.service.HomeService;
 import org.springframework.stereotype.Controller;

@@ -30,6 +30,13 @@
 
 
         <h4 th:text="${title}">Event Title</h4>
+
+        <p>Homepage URL:
+            <a th:href="${homePage}" style="text-decoration: none; color: black;" target="_blank">
+                <span th:text="${homePage}"></span>
+            </a>
+        </p>
+
         <p>Latitude: <span th:text="${lat}"></span></p>
         <p>Longitude: <span th:text="${lot}"></span></p>
 
@@ -38,8 +45,6 @@
     <div id="map"></div>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=33db73c119b1dea112b5e9038fd6ef2a"></script>
     <script th:inline="javascript">
-        //var lat = /*[[${lat}]]*/ '37.566826'; // 기본값으로 서울 시청 좌표를 사용
-        //var lot = /*[[${lot}]]*/ '126.9786567'; // 기본값으로 서울 시청 좌표를 사용
 
         // 카카오맵 API 초기화
         var mapContainer = document.getElementById('map'), // 지도를 표시할 div
