@@ -5,6 +5,8 @@ import lombok.Setter;
 
 import java.util.List;
 
+
+//json형식 데이터 파싱할 때 사용
 @Getter
 @Setter
 public class CulturalEventInfo {

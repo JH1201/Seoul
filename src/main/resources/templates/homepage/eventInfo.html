@@ -46,10 +46,12 @@
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=33db73c119b1dea112b5e9038fd6ef2a"></script>
     <script th:inline="javascript">
 
+
+
         // 카카오맵 API 초기화
         var mapContainer = document.getElementById('map'), // 지도를 표시할 div
             mapOption = {
-                center: new kakao.maps.LatLng('37.566826', '126.9786567'), // 지도의 중심좌표
+                center: new kakao.maps.LatLng([[${lat}]], [[${lot}]]), // 지도의 중심좌표
                 level: 3 // 지도의 확대 레벨
             };
 

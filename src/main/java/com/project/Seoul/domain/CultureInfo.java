@@ -1,12 +1,11 @@
 package com.project.Seoul.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
 
+//각각의 문화행사 정보 필드 값
 @Getter
 @Setter
 @AllArgsConstructor
