@@ -22,9 +22,6 @@ public class EventInfoController {
 
         CultureInfo oneCultureInfoApi = homeService.getOneCultureInfoApi(title);
 
-        System.out.println(oneCultureInfoApi.getLAT());
-        System.out.println(oneCultureInfoApi.getLOT());
-
         // 뷰(웹 페이지) 템플릿으로 넘길 때 사용
         model.addAttribute("title", oneCultureInfoApi.getTITLE());
         model.addAttribute("homePage", oneCultureInfoApi.getORG_LINK());
@@ -32,9 +29,6 @@ public class EventInfoController {
         model.addAttribute("lat", oneCultureInfoApi.getLAT());
         model.addAttribute("lot", oneCultureInfoApi.getLOT());
 
-
-
         return "/homepage/eventInfo";
     }
-
 }

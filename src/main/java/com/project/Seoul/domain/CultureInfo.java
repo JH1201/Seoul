@@ -6,10 +6,12 @@ import lombok.Setter;
 
 
 //각각의 문화행사 정보 필드 값
+
 @Getter
 @Setter
 @AllArgsConstructor
 public class CultureInfo {
+
 
     private String CODENAME; //분류
     private String GUNAME; //자치구

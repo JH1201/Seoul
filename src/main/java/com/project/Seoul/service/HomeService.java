@@ -41,7 +41,6 @@ public class HomeService {
         // 리스트를 순회하면서 homePage와 일치하는 객체를 찾는다.
         for (CultureInfo cultureInfo : cultureInfoList) {
             if (cultureInfo.getTITLE().equals(title)) {
-                System.out.println("find title");
 
                 // 일치하는 객체를 찾았으므로 반환한다.
                 return cultureInfo;
@@ -51,7 +50,6 @@ public class HomeService {
         // 일치하는 객체를 찾지 못했으므로 null 반환 또는 예외 처리
         return null; // 혹은 적절한 예외를 발생시키기
     }
-
 
 
 }
