@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +39,17 @@ public class HomeService {
         return curtureInfoList;
     }
 
+
+    public List<CultureInfo> getAllCultureInfoApiSortedByMonth() {
+        List<CultureInfo> cultureInfoList = getAllCultureInfoApi(); // 이전에 API로부터 받아온 리스트를 가져옴
+        return cultureInfoList.stream()
+                .sorted(Comparator.comparing(CultureInfo::getDATE))
+                .collect(Collectors.toList());
+    }
+
+
+
+    //keyword를 통해 events 찾기
     public List<CultureInfo> searchCulturalEvents(String keyword) {
         List<CultureInfo> allEvents = getAllCultureInfoApi();
         List<CultureInfo> filteredEvents = allEvents.stream()

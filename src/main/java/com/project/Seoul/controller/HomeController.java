@@ -20,7 +20,7 @@ public class HomeController {
 
     @GetMapping("/home")
     public String homepage(Model model) {
-        List<CultureInfo> list = homeService.getAllCultureInfoApi();
+        List<CultureInfo> list = homeService.getAllCultureInfoApiSortedByMonth();
         model.addAttribute("list", list);
         return "/homepage/home";
     }
