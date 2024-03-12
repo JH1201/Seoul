@@ -1,6 +1,5 @@
-
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Custom Homepage with Map</title>
     <meta charset="UTF-8">
@@ -25,31 +24,56 @@
         #details {
             flex: 1; /* 화면의 1/4 차지 */
             padding: 20px;
+            overflow-y: auto; /* 내용이 높이를 초과하면 스크롤바 표시 */
+            max-height: 100vh; /* 뷰포트 높이를 초과하지 않도록 제한 */
         }
         /* 지도 섹션 스타일 설정 */
         #map {
             flex: 3; /* 화면의 3/4 차지 */
             height: 100%; /* 지도 높이 설정 */
         }
+
     </style>
 </head>
 <body>
-<div>
-    <a href="/home">홈페이지로 가기</a>
-</div>
+
 
 <div id="container">
     <div id="details">
 
-        <div class="search-container">
-            <div class="search-part">
-                <input type="text" class="search-bar" placeholder="검색">
-            </div>
+        <div>
+            <a href="/home">홈페이지로 가기</a>
+        </div>
 
+        <div class="search-container">
+            <form class="search-part" action="/search2" method="get">
+                <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요." required>
+                <button type="submit">Search</button>
+            </form>
 
         </div>
 
         <h1>지도에 있는 행사들의 리스트</h1>
+        <div th:if="${searchResults != null}" th:unless="${searchResults.empty}">
+            <div class="items-grid">
+                <div th:each="event : ${searchResults}" class="item" style="display: flex; align-items: center; gap: 20px;">
+                    <div class="star">★</div>
+                    <a th:href="@{/eventInfo(title=${event.TITLE})}"  style="flex-shrink: 0;">
+                        <img th:src="${event.MAIN_IMG}" alt="Event Image" style="width: 80px; height: 120px;">
+                    </a>
+                    <div>
+                        <h4 th:text="${event.TITLE}"></h4>
+                        <p th:text="${event.DATE}"></p>
+                        <p th:text="${event.PLACE}"></p>
+                        <p th:text="${event.IS_FREE}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${searchResults == null || searchResults.empty}">
+            <p>검색 결과가 없습니다.</p>
+        </div>
         <p>여기에 세부사항 및 정보를 입력하세요.</p>
 
 

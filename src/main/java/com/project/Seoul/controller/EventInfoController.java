@@ -45,8 +45,17 @@ public class EventInfoController {
             return "redirect:/home"; // 비어있다면 홈으로 리디렉션
         }
         List<CultureInfo> searchResults = homeService.searchCulturalEvents(keyword);
+        model.addAttribute("lists", searchResults);
+        return "/homepage/home";
+    }
+    @GetMapping("/search2")
+    public String searchEvent2(@RequestParam("keyword") String keyword, Model model) {
+        if (keyword.trim().isEmpty()) {
+            return "redirect:/mapPage"; // 비어있다면 mapPage으로 리디렉션
+        }
+        List<CultureInfo> searchResults = homeService.searchCulturalEvents(keyword);
         model.addAttribute("searchResults", searchResults);
-        return "/homepage/eventListPage";
+        return "/homepage/mapPage";
     }
 
 }
