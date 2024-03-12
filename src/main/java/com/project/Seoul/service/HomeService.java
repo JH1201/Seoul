@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -77,7 +79,6 @@ public class HomeService {
         // 리스트를 순회하면서 homePage와 일치하는 객체를 찾는다.
         for (CultureInfo cultureInfo : cultureInfoList) {
             if (cultureInfo.getTITLE().equals(title)) {
-                System.out.println("find title");
 
                 // 일치하는 객체를 찾았으므로 반환한다.
                 return cultureInfo;
@@ -114,6 +115,53 @@ public class HomeService {
     }
 
 
+    //선택된 드롭박스에 해당되는 데이터
+    public List<CultureInfo> getDropBoxData(String mon) {
+
+
+        if(mon.equals("전체")) {
+            return getAllCultureInfoApiSortedByMonth();
+        }
+
+        //데이터베이스에서 month에 해당하는 데이터 조회
+        List<CultureInfo> filteredList = new ArrayList<>();
+
+        // 비숫자 문자를 모두 제거하여 숫자만 남깁니다.
+        String month = mon.replaceAll("\\D+", "");
+
+
+        // 예시 로직: 모든 CultureInfo 객체를 순회하면서, 주어진 month와 일치하는 객체를 찾아 filteredList에 추가
+        for (CultureInfo info : getAllCultureInfoApi()) { // getAllCultureInfo()는 모든 CultureInfo 객체를 반환하는 메서드
+
+            // info.getDATE() 문자열 예시: "2023-01-15"
+            String dateString = info.getDATE();
+
+            // "2024-12-07~2024-12-07" 문자열 예시
+            // '~'를 기준으로 문자열을 분할하고 첫 번째 날짜 부분만 사용
+            String firstDatePart = dateString.split("~")[0];
+
+             // dateString을 LocalDate 객체로 파싱
+            LocalDate date = LocalDate.parse(firstDatePart, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+            // LocalDate 객체에서 월을 추출 (1 ~ 12 범위의 값)
+            int monthValue = date.getMonthValue();
+
+            String str = String.valueOf(monthValue);
+
+            if (str.equals(month)) {
+
+                filteredList.add(info);
+            }
+        }
+
+        for (CultureInfo info : filteredList) {
+            System.out.println("info = " + info.getTITLE());
+            System.out.println("info.getDATE() = " + info.getDATE());
+            System.out.println();
+        }
+
+        return filteredList;
+    }
 
 
 

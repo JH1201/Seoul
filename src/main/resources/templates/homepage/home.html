@@ -64,7 +64,7 @@
     </style>
 </head>
 <body>
-
+<div id="content">
 <div>
     <a href="home" style="text-decoration: none">
         <h1>
@@ -88,39 +88,44 @@
 <div class="sort-part">
     <!-- 옵션들이 담길 드롭다운 컨테이너, 기본적으로 숨겨져 있습니다 -->
     <select id="sortOptions" onchange="sort()">
-        <option value="favorites">전체</option>
-        <option value="all">즐겨찾기</option>
-        <option value="1">1월</option>
-        <option value="2">2월</option>
-        <option value="1">3월</option>
-        <option value="2">4월</option>
-        <option value="1">5월</option>
-        <option value="2">6월</option>
-        <option value="1">7월</option>
-        <option value="2">8월</option>
-        <option value="1">9월</option>
-        <option value="2">10월</option>
-        <option value="1">11월</option>
-        <option value="12">12월</option>
+        <option value="전체" th:selected="${selectedMonth == '전체'}">전체</option>
+        <option value="즐겨찾기" th:selected="${selectedMonth == '즐겨찾기'}">즐겨찾기</option>
+        <option value="1" th:selected="${selectedMonth == '1'}">1월</option>
+        <option value="2" th:selected="${selectedMonth == '2'}">2월</option>
+        <option value="3" th:selected="${selectedMonth == '3'}">3월</option>
+        <option value="4" th:selected="${selectedMonth == '4'}">4월</option>
+        <option value="5" th:selected="${selectedMonth == '5'}">5월</option>
+        <option value="6" th:selected="${selectedMonth == '6'}">6월</option>
+        <option value="7" th:selected="${selectedMonth == '7'}">7월</option>
+        <option value="8" th:selected="${selectedMonth == '8'}">8월</option>
+        <option value="9" th:selected="${selectedMonth == '9'}">9월</option>
+        <option value="10" th:selected="${selectedMonth == '10'}">10월</option>
+        <option value="11" th:selected="${selectedMonth == '11'}">11월</option>
+        <option value="12" th:selected="${selectedMonth == '12'}">12월</option>
+
 
     </select>
 
     <script>
-        // 사용자가 드롭다운에서 옵션을 선택하면 이 함수가 호출됩니다.
         function sort() {
             var selectedOption = document.getElementById('sortOptions').value;
-            // 여기에 선택된 옵션에 따라 처리할 로직을 구현하세요.
-            console.log("선택된 정렬 옵션:", selectedOption);
-            // 예: 서버에 요청을 보내거나, 페이지의 내용을 정렬할 수 있습니다.
+            // 서버로 GET 요청 보내기
+            fetch(`/monthlySort?month=${selectedOption}`)
+                .then(response => response.text())
+                .then(html => {
+                    // 페이지의 일부를 서버의 응답으로 업데이트
+                    document.getElementById('content').innerHTML = html;
+                })
+                .catch(error => console.error('Error:', error));
         }
     </script>
 </div>
 
 
 <!-- 검색 결과 표시 -->
-<div th:if="${lists != null}" th:unless="${lists.empty}">
+<div th:if="${lists != null}" th:unless="${lists.isEmpty()}">
     <div class="items-grid">
-        <div th:each="event : ${lists}" class="item">
+        <div  th:each="event : ${lists}" class="item">
             <div class="star" th:data-culture-info-id="${event.getId()}">★</div>
             <a th:href="@{/eventInfo(title=${event.getTITLE()})}">
                 <img th:src="${event.getMAIN_IMG()}" alt="Event Image" width="150" height="170">
@@ -130,7 +135,7 @@
     </div>
 </div>
 
-<div th:if="${lists == null || lists.empty}">
+<div th:if="${lists == null || lists.isEmpty()}">
     <p>검색 결과가 없습니다.</p>
 </div>
 
@@ -165,6 +170,6 @@
 
 
 </script>
-
+</div>
 </body>
 </html>
