@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -66,17 +66,15 @@
 <body>
 
 <div class="search-container">
-    <div class="search-part">
-        <!--<form action="/homeQuery" method="get">
-            <input type="text" class="search-bar" name="title" placeholder="검색">
-            <button type="submit">검색</button>
-        </form>-->
-        <input type="text" class="search-bar" placeholder="검색">
-    </div>
-    <div>
-        <a href="/mapPage">지도로 보기</a>
-    </div>
+    <form class="search-part" action="/search" method="get">
+        <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요." required>
+        <button type="submit">Search</button>
+    </form>
 
+</div>
+
+<div>
+    <a href="/mapPage">맵으로 보기</a>
 </div>
 
 <div class="sort-part">

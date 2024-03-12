@@ -3,11 +3,17 @@ package com.project.Seoul.service;
 import com.google.gson.Gson;
 import com.project.Seoul.domain.CulturalEventInfoWrapper;
 import com.project.Seoul.domain.CultureInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class HomeService {
@@ -32,6 +38,14 @@ public class HomeService {
         return curtureInfoList;
     }
 
+    public List<CultureInfo> searchCulturalEvents(String keyword) {
+        List<CultureInfo> allEvents = getAllCultureInfoApi();
+        List<CultureInfo> filteredEvents = allEvents.stream()
+                .filter(event -> event.getTITLE().contains(keyword))
+                .collect(Collectors.toList());
+        return filteredEvents.isEmpty() ? new ArrayList<>() : filteredEvents;
+    }
+
 
     //모든 문화행사 정보 중에 title이 같은 행사를 찾는 함수
     public CultureInfo getOneCultureInfoApi(String title) {
@@ -41,6 +55,7 @@ public class HomeService {
         // 리스트를 순회하면서 homePage와 일치하는 객체를 찾는다.
         for (CultureInfo cultureInfo : cultureInfoList) {
             if (cultureInfo.getTITLE().equals(title)) {
+                System.out.println("find title");
 
                 // 일치하는 객체를 찾았으므로 반환한다.
                 return cultureInfo;
@@ -50,7 +65,6 @@ public class HomeService {
         // 일치하는 객체를 찾지 못했으므로 null 반환 또는 예외 처리
         return null; // 혹은 적절한 예외를 발생시키기
     }
-
 
 }
 
