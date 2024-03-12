@@ -65,6 +65,14 @@
 </head>
 <body>
 
+<div>
+    <a href="home" style="text-decoration: none">
+        <h1>
+        SEOUL EVENT
+        </h1>
+    </a>
+</div>
+
 <div class="search-container">
     <form class="search-part" action="/search" method="get">
         <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요." required>
@@ -108,7 +116,7 @@
     </script>
 </div>
 
-</div>
+
 <!-- 검색 결과 표시 -->
 <div th:if="${lists != null}" th:unless="${lists.empty}">
     <div class="items-grid">
@@ -132,8 +140,30 @@
         star.addEventListener('click', function(e) {
             // 클릭된 별에 'active' 클래스를 토글합니다.
             e.target.classList.toggle('active');
+
+            var cultureInfoId = e.target.dataset.cultureInfoId; // 데이터 속성을 통해 cultureInfo ID를 가져옵니다.
+
+            // AJAX 요청을 서버에 보냅니다.
+            fetch('/home', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ cultureInfoId: cultureInfoId }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // 여기서 응답 처리를 합니다. 예를 들어, UI를 업데이트합니다.
+                    console.log('Success:', data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
         });
     });
+
+
+
 </script>
 
 </body>

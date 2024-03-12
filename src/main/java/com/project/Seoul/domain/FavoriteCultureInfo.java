@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @Entity
-public class CultureInfo {
+public class FavoriteCultureInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,8 +45,9 @@ public class CultureInfo {
     private String HMPG_ADDR; //문화포털상세URL
 
     // 기본 생성자
-    public CultureInfo() {
+    public FavoriteCultureInfo() {
     }
+
 
 }
 
