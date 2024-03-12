@@ -48,4 +48,15 @@ public class HomeController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/monthlySort")
+    public String sort(@RequestParam("month") String month, Model model) {
+
+        List<CultureInfo> list = homeService.getDropBoxData(month);
+
+        model.addAttribute("lists", list);
+        model.addAttribute("selectedMonth", month); // 선택된 월을 모델에 추가
+
+        return "/homepage/home";
+    }
+
 }
