@@ -121,11 +121,11 @@
 <div th:if="${lists != null}" th:unless="${lists.empty}">
     <div class="items-grid">
         <div th:each="event : ${lists}" class="item">
-            <div class="star">★</div>
-            <a th:href="@{/eventInfo(title=${event.TITLE})}">
-                <img th:src="${event.MAIN_IMG}" alt="Event Image" width="150" height="170">
+            <div class="star" th:data-culture-info-id="${event.getId()}">★</div>
+            <a th:href="@{/eventInfo(title=${event.getTITLE()})}">
+                <img th:src="${event.getMAIN_IMG()}" alt="Event Image" width="150" height="170">
             </a>
-            <br><span th:text="${event.TITLE}"></span>
+            <br><span th:text="${event.getTITLE()}"></span>
         </div>
     </div>
 </div>
