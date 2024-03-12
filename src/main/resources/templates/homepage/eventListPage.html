@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문화 행사 검색 결과</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; }
+
+        .search-container {
+
+            display: flex;
+            justify-content: center; /* 검색창을 중앙으로 */
+            margin-bottom: 20px;
+        }
+
+        .search-part {
+            padding-top: 100px;
+            flex-basis: 70%;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .sort-part {
+            flex-basis: 30%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 10px 50px;
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 0 50px; /* 위아래로는 0, 좌우로는 20px의 패딩을 추가 */
+
+        }
+
+        .item {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 5px;
+            text-align: center;
+            position: relative;
+        }
+
+        .star {
+            position: absolute;
+            top: 3px;
+            right: 2px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .star.active {
+            color: gold;
+        }
+    </style>
+</head>
+<body>
+<div class="search-container">
+    <form class="search-part" action="/search" method="get">
+        <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요.">
+        <button type="submit">Search</button>
+    </form>
+
+</div>
+
+<div class="sort-part">
+    <!-- 옵션들이 담길 드롭다운 컨테이너, 기본적으로 숨겨져 있습니다 -->
+    <select id="sortOptions" onchange="sort()">
+        <option value="favorites">전체</option>
+        <option value="all">즐겨찾기</option>
+        <option value="1">1월</option>
+        <option value="2">2월</option>
+        <option value="1">3월</option>
+        <option value="2">4월</option>
+        <option value="1">5월</option>
+        <option value="2">6월</option>
+        <option value="1">7월</option>
+        <option value="2">8월</option>
+        <option value="1">9월</option>
+        <option value="2">10월</option>
+        <option value="1">11월</option>
+        <option value="12">12월</option>
+
+    </select>
+    <script>
+        // 사용자가 드롭다운에서 옵션을 선택하면 이 함수가 호출됩니다.
+        function sort() {
+            var selectedOption = document.getElementById('sortOptions').value;
+            // 여기에 선택된 옵션에 따라 처리할 로직을 구현하세요.
+            console.log("선택된 정렬 옵션:", selectedOption);
+            // 예: 서버에 요청을 보내거나, 페이지의 내용을 정렬할 수 있습니다.
+        }
+    </script>
+</div>
+<!-- 검색 결과 표시 -->
+<div th:if="${searchResults != null}" th:unless="${searchResults.empty}">
+    <div class="items-grid">
+        <div th:each="event : ${searchResults}" class="item">
+            <div class="star">★</div>
+            <a th:href="@{/eventInfo(title=${event.TITLE})}">
+                <img th:src="${event.MAIN_IMG}" alt="Event Image" width="150" height="170">
+            </a>
+            <br><span th:text="${event.TITLE}"></span>
+        </div>
+    </div>
+</div>
+
+<div th:if="${searchResults == null || searchResults.empty}">
+    <p>검색 결과가 없습니다.</p>
+</div>
+<script>
+    // 모든 별을 선택합니다.
+    document.querySelectorAll('.star').forEach(function(star) {
+        star.addEventListener('click', function(e) {
+            // 클릭된 별에 'active' 클래스를 토글합니다.
+            e.target.classList.toggle('active');
+        });
+    });
+</script>
+</body>
+</html>
