@@ -32,6 +32,7 @@ public class EventInfoController {
         model.addAttribute("detail", oneCultureInfoApi.getHMPG_ADDR());
         model.addAttribute("lat", oneCultureInfoApi.getLAT());
         model.addAttribute("lot", oneCultureInfoApi.getLOT());
+        model.addAttribute("date", oneCultureInfoApi.getDATE());
 
 
 
