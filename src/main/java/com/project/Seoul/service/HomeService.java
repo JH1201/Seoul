@@ -94,6 +94,7 @@ public class HomeService {
         eventsRepository.save(cultureInfo);
     }
 
+    /*
     // 즐겨찾기 저장
     public void findAndSaveEventById(Long id) {
         Optional<CultureInfo> optionalCultureInfo = eventsRepository.findById(id);
@@ -127,6 +128,8 @@ public class HomeService {
     }
 
 
+     */
+
     //선택된 드롭박스에 해당되는 데이터
     public List<CultureInfo> getDropBoxData(String mon) {
 
@@ -134,6 +137,7 @@ public class HomeService {
         if(mon.equals("전체")) {
             return getAllCultureInfoApiSortedByMonth();
         }
+        /*
 
         else if(mon.equals("즐겨찾기")) {
 
@@ -156,6 +160,8 @@ public class HomeService {
                     .collect(Collectors.toList());
 
         }
+
+         */
 
         //데이터베이스에서 month에 해당하는 데이터 조회
         List<CultureInfo> filteredList = new ArrayList<>();
