@@ -21,6 +21,7 @@ public class CultureInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String CODENAME; //분류
     private String GUNAME; //자치구
     private String TITLE; //공연,행사명
