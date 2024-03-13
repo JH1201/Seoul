@@ -114,6 +114,18 @@ public class HomeService {
         return favoriteEventsRepository.findAll();
     }
 
+    //출력 타입을 FavoriteCultureInfo -> CultureInfo 변환
+    private CultureInfo convertFavoriteToCulture(FavoriteCultureInfo favorite) {
+        // ModelMapper의 인스턴스를 생성합니다.
+        ModelMapper modelMapper = new ModelMapper();
+
+        // CultureInfo 객체를 FavoriteCultureInfo 객체로 매핑합니다.
+        CultureInfo cultureInfo = modelMapper.map(favorite, CultureInfo.class);
+
+
+        return cultureInfo;
+    }
+
 
     //선택된 드롭박스에 해당되는 데이터
     public List<CultureInfo> getDropBoxData(String mon) {
@@ -121,6 +133,28 @@ public class HomeService {
 
         if(mon.equals("전체")) {
             return getAllCultureInfoApiSortedByMonth();
+        }
+
+        else if(mon.equals("즐겨찾기")) {
+
+            List<FavoriteCultureInfo> favoriteList = getAllFavoriteEvents();
+            List<CultureInfo> cultureList = new ArrayList<>();
+
+            for(FavoriteCultureInfo favorite : favoriteList) {
+                //출력 타입을 FavoriteCultureInfo -> CultureInfo 변환
+                CultureInfo cultureInfo = convertFavoriteToCulture(favorite);
+
+                System.out.println("cultureInfo Title = " + cultureInfo.getTITLE());
+                System.out.println("cultureInfo.getDATE() = " + cultureInfo.getDATE());
+
+                cultureList.add(cultureInfo);
+            }
+
+            //즐겨찾기 목록 출력 시 날짜 순으로
+            return cultureList.stream()
+                    .sorted(Comparator.comparing(CultureInfo::getDATE))
+                    .collect(Collectors.toList());
+
         }
 
         //데이터베이스에서 month에 해당하는 데이터 조회
