@@ -190,7 +190,7 @@
     <div th:if="${lists != null}" th:unless="${lists.isEmpty()}">
         <div class="items-grid">
             <div  th:each="event : ${lists}" class="item">
-                <div class="star" th:data-culture-info-id="${event.Id}">★</div>
+                <!--<div class="star" th:data-culture-info-id="${event.Id}">★</div>-->
                 <a th:href="@{/eventInfo(title=${event.TITLE})}">
                     <img th:src="${event.MAIN_IMG}" alt="Event Image" width="150" height="170">
                 </a>
@@ -203,7 +203,7 @@
         <p>검색 결과가 없습니다.</p>
     </div></div>
 
-    <script>
+    <!--<script>
         // 모든 별을 선택합니다.
         document.querySelectorAll('.star').forEach(function(star) {
             star.addEventListener('click', function(e) {
@@ -233,7 +233,7 @@
 
 
 
-    </script>
+    </script>-->
 </div>
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 <script>
@@ -282,12 +282,13 @@
                 item.classList.add('item');
 
                 var star = document.createElement('div');
-                star.classList.add('star');
+                //star.classList.add('star');
                 star.dataset.cultureInfoId = event.id;
-                star.innerText = '★';
+                //star.innerText = '★';
                 star.addEventListener('click', function(e) {
                     toggleStar(e.target);
                 });
+
 
                 var imageLink = document.createElement('a');
                 imageLink.href = `/eventInfo?title=${encodeURIComponent(event.title)}`;
@@ -325,6 +326,7 @@
         eventsContainer.appendChild(itemsGrid);
     }
 
+    /*
     function toggleStar(star) {
         star.classList.toggle('active');
 
@@ -347,6 +349,8 @@
                 console.error('Error:', error);
             });
     }
+
+     */
 
 </script>
 <script>
