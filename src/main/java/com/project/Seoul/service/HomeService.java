@@ -36,7 +36,7 @@ public class HomeService {
 
         //RestTemplate응 이용해 api 받아오는 방법
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.getForEntity("http://openapi.seoul.go.kr:8088/5a6f416d79776c6735304c6142424e/json/culturalEventInfo/1/110", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("http://openapi.seoul.go.kr:8088/5a6f416d79776c6735304c6142424e/json/culturalEventInfo/1/117", String.class);
 
         String jsonInput = response.getBody();
 
@@ -47,6 +47,8 @@ public class HomeService {
         //받아온 api데이터(json형식)의 row 부분을 CultureInfo 객체로 만들어서 리스트에 저장
         //curtureInfoList == 받아온 문화행사 정보들의 객체
         List<CultureInfo> curtureInfoList = wrapper.getCulturalEventInfo().getRow();
+
+
 
         return curtureInfoList;
     }
@@ -63,7 +65,9 @@ public class HomeService {
 
     //keyword를 통해 events 찾기
     public List<CultureInfo> searchCulturalEvents(String keyword) {
-        List<CultureInfo> allEvents = getAllCultureInfoApi();
+        List<CultureInfo> allEvents = getAllCultureInfoApiSortedByMonth();
+
+
         List<CultureInfo> filteredEvents = allEvents.stream()
                 .filter(event -> event.getTITLE().contains(keyword))
                 .collect(Collectors.toList());
@@ -232,12 +236,7 @@ public class HomeService {
 
         }
 
-        for (CultureInfo info : filteredList) {
-            System.out.println("info = " + info.getTITLE());
-            System.out.println("info.getDATE() = " + info.getDATE());
-            System.out.println();
-        }
-
+        
         return filteredList.stream()
                 .sorted(Comparator.comparing(CultureInfo::getDATE))
                 .collect(Collectors.toList());

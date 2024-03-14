@@ -40,24 +40,7 @@ public class EventInfoController {
         return "/homepage/eventInfo";
     }
 
-    @GetMapping("/search")
-    @ResponseBody
-    public ResponseEntity<List<CultureInfo>> searchEvent(@RequestParam("keyword") String keyword) {
-        if (keyword.trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(Collections.emptyList()); // 비어 있는 경우 빈 목록 반환
-        }
-        List<CultureInfo> searchResults = homeService.searchCulturalEvents(keyword);
-        return ResponseEntity.ok(searchResults); // JSON 형식으로 검색 결과 반환
-    }
 
-    @GetMapping("/search2")
-    public String searchEvent2(@RequestParam("keyword") String keyword, Model model) {
-        if (keyword.trim().isEmpty()) {
-            return "redirect:/mapPage"; // 비어있다면 mapPage으로 리디렉션
-        }
-        List<CultureInfo> searchResults = homeService.searchCulturalEvents(keyword);
-        model.addAttribute("searchResults", searchResults);
-        return "/homepage/mapPage";
-    }
+
 
 }
