@@ -176,22 +176,60 @@ public class HomeService {
             // info.getDATE() 문자열 예시: "2023-01-15"
             String dateString = info.getDATE();
 
-            // "2024-12-07~2024-12-07" 문자열 예시
-            // '~'를 기준으로 문자열을 분할하고 첫 번째 날짜 부분만 사용
-            String firstDatePart = dateString.split("~")[0];
+            int monthValue;
+            int monthValue2;
+            LocalDate date = null;
+            LocalDate date2 = null;
 
-             // dateString을 LocalDate 객체로 파싱
-            LocalDate date = LocalDate.parse(firstDatePart, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-            // LocalDate 객체에서 월을 추출 (1 ~ 12 범위의 값)
-            int monthValue = date.getMonthValue();
+            // "2024-12-07~2024-12-07" 형태일 때
+            if(dateString.length() > 10) {
 
-            String str = String.valueOf(monthValue);
+                // '~'를 기준으로 문자열을 분할하고 첫 번째 날짜 부분만 사용
+                String firstDatePart = dateString.split("~")[0];
 
-            if (str.equals(month)) {
+                String secondDatePart = dateString.split("~")[1];
 
-                filteredList.add(info);
+                // dateString을 LocalDate 객체로 파싱
+                date = LocalDate.parse(firstDatePart, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                date2 = LocalDate.parse(secondDatePart, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+                //4월~6월
+
+                // LocalDate 객체에서 월을 추출 (1 ~ 12 범위의 값)
+                monthValue = date.getMonthValue();
+                monthValue2 = date2.getMonthValue();
+
+                int m = Integer.parseInt(month);
+
+                if (monthValue <= m && m <= monthValue2) {
+
+                    filteredList.add(info);
+                }
+
             }
+
+            else {
+                // '~'를 기준으로 문자열을 분할하고 첫 번째 날짜 부분만 사용
+                String firstDatePart = dateString.split("~")[0];
+
+                // dateString을 LocalDate 객체로 파싱
+                date = LocalDate.parse(firstDatePart, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+
+                // LocalDate 객체에서 월을 추출 (1 ~ 12 범위의 값)
+                monthValue = date.getMonthValue();
+
+                String str = String.valueOf(monthValue);
+
+                if (str.equals(month)) {
+
+                    filteredList.add(info);
+                }
+
+            }
+
+
         }
 
         for (CultureInfo info : filteredList) {
