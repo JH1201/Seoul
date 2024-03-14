@@ -40,6 +40,7 @@ public class HomeController {
         return "/homepage/home";
     }
 
+
     @PostMapping("/home")
     public ResponseEntity<?> saveFavoriteEvent(@RequestBody Map<String, Long> payload) {
         Long cultureInfoId = payload.get("cultureInfoId");
