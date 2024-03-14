@@ -187,21 +187,22 @@
 
     <div id="eventsContainer">
     <!-- 검색 결과 표시 -->
-    <div th:if="${lists != null}" th:unless="${lists.isEmpty()}">
-        <div class="items-grid">
-            <div  th:each="event : ${lists}" class="item">
-                <!--<div class="star" th:data-culture-info-id="${event.Id}">★</div>-->
-                <a th:href="@{/eventInfo(title=${event.TITLE})}">
-                    <img th:src="${event.MAIN_IMG}" alt="Event Image" width="150" height="170">
-                </a>
-                <br><span th:text="${event.TITLE}"></span>
+        <div th:if="${lists != null}" th:unless="${lists.isEmpty()}">
+            <div class="items-grid">
+                <div  th:each="event : ${lists}" class="item">
+                    <!--<div class="star" th:data-culture-info-id="${event.Id}">★</div>-->
+                    <a th:href="@{/eventInfo(title=${event.TITLE})}">
+                        <img th:src="${event.MAIN_IMG}" alt="Event Image" width="150" height="170">
+                    </a>
+                    <br><span th:text="${event.TITLE}"></span>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div th:if="${lists == null || lists.isEmpty()}">
-        <p>검색 결과가 없습니다.</p>
-    </div></div>
+        <div th:if="${lists == null || lists.isEmpty()}">
+            <p>검색 결과가 없습니다.</p>
+        </div>
+    </div>
 
     <!--<script>
         // 모든 별을 선택합니다.
