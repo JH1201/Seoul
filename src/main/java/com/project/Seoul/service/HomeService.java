@@ -94,7 +94,7 @@ public class HomeService {
         eventsRepository.save(cultureInfo);
     }
 
-    /*
+
     // 즐겨찾기 저장
     public void findAndSaveEventById(Long id) {
         Optional<CultureInfo> optionalCultureInfo = eventsRepository.findById(id);
@@ -128,7 +128,7 @@ public class HomeService {
     }
 
 
-     */
+
 
     //선택된 드롭박스에 해당되는 데이터
     public List<CultureInfo> getDropBoxData(String mon) {
