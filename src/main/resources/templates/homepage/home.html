@@ -7,6 +7,16 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
+        @font-face {
+            font-family: 'BagelFatOne-Regular';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_JAMO@1.0/BagelFatOne-Regular.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+        h1 {
+            font-size: 300px;
+            font-family:'BagelFatOne-Regular';
+        }
         * { box-sizing: border-box; }
         body { font-family: Arial, sans-serif; }
 
@@ -52,7 +62,6 @@
             position: relative;
         }
 
-
         .star {
             position: absolute;
             top: 3px;
@@ -64,9 +73,8 @@
         .star.active {
             color: gold;
         }
-
         .swiper-container {
-          width: 90%;
+          width: 94%;
           height: 100%;
           margin: auto;
           position:relative;
@@ -102,7 +110,7 @@
     <div>
         <a href="home" style="text-decoration: none">
             <h1>
-                SEOUL EVENT
+                서울은 지금
             </h1>
         </a>
     </div>
@@ -112,10 +120,10 @@
             <!-- Thymeleaf를 사용하여 아이템들을 반복하여 각 슬라이드 생성 -->
             <div th:each="item : ${items}" class="swiper-slide">
                 <div class="title">
-                    <h3 th:text="${item.getTITLE()}">Item Title</h3>
+                    <h3 th:text="${item.TITLE}">Item Title</h3>
                 </div>
                 <div class="image-container">
-                    <img th:src="${item.getMAIN_IMG()}" alt="Image"/>
+                    <img th:src="${item.MAIN_IMG}" alt="Image"/>
                 </div>
             </div>
         </div>
@@ -125,7 +133,7 @@
     </div>
 
     <div class="search-container">
-        <form class="search-part" action="/search" method="get">
+        <form class="search-part" id="searchForm" action="/search" method="get">
             <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요." required>
             <button type="submit">Search</button>
         </form>
@@ -140,7 +148,7 @@
         <!-- 옵션들이 담길 드롭다운 컨테이너, 기본적으로 숨겨져 있습니다 -->
         <select id="sortOptions" onchange="sort()">
             <option value="전체" th:selected="${selectedMonth == '전체'}">전체</option>
-            <!--<option value="즐겨찾기" th:selected="${selectedMonth == '즐겨찾기'}">즐겨찾기</option>-->
+            <option value="즐겨찾기" th:selected="${selectedMonth == '즐겨찾기'}">즐겨찾기</option>
             <option value="1" th:selected="${selectedMonth == '1'}">1월</option>
             <option value="2" th:selected="${selectedMonth == '2'}">2월</option>
             <option value="3" th:selected="${selectedMonth == '3'}">3월</option>
@@ -172,13 +180,13 @@
         </script>
     </div>
 
-
+    <div id="eventsContainer">
     <!-- 검색 결과 표시 -->
     <div th:if="${lists != null}" th:unless="${lists.isEmpty()}">
         <div class="items-grid">
             <div  th:each="event : ${lists}" class="item">
-                <!--<div class="star" th:classappend="${event.isFavorite} ? 'favorite'" th:data-culture-info-id="${event.getId()}">★</div>-->
-                <a th:href="@{/eventInfo(title=${event.getTITLE()})}">
+                <div class="star" th:data-culture-info-id="${event.Id}">★</div>
+                <a th:href="@{/eventInfo(title=${event.TITLE})}">
                     <img th:src="${event.MAIN_IMG}" alt="Event Image" width="150" height="170">
                 </a>
                 <br><span th:text="${event.TITLE}"></span>
@@ -188,9 +196,9 @@
 
     <div th:if="${lists == null || lists.isEmpty()}">
         <p>검색 결과가 없습니다.</p>
-    </div>
+    </div></div>
 
-    <!--<script>
+    <script>
         // 모든 별을 선택합니다.
         document.querySelectorAll('.star').forEach(function(star) {
             star.addEventListener('click', function(e) {
@@ -209,38 +217,19 @@
                 })
                     .then(response => response.json())
                     .then(data => {
+                        // 여기서 응답 처리를 합니다. 예를 들어, UI를 업데이트합니다.
                         console.log('Success:', data);
-                        // 성공적인 응답 처리, 예를 들어 UI 업데이트 등
-
-                        activateStars(data.cultureInfoId)
-                        function activateStars(cultureInfoId) {
-                            // 모든 'star' 클래스 요소를 선택
-                            const stars = document.querySelectorAll('.star');
-
-                            // 각 요소에 대해
-                            stars.forEach((star) => {
-                                // 현재 요소의 cultureInfoId가 매개변수와 일치하는지 확인
-                                if (star.getAttribute('data-culture-info-id') === cultureInfoId) {
-                                    // 일치한다면, 'active' 클래스 추가
-                                    star.classList.add('active');
-                                }
-                            });
-                        }
                     })
                     .catch((error) => {
                         console.error('Error:', error);
                     });
-
-
-
             });
         });
 
 
 
-    </script>-->
+    </script>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 <script>
     const swiper = new Swiper('.swiper-container', {
@@ -261,5 +250,119 @@
         el:'.swiper-scrollbar',},
     });
 </script>
+<script>
+    function sort() {
+        var selectedOption = document.getElementById('sortOptions').value;
+        // 서버로 GET 요청 보내기
+        fetch(`/monthlySort?month=${selectedOption}`)
+            .then(response => response.json()) // JSON 형식으로 응답 받기
+            .then(data => {
+                // 검색 결과를 받아서 UI 업데이트
+                updateEventsContainer(data);
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function updateEventsContainer(data) {
+        // eventsContainer 업데이트
+        var eventsContainer = document.getElementById('eventsContainer');
+
+        // 검색 결과를 보여주는 부분 업데이트
+        var itemsGrid = document.createElement('div');
+        itemsGrid.classList.add('items-grid');
+
+        if (data && data.length > 0) {
+            data.forEach(event => {
+                var item = document.createElement('div');
+                item.classList.add('item');
+
+                var star = document.createElement('div');
+                star.classList.add('star');
+                star.dataset.cultureInfoId = event.id;
+                star.innerText = '★';
+                star.addEventListener('click', function(e) {
+                    toggleStar(e.target);
+                });
+
+                var imageLink = document.createElement('a');
+                imageLink.href = `/eventInfo?title=${encodeURIComponent(event.title)}`;
+
+                var image = document.createElement('img');
+                image.src = event.main_IMG;
+                image.alt = 'Event Image';
+                image.width = 150;
+                image.height = 170;
+
+                var title = document.createElement('span');
+                title.innerText = event.title;
+
+                var imageContainer = document.createElement('div');
+                imageLink.appendChild(image);
+                imageContainer.appendChild(imageLink);
+
+                var titleContainer = document.createElement('div');
+                titleContainer.appendChild(title);
+
+                item.appendChild(star);
+                item.appendChild(imageContainer);
+                item.appendChild(titleContainer);
+                itemsGrid.appendChild(item);
+            });
+        } else {
+            var noResultMessage = document.createElement('p');
+            noResultMessage.innerText = '검색 결과가 없습니다.';
+            eventsContainer.innerHTML = ''; // 기존 내용 지우기
+            eventsContainer.appendChild(noResultMessage);
+            return;
+        }
+
+        eventsContainer.innerHTML = ''; // 기존 내용 지우기
+        eventsContainer.appendChild(itemsGrid);
+    }
+
+    function toggleStar(star) {
+        star.classList.toggle('active');
+
+        var cultureInfoId = star.dataset.cultureInfoId;
+
+        // AJAX 요청을 서버에 보냅니다.
+        fetch('/home', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ cultureInfoId: cultureInfoId }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                // 응답 처리
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+
+</script>
+<script>
+    document.getElementById('searchForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // 기본 이벤트 처리 방지
+
+        var keyword = document.querySelector('.search-bar').value.trim();
+        if (keyword === '') {
+            return; // 검색어가 비어 있으면 아무런 작업도 하지 않음
+        }
+
+        // 서버로 GET 요청 보내기
+        fetch(`/search?keyword=${encodeURIComponent(keyword)}`)
+            .then(response => response.json()) // JSON 형식으로 응답 받기
+            .then(data => {
+                // 검색 결과를 받아서 UI 업데이트
+                updateEventsContainer(data);
+            })
+            .catch(error => console.error('Error:', error));
+    });
+</script>
+
 </body>
 </html>
