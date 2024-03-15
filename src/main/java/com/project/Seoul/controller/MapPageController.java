@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -27,8 +28,13 @@ public class MapPageController {
 
         model.addAttribute("lists", cultureInfoList); // 행사 정보 추가
 
+
+
         return "homepage/mapPage"; // 맵 페이지 템플릿 반환
     }
+
+    // json형식으로 클라이언트에 넘김
+
 
     @GetMapping("/search")
     @ResponseBody

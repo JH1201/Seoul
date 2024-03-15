@@ -43,6 +43,8 @@ public class HomeController {
     }
 
 
+    /*
+    //즐겨찾기 기능
     @PostMapping("/home")
     public ResponseEntity<?> saveFavoriteEvent(@RequestBody Map<String, Long> payload) {
         Long cultureInfoId = payload.get("cultureInfoId");
@@ -53,6 +55,8 @@ public class HomeController {
 
         return ResponseEntity.ok().build();
     }
+
+     */
 
     @GetMapping("/monthlySort")
     @ResponseBody

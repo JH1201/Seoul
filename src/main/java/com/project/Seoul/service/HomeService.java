@@ -53,6 +53,19 @@ public class HomeService {
         return curtureInfoList;
     }
 
+    //문화행사 정보 api / json 형식으로 리턴
+    public String getAllCultureInfoApiJson() {
+
+        //RestTemplate응 이용해 api 받아오는 방법
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.getForEntity("http://openapi.seoul.go.kr:8088/5a6f416d79776c6735304c6142424e/json/culturalEventInfo/1/117", String.class);
+
+        String jsonInput = response.getBody();
+
+        System.out.println("jsonInput = " + jsonInput);
+
+        return jsonInput;
+    }
 
     public List<CultureInfo> getAllCultureInfoApiSortedByMonth() {
         List<CultureInfo> cultureInfoList = getAllCultureInfoApi(); // 이전에 API로부터 받아온 리스트를 가져옴
@@ -98,6 +111,7 @@ public class HomeService {
         eventsRepository.save(cultureInfo);
     }
 
+    /*
 
     // 즐겨찾기 저장
     public void findAndSaveEventById(Long id) {
@@ -119,6 +133,10 @@ public class HomeService {
         return favoriteEventsRepository.findAll();
     }
 
+     */
+
+
+
     //출력 타입을 FavoriteCultureInfo -> CultureInfo 변환
     private CultureInfo convertFavoriteToCulture(FavoriteCultureInfo favorite) {
         // ModelMapper의 인스턴스를 생성합니다.
@@ -130,9 +148,6 @@ public class HomeService {
 
         return cultureInfo;
     }
-
-
-
 
     //선택된 드롭박스에 해당되는 데이터
     public List<CultureInfo> getDropBoxData(String mon) {
