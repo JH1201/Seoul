@@ -81,32 +81,41 @@
     <div id="map"></div>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=33db73c119b1dea112b5e9038fd6ef2a"></script>
     <script th:inline="javascript">
-
-
         // 카카오맵 API 초기화
         var mapContainer = document.getElementById('map'), // 지도를 표시할 div
             mapOption = {
-                center: new kakao.maps.LatLng(37.534272313844, 	126.97534763076), // 지도의 중심좌표
-                level: 8 // 지도의 확대 레벨
+                center: new kakao.maps.LatLng(37.566535, 126.9779692), // 지도의 중심좌표
+                level: 6 // 지도의 확대 레벨
             };
 
-        var cultureInfoList = [[${lists}]];
-        function addMarkersToMap(map, cultureInfoList) {
-            cultureInfoList.forEach(function(cultureInfo) {
+        var cultureInfoList = [[${lists}]]; // 행사 정보 리스트
 
-                //위도,경도 설정
+        function addMarkersToMap(map, cultureInfoList) {
+            // 현재 지도의 경계를 가져옴
+            var bounds = map.getBounds();
+            var southWest = bounds.getSouthWest(); // 남서쪽 좌표
+            var northEast = bounds.getNorthEast(); // 북동쪽 좌표
+
+            console.log(southWest);
+            console.log(northEast);
+
+
+            cultureInfoList.forEach(function(cultureInfo) {
+                // 위도, 경도 설정
                 var lat = parseFloat(cultureInfo.lat);
-                var log = parseFloat(cultureInfo.lot);
+                var lng = parseFloat(cultureInfo.lot); // 'log'는 오타인 듯 하여 'lng'로 변경
 
                 // 마커 위치 설정
-                var position = new kakao.maps.LatLng(log, lat);
+                var position = new kakao.maps.LatLng(lng, lat);
 
-                // position 위치의 마커를 맵에 생성
-                var marker = new kakao.maps.Marker({
-                    map: map,
-                    position: position
-                });
-
+                // 현재 지도의 보이는 영역 내에 있는지 판단
+                if (lng >= southWest.getLat() && lng <= northEast.getLat() && lat >= southWest.getLng() && lat <= northEast.getLng()) {
+                    // position 위치의 마커를 맵에 생성
+                    var marker = new kakao.maps.Marker({
+                        map: map,
+                        position: position
+                    });
+                }
             });
         }
 
@@ -119,84 +128,14 @@
 
             addMarkersToMap(map, cultureInfoList);
 
+            // 지도의 이동이 끝날 때마다 마커를 업데이트
+            kakao.maps.event.addListener(map, 'idle', function() {
+                console.log('idle 이벤트 발생');
+                addMarkersToMap(map, cultureInfoList);
+            });
         });
-
-
     </script>
-    <script>
-        function sort() {
-            var selectedOption = document.getElementById('sortOptions').value;
-            // 서버로 GET 요청 보내기
-            fetch(`/monthlySort?month=${selectedOption}`)
-                .then(response => response.json()) // JSON 형식으로 응답 받기
-                .then(data => {
-                    // 검색 결과를 받아서 UI 업데이트
-                    updateEventsContainer(data);
-                })
-                .catch(error => console.error('Error:', error));
-        }
 
-        function updateEventsContainer(data) {
-            // eventsContainer 업데이트
-            var eventsContainer = document.getElementById('eventsContainer');
-
-            // 검색 결과를 보여주는 부분 업데이트
-            var itemsGrid = document.createElement('div');
-            itemsGrid.classList.add('items-grid');
-
-            if (data && data.length > 0) {
-                data.forEach(event => {
-                    var item = document.createElement('div');
-                    item.classList.add('item');
-
-                    var star = document.createElement('div');
-                    //star.classList.add('star');
-                    star.dataset.cultureInfoId = event.id;
-                    //star.innerText = '★';
-                    star.addEventListener('click', function(e) {
-                        toggleStar(e.target);
-                    });
-
-
-                    var imageLink = document.createElement('a');
-                    imageLink.href = `/eventInfo?title=${encodeURIComponent(event.title)}`;
-
-                    var image = document.createElement('img');
-                    image.src = event.main_IMG;
-                    image.alt = 'Event Image';
-                    image.width = 150;
-                    image.height = 170;
-
-                    var title = document.createElement('span');
-                    title.innerText = event.title;
-
-                    var imageContainer = document.createElement('div');
-                    imageLink.appendChild(image);
-                    imageContainer.appendChild(imageLink);
-
-                    var titleContainer = document.createElement('div');
-                    titleContainer.appendChild(title);
-
-                    item.appendChild(star);
-                    item.appendChild(imageContainer);
-                    item.appendChild(titleContainer);
-                    itemsGrid.appendChild(item);
-                });
-            } else {
-                var noResultMessage = document.createElement('p');
-                noResultMessage.innerText = '검색 결과가 없습니다.';
-                eventsContainer.innerHTML = ''; // 기존 내용 지우기
-                eventsContainer.appendChild(noResultMessage);
-                return;
-            }
-
-            eventsContainer.innerHTML = ''; // 기존 내용 지우기
-            eventsContainer.appendChild(itemsGrid);
-        }
-
-
-
-    </script>
 
     <script>
         document.getElementById('searchForm').addEventListener('submit', function (event) {
