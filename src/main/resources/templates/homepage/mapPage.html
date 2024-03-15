@@ -138,6 +138,65 @@
 
 
     <script>
+
+        function updateEventsContainer(data) {
+            // eventsContainer 업데이트
+            var eventsContainer = document.getElementById('eventsContainer');
+
+            // 검색 결과를 보여주는 부분 업데이트
+            var itemsGrid = document.createElement('div');
+            itemsGrid.classList.add('items-grid');
+
+            if (data && data.length > 0) {
+                data.forEach(event => {
+                    var item = document.createElement('div');
+                    item.classList.add('item');
+
+                    var star = document.createElement('div');
+                    //star.classList.add('star');
+                    star.dataset.cultureInfoId = event.id;
+                    //star.innerText = '★';
+                    star.addEventListener('click', function(e) {
+                        toggleStar(e.target);
+                    });
+
+
+                    var imageLink = document.createElement('a');
+                    imageLink.href = `/eventInfo?title=${encodeURIComponent(event.title)}`;
+
+                    var image = document.createElement('img');
+                    image.src = event.main_IMG;
+                    image.alt = 'Event Image';
+                    image.width = 150;
+                    image.height = 170;
+
+                    var title = document.createElement('span');
+                    title.innerText = event.title;
+
+                    var imageContainer = document.createElement('div');
+                    imageLink.appendChild(image);
+                    imageContainer.appendChild(imageLink);
+
+                    var titleContainer = document.createElement('div');
+                    titleContainer.appendChild(title);
+
+                    item.appendChild(star);
+                    item.appendChild(imageContainer);
+                    item.appendChild(titleContainer);
+                    itemsGrid.appendChild(item);
+                });
+            } else {
+                var noResultMessage = document.createElement('p');
+                noResultMessage.innerText = '검색 결과가 없습니다.';
+                eventsContainer.innerHTML = ''; // 기존 내용 지우기
+                eventsContainer.appendChild(noResultMessage);
+                return;
+            }
+
+            eventsContainer.innerHTML = ''; // 기존 내용 지우기
+            eventsContainer.appendChild(itemsGrid);
+        }
+
         document.getElementById('searchForm').addEventListener('submit', function (event) {
             event.preventDefault(); // 기본 이벤트 처리 방지
 
