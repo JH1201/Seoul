@@ -14,57 +14,93 @@
             font-style: normal;
         }
         h1 {
-            padding-top: 30px;
+            padding-top: 40px;
             font-size: 100px;
             font-family:'BagelFatOne-Regular';
             text-align: center;
+            color: #C5D74A;
         }
 
-        a:visited { color: black; }
+        h1 a:visited { color: #C5D74A; }
 
         * { box-sizing: border-box; }
         body { font-family: Arial, sans-serif; }
 
-        .search-container {
+        .ToMAP {
+            font-family: 'BagelFatOne-Regular';
+            padding-left: 50px;
+            font-size: 30px;
+        }
 
+        .search-container {
             display: flex;
             justify-content: center; /* 검색창을 중앙으로 */
             margin-bottom: 20px;
         }
 
         .search-part {
-            padding-top: 100px;
-            flex-basis: 70%;
+            padding-top: 80px;
+            flex-basis: 50%;
+            display: flex;
         }
 
         .search-bar {
             width: 100%;
-            padding: 10px;
+            padding: 20px;
             font-size: 16px;
+            height: 60px;
+            border-radius: 100px;
+            margin-right: 10px;
+        }
+
+        .search-button {
+            width: 80px;
+            height: 60px; /* 버튼의 높이 조절 */
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 40px;
+            background-color: #C5D74A;
+            color: white;
+            cursor: pointer;
         }
 
         .sort-part {
-            flex-basis: 30%;
             display: flex;
             justify-content: flex-end;
             align-items: center;
             padding: 10px 50px;
         }
 
+        #sortOptions {
+            width: 150px; /* 드롭다운 박스의 너비를 늘립니다 */
+            height: 40px; /* 드롭다운 박스의 높이를 늘립니다 */
+            font-size: 16px; /* 드롭다운 박스 내의 텍스트 크기를 조절합니다 */
+            border-radius: 10px;
+        }
+
         .items-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            padding: 0 50px; /* 위아래로는 0, 좌우로는 20px의 패딩을 추가 */
+            gap: 30px;
+            margin-left: 50px;
+            margin-right: 50px;
+            padding-bottom: 10px;
+        }
 
+        .items-grid img {
+            border-radius: 10px;
+            padding-top: 15px;
+            padding-bottom: 8px;
         }
 
         .item {
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            padding: 5px;
+            /* 슬라이드 item*/
+            border: 3px solid #ddd;
+            border-radius: 20px;
+            padding: 10px;
             text-align: center;
             position: relative;
+            background-color: #F0EFEB;
         }
 
         .star {
@@ -99,13 +135,13 @@
         }
 
         .image-container img {
-            width: 20%; /* 이미지 크기 조정 */
+            width: 250px; /* 이미지 크기 조정 */
             height: auto;
-            margin-right:10%
+            margin-right:10%;
         }
 
         .title {
-            margin-left: 10%
+            margin-left: 10%;
         }
 
     </style>
@@ -113,12 +149,12 @@
 <body>
 <div id="content">
     <div>
-        <a href="home" style="text-decoration: none">
             <h1>
+                <a href="home" style="text-decoration: none">
                 서울은 지금
+                </a>
             </h1>
-        </a>
-    </div>
+    </div><br>
     <div class="swiper-container">
         <!-- 슬라이더의 각 슬라이드를 담을 래퍼 -->
         <div class="swiper-wrapper">
@@ -139,20 +175,19 @@
 
     <div class="search-container">
         <form class="search-part" id="searchForm" action="/search" method="get">
-            <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요." required>
-            <button type="submit">Search</button>
+            <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요." required><button class="search-button" type="submit">🔍︎</button>
         </form>
 
-    </div>
+    </div><br>
 
-    <div>
-        <a href="/mapPage">지도로 보기</a>
-    </div>
+    <div class="ToMAP">
+        <a href="/mapPage" style="text-decoration: none">지도로 보기</a>
+    </div><br>
 
     <div class="sort-part">
         <!-- 옵션들이 담길 드롭다운 컨테이너, 기본적으로 숨겨져 있습니다 -->
         <select id="sortOptions" onchange="sort()">
-            <option value="전체" th:selected="${selectedMonth == '전체'}">전체</option>
+            <option value="전체" th:selected="${selectedMonth == '전체'}">월별</option>
             <!--<option value="즐겨찾기" th:selected="${selectedMonth == '즐겨찾기'}">즐겨찾기</option>-->
             <option value="1" th:selected="${selectedMonth == '1'}">1월</option>
             <option value="2" th:selected="${selectedMonth == '2'}">2월</option>
@@ -184,7 +219,7 @@
             }
         </script>
     </div>
-
+    <br><br>
     <div id="eventsContainer">
     <!-- 검색 결과 표시 -->
         <div th:if="${lists != null}" th:unless="${lists.isEmpty()}">
@@ -192,9 +227,9 @@
                 <div  th:each="event : ${lists}" class="item">
                     <!--<div class="star" th:data-culture-info-id="${event.Id}">★</div>-->
                     <a th:href="@{/eventInfo(title=${event.TITLE})}">
-                        <img th:src="${event.MAIN_IMG}" alt="Event Image" width="150" height="170">
+                        <img th:src="${event.MAIN_IMG}" alt="Event Image" width="200" height="280">
                     </a>
-                    <br><span th:text="${event.TITLE}"></span>
+                    <br><br><span th:text="${event.TITLE}"><br><br></span>
                 </div>
             </div>
         </div>
@@ -297,8 +332,8 @@
                 var image = document.createElement('img');
                 image.src = event.main_IMG;
                 image.alt = 'Event Image';
-                image.width = 150;
-                image.height = 170;
+                image.width = 200;
+                image.height = 280;
 
                 var title = document.createElement('span');
                 title.innerText = event.title;
