@@ -7,6 +7,9 @@ import com.project.Seoul.domain.FavoriteCultureInfo;
 import com.project.Seoul.repository.EventsRepository;
 import com.project.Seoul.repository.FavoriteEventsRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -53,19 +56,6 @@ public class HomeService {
         return curtureInfoList;
     }
 
-    //문화행사 정보 api / json 형식으로 리턴
-    public String getAllCultureInfoApiJson() {
-
-        //RestTemplate응 이용해 api 받아오는 방법
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.getForEntity("http://openapi.seoul.go.kr:8088/5a6f416d79776c6735304c6142424e/json/culturalEventInfo/1/117", String.class);
-
-        String jsonInput = response.getBody();
-
-        System.out.println("jsonInput = " + jsonInput);
-
-        return jsonInput;
-    }
 
     public List<CultureInfo> getAllCultureInfoApiSortedByMonth() {
         List<CultureInfo> cultureInfoList = getAllCultureInfoApi(); // 이전에 API로부터 받아온 리스트를 가져옴
@@ -257,6 +247,19 @@ public class HomeService {
                 .collect(Collectors.toList());
 
     }
+
+    public Page<CultureInfo> paging (int pageNumber, int pageSize) {
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return eventsRepository.findAll(pageable);
+
+    }
+
+    public int getTotalPages(int size) {
+
+        return (int) Math.ceil((double) 1000 /size);
+    }
+
 
 
 

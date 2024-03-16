@@ -152,6 +152,20 @@
             opacity: 0.5; /* 이 부분에서 투명도 조절 */
             z-index: -1; /* 컨텐츠가 가상 요소보다 위에 오도록 */
         }
+
+        .button_number {
+            font-size: 30px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .button_number  {
+            font-size: 30px;
+            padding: 10px;
+            text-align: center;
+        }
+
+
     </style>
 </head>
 <body>
@@ -251,6 +265,34 @@
 
         <div th:if="${lists == null || lists.isEmpty()}">
             <p>검색 결과가 없습니다.</p>
+        </div>
+    </div>
+
+    <!-- 페이지 버튼 -->
+    <div th:if="${totalPages > 1}">
+        <div class="button_number">
+            <div class="row">
+                <button style="display: inline-block">
+                    <a class="page-link" th:href="@{${'/home'}}">첫 페이지</a>
+                </button>
+
+                <button th:if="${currentPage > 1}" style="display: inline-block">
+                    <a class="page-link" th:href="@{${'/home?page=' + (currentPage - 1)}}">이전</a>
+                </button>
+
+                <button th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}" style="display: inline-block">
+                    <a class="page-link" th:href="@{${'/home?page=' + pageNumber}}" th:text="${pageNumber}"></a>
+                </button>
+
+
+                <button th:if="${currentPage < totalPages}" style="display: inline-block">
+                    <a class="page-link" th:href="@{${'/home?page=' + (currentPage + 1)}}">다음</a>
+                </button>
+
+                <button style="display: inline-block">
+                    <a class="page-link" th:href="@{${'/home?page=' + totalPages}}">마지막페이지</a>
+                </button>
+            </div>
         </div>
     </div>
 
