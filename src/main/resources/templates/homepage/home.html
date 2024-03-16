@@ -15,19 +15,19 @@
         }
         h1 {
             padding-top: 40px;
-            font-size: 100px;
+            font-size: 80px;
             font-family:'BagelFatOne-Regular';
             text-align: center;
-            color: #C5D74A;
         }
 
-        h1 a:visited { color: #C5D74A; }
+        h1 a:visited { color: darkblue; }
 
         * { box-sizing: border-box; }
         body { font-family: Arial, sans-serif; }
 
         .ToMAP {
             font-family: 'BagelFatOne-Regular';
+            padding-top: 25px;
             padding-left: 50px;
             font-size: 30px;
         }
@@ -103,17 +103,7 @@
             background-color: #F0EFEB;
         }
 
-        .star {
-            position: absolute;
-            top: 3px;
-            right: 2px;
-            cursor: pointer;
-            font-size: 18px;
-        }
 
-        .star.active {
-            color: gold;
-        }
         .swiper-container {
           width: 94%;
           height: 100%;
@@ -121,6 +111,7 @@
           position:relative;
           overflow:hidden;
           padding-top:5%;
+            padding-bottom: 2%;
         }
 
         .swiper-slide {
@@ -144,17 +135,38 @@
             margin-left: 10%;
         }
 
+        .background-image-container {
+            position: relative; /* 가상 요소의 위치 기준점 */
+        }
+
+        .background-image-container::before {
+            content: ""; /* 필수 속성 */
+            position: absolute; /* 부모 컨테이너에 대해 절대 위치 */
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("/image/hangang.jpg"); /* 배경 이미지 URL */
+            background-size: cover;
+            background-position: center center;
+            opacity: 0.5; /* 이 부분에서 투명도 조절 */
+            z-index: -1; /* 컨텐츠가 가상 요소보다 위에 오도록 */
+        }
     </style>
 </head>
 <body>
 <div id="content">
+
+    <div class="background-image-container">
     <div>
-            <h1>
-                <a href="home" style="text-decoration: none">
+        <h1>
+            <a href="home" style="text-decoration: none">
                 서울은 지금
-                </a>
-            </h1>
+            </a>
+        </h1>
+
     </div><br>
+
     <div class="swiper-container">
         <!-- 슬라이더의 각 슬라이드를 담을 래퍼 -->
         <div class="swiper-wrapper">
@@ -172,6 +184,11 @@
         <div class="swiper-button-prev"></div>
         <div class="swiper-button-next"></div>
     </div>
+    </div>
+
+    <div class="ToMAP">
+        <a href="/mapPage" style="text-decoration: none">지도로 보기</a>
+    </div><br>
 
     <div class="search-container">
         <form class="search-part" id="searchForm" action="/search" method="get">
@@ -180,9 +197,7 @@
 
     </div><br>
 
-    <div class="ToMAP">
-        <a href="/mapPage" style="text-decoration: none">지도로 보기</a>
-    </div><br>
+
 
     <div class="sort-part">
         <!-- 옵션들이 담길 드롭다운 컨테이너, 기본적으로 숨겨져 있습니다 -->
