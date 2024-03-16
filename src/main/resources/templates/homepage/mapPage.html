@@ -15,6 +15,16 @@
             height: 40px;
         }
 
+        .item {
+            display: flex;
+            align-items: center;
+        }
+
+        img {
+            width: 80px;
+            height: 120px;"
+        }
+
         /* 컨테이너 스타일 설정 */
         #container {
             display: flex;
@@ -55,15 +65,13 @@
         <h1>지도에 있는 행사들의 리스트</h1>
         <div id="eventsContainer">
         <div class="items-grid">
-            <div th:each="event : ${lists}" class="item" style="display: flex; align-items: center; gap: 20px;">
-                <a th:href="@{/eventInfo(title=${event.getTITLE()})}"  style="flex-shrink: 0;">
-                    <img th:src="${event.getMAIN_IMG()}" alt="Event Image" style="width: 80px; height: 120px;">
+            <div th:each="event : ${lists}" class="item">
+                <a th:href="@{/eventInfo(title=${event.getTITLE()})}">
+                    <img th:src="${event.getMAIN_IMG()}" alt="Event Image">
                 </a>
                 <div>
                     <h4 th:text="${event.getTITLE()}"></h4>
-                    <p th:text="${event.getMAIN_IMG()}"></p>
-                    <p th:text="${event.getTITLE()}"></p>
-                    <p th:text="${event.getIS_FREE()}"></p>
+                    <p class="is-free" th:text="${event.getIS_FREE()}"></p>
                 </div>
             </div>
 
@@ -80,6 +88,7 @@
     </div>
     <div id="map"></div>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=33db73c119b1dea112b5e9038fd6ef2a"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script th:inline="javascript">
         // 카카오맵 API 초기화
         var mapContainer = document.getElementById('map'), // 지도를 표시할 div
@@ -132,8 +141,90 @@
             kakao.maps.event.addListener(map, 'idle', function() {
                 console.log('idle 이벤트 발생');
                 addMarkersToMap(map, cultureInfoList);
+
+                // 현재 지도의 경계 값을 가져옵니다.
+                var bounds = map.getBounds();
+                var southWest = bounds.getSouthWest();
+                var northEast = bounds.getNorthEast();
+
+                // Ajax 요청을 보내는 부분
+                $.ajax({
+                    url: '/filterEvents',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        southWestLat: southWest.getLng(),
+                        southWestLng: southWest.getLat(),
+                        northEastLat: northEast.getLng(),
+                        northEastLng: northEast.getLat()
+                    }),
+                    success: function(filteredEvents) {
+                        console.log("success")
+
+                        // 필터링된 행사 데이터로 페이지의 내용을 업데이트
+                        updatePageWithFilteredEvents(filteredEvents);
+                    },
+                    error: function(error) {
+                        console.error('Error fetching filtered events:', error);
+                    }
+                });
+
+
             });
         });
+
+        function updatePageWithFilteredEvents(events) {
+            // 행사 데이터를 사용하여 웹 페이지를 업데이트하는 코드를 여기에 작성합니다.
+            // 예를 들어, Thymeleaf 대신 순수 JavaScript로 DOM을 조작하여
+            // 행사 목록을 업데이트할 수 있습니다.
+
+            // 웹 페이지에 행사를 표시하는 로직을 작성합니다.
+            const eventsContainer = document.getElementById('eventsContainer');
+            eventsContainer.innerHTML = ''; // 기존의 행사 목록을 비웁니다.
+
+
+            // 받은 행사 데이터를 이용하여 새로운 목록 아이템을 생성합니다.
+            events.forEach(event => {
+
+                var item = document.createElement('div');
+                item.classList.add('item');
+
+                var imageLink = document.createElement('a');
+                imageLink.href = `/eventInfo?title=${encodeURIComponent(event.title)}`;
+
+                var image = document.createElement('img');
+                image.src = event.main_IMG;
+                image.alt = 'Event Image';
+
+                var title = document.createElement('h4');
+                title.innerText = event.title;
+
+                var isFree = document.createElement('p');
+                isFree.innerText = event.isFree ? '무료' : '유료';
+                isFree.classList.add('is-free');
+
+                var imageContainer = document.createElement('div');
+                imageLink.appendChild(image);
+                imageContainer.appendChild(imageLink);
+
+                var titleContainer = document.createElement('div');
+                titleContainer.appendChild(title);
+                titleContainer.appendChild(isFree);
+
+                // eventsContainer에 새로운 행사 아이템을 추가합니다.
+                item.appendChild(imageContainer);
+                item.appendChild(titleContainer);
+                eventsContainer.appendChild(item);
+            });
+
+            // 이벤트가 없을 때 표시할 메시지입니다.
+            if (events.length === 0) {
+                var noEventsMsg = document.createElement('p');
+                noEventsMsg.innerText = '진행중인 행사가 없습니다.';
+                document.getElementById('eventsContainer').appendChild(noEventsMsg);
+            }
+
+        }
     </script>
 
 
@@ -152,14 +243,6 @@
                     var item = document.createElement('div');
                     item.classList.add('item');
 
-                    var star = document.createElement('div');
-                    //star.classList.add('star');
-                    star.dataset.cultureInfoId = event.id;
-                    //star.innerText = '★';
-                    star.addEventListener('click', function(e) {
-                        toggleStar(e.target);
-                    });
-
 
                     var imageLink = document.createElement('a');
                     imageLink.href = `/eventInfo?title=${encodeURIComponent(event.title)}`;
@@ -173,14 +256,18 @@
                     var title = document.createElement('span');
                     title.innerText = event.title;
 
+                    var isFree = document.createElement('p');
+                    isFree.innerText = event.isFree ? '무료' : '유료';
+                    isFree.classList.add('is-free');
+
                     var imageContainer = document.createElement('div');
                     imageLink.appendChild(image);
                     imageContainer.appendChild(imageLink);
 
                     var titleContainer = document.createElement('div');
                     titleContainer.appendChild(title);
+                    titleContainer.appendChild(isFree);
 
-                    item.appendChild(star);
                     item.appendChild(imageContainer);
                     item.appendChild(titleContainer);
                     itemsGrid.appendChild(item);
