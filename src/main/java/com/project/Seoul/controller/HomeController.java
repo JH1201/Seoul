@@ -2,6 +2,7 @@ package com.project.Seoul.controller;
 
 import com.project.Seoul.domain.CultureInfo;
 import com.project.Seoul.service.HomeService;
+import com.project.Seoul.service.MapPageService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,14 +12,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class HomeController {
 
     @Autowired
     public final HomeService homeService;
-
     public HomeController(HomeService homeService) {
         this.homeService = homeService;
     }
