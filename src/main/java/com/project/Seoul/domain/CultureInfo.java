@@ -1,9 +1,6 @@
 package com.project.Seoul.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,11 +25,22 @@ public class CultureInfo {
     private String PLACE; //장소
     private String ORG_NAME; //기관명
     private String USE_TRGT; //이용대상
+
+    @Column(length = 500)
     private String USE_FEE; //이용요금
+
+    @Column(length = 500)
     private String PLAYER; //출연자정보
+
+    @Column(length = 1000)
     private String PROGRAM; //프로그램소개
+
+    @Column(length = 1000)
     private String ETC_DESC; //기타내용
+
+    @Column(length = 500)
     private String ORG_LINK; //홈페이지 주소
+
     private String MAIN_IMG; //메인 이미지
     private String RGSTDATE; //신청일
     private String TICKET; //시민,기관

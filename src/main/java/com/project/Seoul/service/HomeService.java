@@ -36,7 +36,7 @@ public class HomeService {
 
         //RestTemplate응 이용해 api 받아오는 방법
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.getForEntity("http://openapi.seoul.go.kr:8088/5a6f416d79776c6735304c6142424e/json/culturalEventInfo/1/117", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("http://openapi.seoul.go.kr:8088/5a6f416d79776c6735304c6142424e/json/culturalEventInfo/1/1000", String.class);
 
         String jsonInput = response.getBody();
 
