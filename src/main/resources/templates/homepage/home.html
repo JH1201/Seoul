@@ -277,7 +277,7 @@
                 </button>
 
                 <button th:if="${currentPage > 1}" style="display: inline-block">
-                    <a class="page-link" th:href="@{${'/home?page=' + (currentPage - 1)}}">이전</a>
+                    <a class="page-link" th:href="@{${'/home?page=' + (startPage - 1)}}">이전</a>
                 </button>
 
                 <button th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}" style="display: inline-block">
@@ -286,7 +286,7 @@
 
 
                 <button th:if="${currentPage < totalPages}" style="display: inline-block">
-                    <a class="page-link" th:href="@{${'/home?page=' + (currentPage + 1)}}">다음</a>
+                    <a class="page-link" th:href="@{${'/home?page=' + (endPage + 1)}}">다음</a>
                 </button>
 
                 <button style="display: inline-block">
