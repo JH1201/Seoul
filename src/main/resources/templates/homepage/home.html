@@ -158,6 +158,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 30px;
         }
 
         .background-image-container {
@@ -179,11 +180,25 @@
         }
 
         .button_number {
-            font-size: 30px;
-            padding: 10px;
+            margin-top: 20px;
+            margin-bottom: 20px;
             text-align: center;
         }
 
+        .button_number button {
+            border-radius: 15px;
+            font-size: 20px;
+            background-color:#C5D74A;
+            height: 40px;
+            width: 40px;
+            border: none;
+            margin: 0 3px;
+        }
+
+        .button_number a {
+            color: white;
+            font-weight: bold;
+        }
 
     </style>
 </head>
@@ -294,11 +309,11 @@
         <div class="button_number">
             <div class="row">
                 <button style="display: inline-block">
-                    <a class="page-link" th:href="@{${'/home'}}">⏪︎</a>
+                    <a class="page-link" th:href="@{${'/home'}}">«</a>
                 </button>
 
                 <button th:if="${currentPage > 1}" style="display: inline-block">
-                    <a class="page-link" th:href="@{${'/home?page=' + (startPage - 1)}}">◀︎</a>
+                    <a class="page-link" th:href="@{${'/home?page=' + (startPage - 1)}}"><</a>
                 </button>
 
                 <button th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}" style="display: inline-block">
@@ -307,15 +322,15 @@
 
 
                 <button th:if="${currentPage < totalPages}" style="display: inline-block">
-                    <a class="page-link" th:href="@{${'/home?page=' + (endPage + 1)}}">▶︎</a>
+                    <a class="page-link" th:href="@{${'/home?page=' + (endPage + 1)}}">>︎</a>
                 </button>
 
                 <button style="display: inline-block">
-                    <a class="page-link" th:href="@{${'/home?page=' + totalPages}}">⏩︎</a>
+                    <a class="page-link" th:href="@{${'/home?page=' + totalPages}}">»︎</a>
                 </button>
             </div>
         </div>
-    </div>
+    </div> <br>
 
     <!--<script>
         // 모든 별을 선택합니다.
