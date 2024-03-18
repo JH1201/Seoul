@@ -69,7 +69,7 @@ public class HomeController {
 
         List<CultureInfo> items = homeService.getAllCultureInfoApi(); // API로부터 아이템들을 가져오는 메서드
         Collections.shuffle(items); // 아이템들을 랜덤하게 섞는다
-        List<CultureInfo> selectedItems = items.subList(0, 5); // 상위 5개 아이템을 선택
+        List<CultureInfo> selectedItems = items.subList(0, 10); // 상위 10개 아이템을 선택
 
         model.addAttribute("items", selectedItems); // 모델에 아이템들을 추가
         model.addAttribute("lists", eventPaging);
