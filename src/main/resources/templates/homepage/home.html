@@ -20,12 +20,12 @@
             font-style: normal;
         }
         h1 {
-            padding-top: 30px;
+            padding-top: 50px;
             font-size: 100px;
             font-family:'TTHakgyoansimMulgyeolB';
             text-align: center;
             text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white, 4px 4px 20px gray;
-            padding-bottom: 15px;
+            padding-bottom: 35px;
         }
 
         h1 a:visited { color: darkblue; }
@@ -129,36 +129,37 @@
           overflow:hidden;
           padding-top: 2%;
           padding-bottom: 2%;
-          background-color: white;
-          border-radius: 80px;
-          box-shadow: 4px 4px 10px gray;
+          background-color: rgba(230, 230, 230, 0.7);
+          border-radius: 20px;
         }
 
         .swiper-slide {
-            display: flex; /* 슬라이드 내용을 flexbox로 정렬합니다. */
+            display: block;
         }
 
-        .image-container {
-            flex: 1;
-            display: flex;
-            justify-content: flex-end;
-            margin-right: 7%;
+        .swiper-wrapper {
+            margin-left: 30px;
         }
 
         .image-container img {
-            width: 300px; /* 이미지 크기 조정 */
-            height: 430px;
+            width: 290px; /* 이미지 크기 조정 */
+            height: 420px;
+            box-shadow: 3px 3px 6px gray;
         }
 
         .title {
-            background-color: white;
-            border-radius: 40px;
-            margin-left: 7%;
+            font-size: 18px; /* 필요에 따라 조정 */
             text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
+            width: 290px; /* 타이틀 너비를 슬라이드에 맞춤 */
+            margin-top: 10px; /* 이미지와 타이틀 사이의 간격 조정 */
+            /* 기타 스타일링 옵션 */
+            background-color: white;
+            font-weight: bold;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            padding-left: 10px;
+            padding-right: 10px;
+            box-shadow: 3px 3px 6px gray;
         }
 
         .background-image-container {
@@ -220,11 +221,12 @@
         <div class="swiper-wrapper">
             <!-- Thymeleaf를 사용하여 아이템들을 반복하여 각 슬라이드 생성 -->
             <div th:each="item : ${items}" class="swiper-slide">
+                <div class="image-container">
+                    <a th:href="@{/eventInfo(title=${item.TITLE})}">
+                    <img th:src="${item.MAIN_IMG}" alt="Image"/></a>
+                </div>
                 <div class="title">
                     <h3 th:text="${item.TITLE}">Item Title</h3>
-                </div>
-                <div class="image-container">
-                    <img th:src="${item.MAIN_IMG}" alt="Image"/>
                 </div>
             </div>
         </div>
@@ -368,13 +370,14 @@
 <script>
     const swiper = new Swiper('.swiper-container', {
         autoplay: {
-            delay:5000 },
+            delay:3000 },
         centeredSlide:true,
         loop: true,
         debugger: true,
         slideToClickedSlide: true,
         pagination: {
             el: '.swiper-pagination',
+            type: 'bullets',
             clickable: true},
         navigation: {
             nextEl: '.swiper-button-next',
@@ -382,6 +385,9 @@
         },
         scrollbar:{
         el:'.swiper-scrollbar',},
+        slidesPerView: 5,
+        slidesPerGroup: 1,
+        spaceBetween:10,
     });
 </script>
 <script>
