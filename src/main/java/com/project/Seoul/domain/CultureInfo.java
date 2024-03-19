@@ -32,7 +32,7 @@ public class CultureInfo {
     @Column(length = 500)
     private String PLAYER; //출연자정보
 
-    @Column(length = 1000)
+    @Column(length = 1500)
     private String PROGRAM; //프로그램소개
 
     @Column(length = 1000)

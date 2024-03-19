@@ -31,7 +31,7 @@ public class HomeController {
     public String homepage(Model model,
                            @RequestParam(defaultValue = "1", name = "page") int page,
                            @RequestParam(defaultValue = "24", name = "size") int size) {
-
+        
         List<CultureInfo> list = homeService.getAllCultureInfoApiSortedByMonth();
 
         for (CultureInfo cultureInfo : list) {
@@ -40,7 +40,6 @@ public class HomeController {
 
         // 페이징을 처리하기 전에 총 페이지 수를 미리 계산해야 합니다.
         // 이 예제에서는 homeService.getTotalPages(size) 메서드가 총 페이지 수를 반환한다고 가정합니다.
-        // 이 메서드는 실제로 존재하지 않으며, 총 페이지 수를 얻는 로직에 따라 적절히 수정해야 합니다.
         int totalPageCount = homeService.getTotalPages(size);
 
         // 페이지 번호 조정 로직을 여기로 이동
@@ -51,9 +50,7 @@ public class HomeController {
         if (page > totalPageCount) {
             page = totalPageCount; // 페이지 번호를 마지막 페이지로 설정
         }
-        if (page < 1) {
-            page = 1; // 페이지 번호를 첫 페이지로 설정
-        }
+
 
         // 페이지 번호 조정 후에 한 번만 호출
         Page<CultureInfo> eventPaging = homeService.paging(page, size);

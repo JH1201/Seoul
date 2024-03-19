@@ -65,7 +65,6 @@ public class HomeService {
     }
 
 
-
     //keyword를 통해 events 찾기
     public List<CultureInfo> searchCulturalEvents(String keyword) {
         List<CultureInfo> allEvents = getAllCultureInfoApiSortedByMonth();
@@ -187,8 +186,13 @@ public class HomeService {
 
             int monthValue;
             int monthValue2;
+            int yearValue;
+            int yearValue2;
+
             LocalDate date = null;
             LocalDate date2 = null;
+            LocalDate year = null;
+            LocalDate year2 = null;
 
 
             // "2024-12-07~2024-12-07" 형태일 때
@@ -200,10 +204,18 @@ public class HomeService {
                 String secondDatePart = dateString.split("~")[1];
 
                 // dateString을 LocalDate 객체로 파싱
+
+                year = LocalDate.parse(secondDatePart, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                year2 = LocalDate.parse(secondDatePart, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+
                 date = LocalDate.parse(firstDatePart, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 date2 = LocalDate.parse(secondDatePart, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-                //4월~6월
+                //
+
+                yearValue = year.getYear();
+                yearValue2 = year2.getYear();
 
                 // LocalDate 객체에서 월을 추출 (1 ~ 12 범위의 값)
                 monthValue = date.getMonthValue();
@@ -212,6 +224,8 @@ public class HomeService {
                 int m = Integer.parseInt(month);
 
                 if (monthValue <= m && m <= monthValue2) {
+
+                    if(yearValue2 != 2024) continue;
 
                     filteredList.add(info);
                 }
@@ -222,16 +236,20 @@ public class HomeService {
                 // '~'를 기준으로 문자열을 분할하고 첫 번째 날짜 부분만 사용
                 String firstDatePart = dateString.split("~")[0];
 
+                year = LocalDate.parse(firstDatePart, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
                 // dateString을 LocalDate 객체로 파싱
                 date = LocalDate.parse(firstDatePart, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
 
                 // LocalDate 객체에서 월을 추출 (1 ~ 12 범위의 값)
                 monthValue = date.getMonthValue();
+                yearValue = year.getYear();
 
                 String str = String.valueOf(monthValue);
 
                 if (str.equals(month)) {
+                    if(yearValue != 2024) continue;
 
                     filteredList.add(info);
                 }
@@ -250,7 +268,7 @@ public class HomeService {
 
     public Page<CultureInfo> paging (int pageNumber, int pageSize) {
 
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
         return eventsRepository.findAll(pageable);
 
     }
