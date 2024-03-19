@@ -1,10 +1,8 @@
 package com.project.Seoul.controller;
 
 import com.project.Seoul.domain.CultureInfo;
-import com.project.Seoul.repository.EventsRepository;
 import com.project.Seoul.service.HomeService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,22 +23,18 @@ public class HomeController {
         this.homeService = homeService;
     }
 
-
-
     @GetMapping("/home")
     public String homepage(Model model,
                            @RequestParam(defaultValue = "1", name = "page") int page,
                            @RequestParam(defaultValue = "24", name = "size") int size) {
         
-        List<CultureInfo> list = homeService.getAllCultureInfoApiSortedByMonth();
 
-        for (CultureInfo cultureInfo : list) {
-            homeService.saveEvents(cultureInfo);
-        }
 
         // 페이징을 처리하기 전에 총 페이지 수를 미리 계산해야 합니다.
         // 이 예제에서는 homeService.getTotalPages(size) 메서드가 총 페이지 수를 반환한다고 가정합니다.
-        int totalPageCount = homeService.getTotalPages(size);
+        List<CultureInfo> allCultureInfoApi = homeService.getAllCultureInfoApi();
+        int eventSize = allCultureInfoApi.size();
+        int totalPageCount = homeService.getTotalPages(size, eventSize);
 
         // 페이지 번호 조정 로직을 여기로 이동
         int blockLimit = 10;

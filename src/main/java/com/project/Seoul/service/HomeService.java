@@ -1,9 +1,7 @@
 package com.project.Seoul.service;
 
 import com.google.gson.Gson;
-import com.project.Seoul.domain.CulturalEventInfoWrapper;
-import com.project.Seoul.domain.CultureInfo;
-import com.project.Seoul.domain.FavoriteCultureInfo;
+import com.project.Seoul.domain.*;
 import com.project.Seoul.repository.EventsRepository;
 import com.project.Seoul.repository.FavoriteEventsRepository;
 import org.modelmapper.ModelMapper;
@@ -35,6 +33,7 @@ public class HomeService {
 
 
     //문화행사 정보 api
+    /*
     public List<CultureInfo> getAllCultureInfoApi() {
 
         //RestTemplate응 이용해 api 받아오는 방법
@@ -56,6 +55,36 @@ public class HomeService {
         return curtureInfoList;
     }
 
+     */
+
+    public List<CultureInfo> getAllCultureInfoApi() {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.getForEntity("http://openapi.seoul.go.kr:8088/5a6f416d79776c6735304c6142424e/json/culturalEventInfo/1/1000", String.class);
+
+        String jsonInput = response.getBody();
+
+        Gson gson = new Gson();
+        CulturalEventInfoWrapper wrapper = gson.fromJson(jsonInput, CulturalEventInfoWrapper.class);
+
+        List<CultureInfo> cultureInfoList = wrapper.getCulturalEventInfo().getRow();
+
+        // Remove items where the start date is in 2023 or the end date is not in 2024
+        cultureInfoList.removeIf(info -> {
+            String date = info.getDATE();
+            if (date.contains(" ~ ")) {
+                String[] dates = date.split(" ~ ");
+                String startDate = dates[0];
+                String endDate = dates[1];
+                return startDate.startsWith("2023-") || !endDate.startsWith("2024-");
+            } else {
+                return date.startsWith("2023-");
+            }
+        });
+
+        return cultureInfoList;
+    }
+
+
 
     public List<CultureInfo> getAllCultureInfoApiSortedByMonth() {
         List<CultureInfo> cultureInfoList = getAllCultureInfoApi(); // 이전에 API로부터 받아온 리스트를 가져옴
@@ -63,6 +92,7 @@ public class HomeService {
                 .sorted(Comparator.comparing(CultureInfo::getDATE))
                 .collect(Collectors.toList());
     }
+
 
 
     //keyword를 통해 events 찾기
@@ -273,9 +303,9 @@ public class HomeService {
 
     }
 
-    public int getTotalPages(int size) {
+    public int getTotalPages(int size, int eventSize) {
 
-        return (int) Math.ceil((double) 1000 /size);
+        return (int) Math.ceil((double) eventSize /size);
     }
 
 
