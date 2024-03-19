@@ -1,9 +1,7 @@
 package com.project.Seoul.service;
 
 import com.google.gson.Gson;
-import com.project.Seoul.domain.CulturalEventInfoWrapper;
-import com.project.Seoul.domain.CultureInfo;
-import com.project.Seoul.domain.FavoriteCultureInfo;
+import com.project.Seoul.domain.*;
 import com.project.Seoul.repository.EventsRepository;
 import com.project.Seoul.repository.FavoriteEventsRepository;
 import org.modelmapper.ModelMapper;

@@ -1,10 +1,8 @@
 package com.project.Seoul.controller;
 
 import com.project.Seoul.domain.CultureInfo;
-import com.project.Seoul.repository.EventsRepository;
 import com.project.Seoul.service.HomeService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,8 +22,6 @@ public class HomeController {
     public HomeController(HomeService homeService) {
         this.homeService = homeService;
     }
-
-
 
     @GetMapping("/home")
     public String homepage(Model model,

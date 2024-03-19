@@ -129,7 +129,6 @@
           overflow:hidden;
           padding-top: 2%;
           padding-bottom: 2%;
-          background-color: rgba(230, 230, 230, 0.7);
           border-radius: 20px;
         }
 
@@ -154,7 +153,6 @@
             margin-top: 10px; /* 이미지와 타이틀 사이의 간격 조정 */
             /* 기타 스타일링 옵션 */
             background-color: white;
-            font-weight: bold;
             padding-top: 10px;
             padding-bottom: 10px;
             padding-left: 10px;
@@ -205,16 +203,65 @@
 </head>
 <body>
 <div id="content">
-
     <div class="background-image-container">
-    <div>
+    <div class="header" style="display: flex; align-items: center; justify-content: center;">
+        <div class="weather" style="display:flex; align-items: center; justify-content: center; background-color: white; padding: 10px; border-radius: 20px; opacity: 0.8; position: absolute;
+                                    left: 15%; top: 5%; justify-content: center">
+            <div class='CurrIcon'></div>
+            <div class="weather-info" style="display: flex; flex-direction: column; align-items: flex-start; padding-right: 10px;">
+                <div class='CurrTemp' style="text-align: center; font-size: 30px; font-weight: bold;"></div>
+                <div class='City' style="text-align: center; font-size: 30px; font-weight: bold;"></div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function (){
+                $.ajax({
+                    url: 'https://api.openweathermap.org/data/2.5/weather?q=Seoul&appid=5d9b3b800dfed24a20f68eeb480f5d9d&units=metric',
+                    dataType:'json',
+                    type:'GET',
+                    success: function (data){
+                        var iconUrl = 'http://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png';
+                        var temperature = Math.floor(data.main.temp) + '°C';
+                        var city = data.name;
+
+                        $('.CurrIcon').html('<img src="' + iconUrl + '">');
+                        $('.CurrTemp').text(temperature);
+                        $('.City').text(city);
+                    }
+                })
+            });
+        </script>
         <h1>
-            <a href="home" style="text-decoration: none">
+            <a href="home" style="text-decoration: none;">
                 서울은 지금
             </a>
         </h1>
 
-    </div><br>
+    <div id="clock" style="color: black; display: flex; flex-direction: column; background-color: white;
+     padding:10px; border-radius: 20px; font-weight: bold; opacity: 0.8; position: absolute; top:8%; right: 12%;">
+        <div id="date" style="font-size: 30px">날짜</div>
+        <div id="time" style="font-size: 30px; text-align: center">시간</div>
+    </div>
+    </div>
+    <script>
+        function clock() {
+            var now = new Date();
+            var month = now.getMonth();
+            var date = now.getDate();
+            var day = now.getDay();
+            var week = ['일', '월', '화', '수', '목', '금', '토'];
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var seconds = now.getSeconds();
+
+            document.getElementById('date').innerText = `${month + 1}월 ${date}일 ${week[day]}요일`;
+            document.getElementById('time').innerText = `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
+        }
+        clock();
+        setInterval(clock, 1000); // 1초마다 실행
+    </script>
+        <br>
 
     <div class="swiper-container">
         <!-- 슬라이더의 각 슬라이드를 담을 래퍼 -->
