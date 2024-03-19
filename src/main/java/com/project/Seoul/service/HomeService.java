@@ -33,6 +33,7 @@ public class HomeService {
 
 
     //문화행사 정보 api
+    /*
     public List<CultureInfo> getAllCultureInfoApi() {
 
         //RestTemplate응 이용해 api 받아오는 방법
@@ -53,6 +54,36 @@ public class HomeService {
 
         return curtureInfoList;
     }
+
+     */
+
+    public List<CultureInfo> getAllCultureInfoApi() {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.getForEntity("http://openapi.seoul.go.kr:8088/5a6f416d79776c6735304c6142424e/json/culturalEventInfo/1/1000", String.class);
+
+        String jsonInput = response.getBody();
+
+        Gson gson = new Gson();
+        CulturalEventInfoWrapper wrapper = gson.fromJson(jsonInput, CulturalEventInfoWrapper.class);
+
+        List<CultureInfo> cultureInfoList = wrapper.getCulturalEventInfo().getRow();
+
+        // Remove items where the start date is in 2023 or the end date is not in 2024
+        cultureInfoList.removeIf(info -> {
+            String date = info.getDATE();
+            if (date.contains(" ~ ")) {
+                String[] dates = date.split(" ~ ");
+                String startDate = dates[0];
+                String endDate = dates[1];
+                return startDate.startsWith("2023-") || !endDate.startsWith("2024-");
+            } else {
+                return date.startsWith("2023-");
+            }
+        });
+
+        return cultureInfoList;
+    }
+
 
 
     public List<CultureInfo> getAllCultureInfoApiSortedByMonth() {
@@ -185,8 +216,13 @@ public class HomeService {
 
             int monthValue;
             int monthValue2;
+            int yearValue;
+            int yearValue2;
+
             LocalDate date = null;
             LocalDate date2 = null;
+            LocalDate year = null;
+            LocalDate year2 = null;
 
 
             // "2024-12-07~2024-12-07" 형태일 때
@@ -198,10 +234,18 @@ public class HomeService {
                 String secondDatePart = dateString.split("~")[1];
 
                 // dateString을 LocalDate 객체로 파싱
+
+                year = LocalDate.parse(secondDatePart, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                year2 = LocalDate.parse(secondDatePart, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+
                 date = LocalDate.parse(firstDatePart, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 date2 = LocalDate.parse(secondDatePart, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-                //4월~6월
+                //
+
+                yearValue = year.getYear();
+                yearValue2 = year2.getYear();
 
                 // LocalDate 객체에서 월을 추출 (1 ~ 12 범위의 값)
                 monthValue = date.getMonthValue();
@@ -210,6 +254,8 @@ public class HomeService {
                 int m = Integer.parseInt(month);
 
                 if (monthValue <= m && m <= monthValue2) {
+
+                    if(yearValue2 != 2024) continue;
 
                     filteredList.add(info);
                 }
@@ -220,16 +266,20 @@ public class HomeService {
                 // '~'를 기준으로 문자열을 분할하고 첫 번째 날짜 부분만 사용
                 String firstDatePart = dateString.split("~")[0];
 
+                year = LocalDate.parse(firstDatePart, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
                 // dateString을 LocalDate 객체로 파싱
                 date = LocalDate.parse(firstDatePart, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
 
                 // LocalDate 객체에서 월을 추출 (1 ~ 12 범위의 값)
                 monthValue = date.getMonthValue();
+                yearValue = year.getYear();
 
                 String str = String.valueOf(monthValue);
 
                 if (str.equals(month)) {
+                    if(yearValue != 2024) continue;
 
                     filteredList.add(info);
                 }
@@ -248,14 +298,14 @@ public class HomeService {
 
     public Page<CultureInfo> paging (int pageNumber, int pageSize) {
 
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
         return eventsRepository.findAll(pageable);
 
     }
 
-    public int getTotalPages(int size) {
+    public int getTotalPages(int size, int eventSize) {
 
-        return (int) Math.ceil((double) 1000 /size);
+        return (int) Math.ceil((double) eventSize /size);
     }
 
 
