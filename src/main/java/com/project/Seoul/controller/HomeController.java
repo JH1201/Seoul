@@ -26,7 +26,7 @@ public class HomeController {
     @GetMapping("/home")
     public String homepage(Model model,
                            @RequestParam(defaultValue = "1", name = "page") int page,
-                           @RequestParam(defaultValue = "24", name = "size") int size) {
+                           @RequestParam(defaultValue = "30", name = "size") int size) {
         
 
 

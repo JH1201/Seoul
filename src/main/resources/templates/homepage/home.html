@@ -110,25 +110,105 @@
                 <div th:each="item : ${items}" class="swiper-slide">
                     <div class="image-container">
                         <a th:href="@{/eventInfo(title=${item.TITLE})}">
-                            <img th:src="${item.MAIN_IMG}" alt="Image"/></a>
+                            <img th:src="${item.MAIN_IMG}" alt="Image"/>
+                        </a>
                     </div>
-                    <!--<div class="title">
+                    <div class="title">
                         <h3 th:text="${item.TITLE}">Item Title</h3>
-                    </div>-->
+                    </div>
                 </div>
             </div>
             <div class="swiper-pagination"></div>
             <!--<div class="swiper-button-prev"></div>
             <div class="swiper-button-next"></div>-->
-        </div><br><br>
+        </div>
     </div>
 
 
     <div class="search-container">
-        <form class="search-part" id="searchForm" action="/search" method="get">
-            <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요." required><button class="search-button" type="submit">🔍︎</button>
-        </form>
+        <div class="searchUpPart">
+            <div>
+                <label for="date1"> 시작 날짜:
+                    <input type="date" id="date1"></input>
+                </label>
+
+            </div>
+            -
+            <div>
+                <label for="date2"> 종료 날짜:
+                    <input type="date" id="date2" value="2024-12-31"></input>
+                </label>
+            </div>
+            <div>
+                <form class="search-part" id="searchForm" action="/search" method="get">
+                    <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요." required>
+                    <button class="search-button" type="submit">🔍︎</button>
+                </form>
+            </div>
+        </div>
+        <div class="searchDownPart">
+            <div>
+                <label><input type="checkbox" name="codename" value="전체"> 전체</label>
+                <label><input type="checkbox" name="codename" value="공연"> 공연</label>
+                <label><input type="checkbox" name="codename" value="전시"> 전시</label>
+                <label><input type="checkbox" name="codename" value="축제"> 축제</label>
+                <label><input type="checkbox" name="codename" value="기타"> 기타</label>
+            </div>
+
+            <div class="locationName">
+                <select id="location" onchange="sort()">
+                    <option value="종로구" th:selected="${selectedMonth == '종로구'}">종로구</option>
+                    <!--<option value="즐겨찾기" th:selected="${selectedMonth == '즐겨찾기'}">즐겨찾기</option>-->
+                    <option value="강남구" th:selected="${selectedMonth == '강남구'}">강남구</option>
+                    <option value="강서구" th:selected="${selectedMonth == '강서구'}">강서구</option>
+                    <option value="중구" th:selected="${selectedMonth == '중구'}">중구</option>
+                    <option value="마포구" th:selected="${selectedMonth == '마포구'}">마포구</option>
+                    <option value="은평구" th:selected="${selectedMonth == '은평구'}">은평구</option>
+
+                </select>
+
+                <script>
+                    function sort() {
+                        var selectedOption = document.getElementById('sortOptions').value;
+                        // 서버로 GET 요청 보내기
+                        fetch(`/get함수이름?지역=${location}`)
+                            .then(response => response.text())
+                            .then(html => {
+                                // 페이지의 일부를 서버의 응답으로 업데이트
+                                document.getElementById('content').innerHTML = html;
+                            })
+                            .catch(error => console.error('Error:', error));
+                    }
+                </script>
+            </div>
+
+        </div>
+
+
     </div><br>
+
+    <script>
+        // 현재 날짜를 가져오는 함수
+        function getCurrentDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            let month = today.getMonth() + 1;
+            let day = today.getDate();
+
+            // 월과 일이 한 자리 숫자인 경우 앞에 0을 추가해줍니다.
+            if (month < 10) {
+                month = '0' + month;
+            }
+            if (day < 10) {
+                day = '0' + day;
+            }
+
+            return `${year}-${month}-${day}`;
+        }
+
+        // input 요소의 value 속성에 현재 날짜를 설정합니다.
+        document.getElementById('date1').value = getCurrentDate();
+    </script>
 
 
 
@@ -167,19 +247,32 @@
             }
         </script>
     </div>
-    <br><br>
+    <br>
     <div id="eventsContainer">
     <!-- 검색 결과 표시 -->
         <div th:if="${lists != null}" th:unless="${lists.isEmpty()}">
             <div class="items-grid">
                 <div  th:each="event : ${lists}" class="item">
-                    <!--<div class="star" th:data-culture-info-id="${event.Id}">★</div>-->
-                    <a th:href="@{/eventInfo(title=${event.TITLE})}">
-                        <img th:src="${event.MAIN_IMG}" alt="Event Image" width="200" height="280">
-                    </a>
-                    <div class="gridText">
-                        <span th:text="${event.TITLE}" ></span>
+                    <div style="padding: 10px">
+                        <!--<div class="star" th:data-culture-info-id="${event.Id}">★</div>-->
+                        <a th:href="@{/eventInfo(title=${event.TITLE})}">
+                            <img th:src="${event.MAIN_IMG}" alt="Event Image" width="200" height="280">
+                        </a>
+                        <div class="gridText">
+                            <span th:text="${event.TITLE}" ></span>
+                        </div>
+                        <br><br>
+                        <!--<div>
+                            <span th:text="${event.PLACE}"></span>
+                        </div>
+                        <br>
+                        <div>
+                            <span th:text="${event.STRTDATE} "></span>
+                            ~
+                            <span th:text="${event.END_DATE}"></span>
+                        </div>-->
                     </div>
+
                 </div>
             </div>
         </div>
