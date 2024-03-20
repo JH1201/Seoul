@@ -1,0 +1,253 @@
+
+@font-face {
+    font-family: 'TTHakgyoansimMulgyeolB';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2402_keris@1.0/TTHakgyoansimMulgyeolB.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SokchoBadaBatang';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2402_1@1.0/SokchoBadaBatang.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+
+.header {
+    border-bottom: 1px solid black;
+    display: flex;
+    align-items: center;
+}
+h1 {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 35px;
+    padding-bottom: 35px;
+    padding-left: 50px;
+    font-size: 45px;
+    font-family:'TTHakgyoansimMulgyeolB';
+}
+
+
+h1 a:visited { color: darkblue; }
+
+a {text-decoration: none;}
+
+.weather-toMap-container {
+    display: flex;
+    align-items: center;
+}
+
+.ToMAP {
+    /* 필요한 경우 여기에 margin-right를 추가하여 간격 조정 */
+    margin-left: 20px; /* 예시: .weather와의 간격 */
+}
+
+.ToMAP img {
+    width: 65px; /* 원하는 너비로 설정 */
+    height: 65px; /* 이미지의 비율을 유지하기 위해 'auto'로 설정 */
+}
+
+
+.weather {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.clock {
+    color: black;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    padding:10px;
+    border-radius: 20px;
+    font-weight: bold;
+    opacity: 0.8;
+    position: absolute;
+    top:8%;
+    right: 12%;
+}
+
+
+.background-image-container {
+    position: relative; /* 가상 요소의 위치 기준점 */
+    border-bottom: 1px solid black;
+}
+
+
+.background-image-container::before {
+    content: ""; /* 필수 속성 */
+    position: absolute; /* 부모 컨테이너에 대해 절대 위치 */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("/image/hangang.jpg"); /* 배경 이미지 URL */
+    background-size: cover;
+    background-position: center center;
+    opacity: 0.5; /* 이 부분에서 투명도 조절 */
+    z-index: -1; /* 컨텐츠가 가상 요소보다 위에 오도록 */
+}
+
+
+.swiper-container {
+    width: 94%;
+    height: 100%;
+    margin: auto;
+    overflow:hidden;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    border-radius: 20px;
+}
+
+.swiper-wrapper {
+    /* image와 title 위아래로 묶어주기 위해 사용 */
+}
+
+.swiper-slide {
+    display: block;
+}
+
+.image-container img {
+    width: 290px; /* 이미지 크기 조정 */
+    height: 420px;
+    box-shadow: 3px 3px 6px black;
+    text-align: center;
+}
+
+.title {
+    background-color: transparent;
+    padding-top: 10px;
+    width: 290px;
+    text-align: center;
+}
+
+
+* { box-sizing: border-box; }
+body { font-family: Arial, sans-serif; font-family: 'SokchoBadaBatang'; }
+
+
+
+.search-container {
+    margin-top: 4%;
+    margin-bottom: 2%;
+    margin-right: 8%;
+    margin-left: 8%;
+    padding-top: 1%;
+    padding-bottom: 2%;
+
+    display: flex;
+    justify-content: center; /* 검색창을 중앙으로 */
+    border: 1px solid black;
+    flex-direction: column;
+}
+
+.searchUpPart {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    padding-bottom: 1%;
+    border-bottom: 1px solid gray;
+}
+
+
+
+.search-part {
+    display: flex;
+}
+
+.search-bar {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    height: 45px;
+}
+
+.search-button {
+    width: 65px;
+    height: 45px; /* 버튼의 높이 조절 */
+    font-size: 40px;
+    background-color: #C5D74A;
+    color: white;
+    cursor: pointer;
+}
+
+.searchDownPart {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    padding-bottom: 1%;
+}
+
+.sort-part {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-right: 8%;
+}
+
+#sortOptions {
+    width: 150px; /* 드롭다운 박스의 너비를 늘립니다 */
+    height: 40px; /* 드롭다운 박스의 높이를 늘립니다 */
+    font-size: 16px; /* 드롭다운 박스 내의 텍스트 크기를 조절합니다 */
+    border-radius: 10px;
+}
+
+.eventsContainer {
+    margin-left: 8%;
+    margin-right: 8%;
+}
+
+.items-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    margin-left: 8%;
+    margin-right: 8%;
+}
+
+.items-grid img {
+    text-align: center;
+    width: 90%;
+    height: 360px;
+}
+
+.item {
+    border: 1px solid black;
+    /*border-radius: 10px;*/
+    text-align: center;
+    background-color: transparent;
+    /*box-shadow: 2px 2px 5px;*/
+}
+
+.gridText {
+    padding-top: 20px;
+    text-align: center;
+}
+
+
+
+
+.button_number {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.button_number button {
+    border-radius: 15px;
+    font-size: 20px;
+    background-color:#C5D74A;
+    height: 40px;
+    width: 40px;
+    border: none;
+    margin: 0 3px;
+}
+
+.button_number a {
+    color: white;
+    font-weight: bold;
+}
