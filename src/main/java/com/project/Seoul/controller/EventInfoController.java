@@ -36,6 +36,7 @@ public class EventInfoController {
         model.addAttribute("lot", oneCultureInfoApi.getLOT());
         model.addAttribute("date", oneCultureInfoApi.getDATE());
         model.addAttribute("main_img", oneCultureInfoApi.getMAIN_IMG());
+        model.addAttribute("place", oneCultureInfoApi.getPLACE());
         model.addAttribute("free", oneCultureInfoApi.getIS_FREE());
         model.addAttribute("fee", oneCultureInfoApi.getUSE_FEE());
         model.addAttribute("program", oneCultureInfoApi.getPROGRAM());
