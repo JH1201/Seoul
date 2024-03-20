@@ -30,11 +30,15 @@ public class EventInfoController {
         // 뷰(웹 페이지) 템플릿으로 넘길 때 사용
         model.addAttribute("title", oneCultureInfoApi.getTITLE());
         model.addAttribute("homePage", oneCultureInfoApi.getORG_LINK());
+        model.addAttribute("detailaddress", oneCultureInfoApi.getHMPG_ADDR());
         model.addAttribute("detail", oneCultureInfoApi.getHMPG_ADDR());
         model.addAttribute("lat", oneCultureInfoApi.getLAT());
         model.addAttribute("lot", oneCultureInfoApi.getLOT());
         model.addAttribute("date", oneCultureInfoApi.getDATE());
         model.addAttribute("main_img", oneCultureInfoApi.getMAIN_IMG());
+        model.addAttribute("free", oneCultureInfoApi.getIS_FREE());
+        model.addAttribute("fee", oneCultureInfoApi.getUSE_FEE());
+        model.addAttribute("program", oneCultureInfoApi.getPROGRAM());
 
 
         return "/homepage/eventInfo";
