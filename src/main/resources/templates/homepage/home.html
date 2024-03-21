@@ -127,14 +127,19 @@
     <div class="search-container">
         <div class="searchUpPart">
             <div class="dateSearch">
-                <label for="date1">
-                    <input type="date" id="date1"></input>
-                </label>
-             ~
-                <label for="date2">
-                    <input type="date" id="date2" value="2024-12-31"></input>
-                </label>
+                <div class="date">
+                    <label for="date1">
+                        <input type="date" id="date1"></input>
+                    </label>
+                </div>
+                <div class="date" style="display: flex; align-items: center; height: 60px;"> ~ </div>
+                <div class="date">
+                    <label for="date2">
+                        <input type="date" id="date2" value="2024-12-31"></input>
+                    </label>
+                </div>
             </div>
+
             <div>
                 <form class="search-part" id="searchForm" action="/search" method="get">
                     <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요." required>
@@ -239,7 +244,7 @@
                             const anyChecked = Array.from(parentDiv.querySelectorAll('input[type="checkbox"]:not([value="전체"])')).some(cb => cb.checked);
                             if (!anyChecked) {
                                 // 모든 체크박스가 해제되면 '전체' 체크박스를 자동으로 선택하지 않음
-                                allCheckbox.checked = true;
+                                allCheckbox.checked = false;
                             }
                         }
                     });

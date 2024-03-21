@@ -37,7 +37,7 @@ a {text-decoration: none;}
 .weather-toMap-container {
     display: flex;
     position: relative;
-    left: 1150px;
+    left: 63%;
 }
 
 .ToMAP {
@@ -136,17 +136,20 @@ a {text-decoration: none;}
 body { font-family: 'SokchoBadaBatang'; }
 
 .dateSearch {
+    display: flex;
+    flex-direction: row;
     padding: 10px;
     margin-right: 10%;
     border-radius: 20px;
 }
+
 
 #date1 {
     padding: 10px;
     border:2px solid darkgray;
     border-radius: 10px;
     width: 200px;
-    height: 50px;
+    height: 60px;
     font-size: 20px;
     color: darkgray;
     font-family: 'SokchoBadaBatang';
@@ -157,7 +160,7 @@ body { font-family: 'SokchoBadaBatang'; }
     border:2px solid darkgray;
     border-radius: 10px;
     width: 200px;
-    height: 50px;
+    height: 60px;
     font-size: 20px;
     color: darkgray;
     font-family: 'SokchoBadaBatang';
@@ -178,24 +181,43 @@ body { font-family: 'SokchoBadaBatang'; }
 
 .searchUpPart {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
+    padding-left: 15%;
     flex-direction: row;
     padding-bottom: 1%;
 }
 
+
+.date {
+    font-size: 16px;
+    padding: 10px;
+}
+
+/*.search-part {
+    display: flex;
+    justify-content: center;
+    padding-left: 100px;
+}*/
+
+/*.search-bar {
+    width: 100%;
+=======*/
+
 .search-part {
     position: relative;
     display: inline-block;
-    padding-top: 9px;
+    margin-top: 20px;
+    right: 10%
 }
 
 .search-bar {
     width: 600px;
     padding: 10px;
-    font-size: 16px;
-    height: 50px;
+    font-size: 20px;
+    height: 60px;
     border-radius:10px;
     border: 2px solid darkgray;
+    font-family: 'SokchoBadaBatang';
 }
 
 .search-button {
@@ -205,17 +227,19 @@ body { font-family: 'SokchoBadaBatang'; }
     color: darkgray;
     cursor: pointer;
     position: absolute;
-    right: 10px;
-    bottom:1px;
+    right: 8px;
+    bottom:5px;
     background-color: rgba(0, 0, 0, 0);
     border: 0
 }
 
 .searchDownPart {
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 2%;
+    flex-direction: column;
+    padding-top: 2%;
     padding-bottom: 1%;
-    padding-left: 5%;
-    padding: 40px;
-    padding-top: 45px;
     border-radius: 30px;
 }
 
