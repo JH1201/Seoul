@@ -13,11 +13,13 @@
 }
 
 
-
 .header {
     display: flex;
     align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
 }
+
 h1 {
     display: flex;
     align-items: center;
@@ -34,10 +36,16 @@ h1 a:visited { color: darkblue; }
 
 a {text-decoration: none;}
 
+
 .weather-toMap-container {
     display: flex;
     position: relative;
-    left: 63%;
+}
+
+.ToMAP img {
+    width: 65px; /* 원하는 너비로 설정 */
+    height: 65px; /* 이미지의 비율을 유지하기 위해 'auto'로 설정 */
+    padding-bottom: 15px;
 }
 
 .ToMAP {
@@ -45,12 +53,6 @@ a {text-decoration: none;}
     margin-left: 20px; /* 예시: .weather와의 간격 */
     margin-top: 13px;
 }
-
-.ToMAP img {
-    width: 65px; /* 원하는 너비로 설정 */
-    height: 65px; /* 이미지의 비율을 유지하기 위해 'auto'로 설정 */
-}
-
 
 .weather {
     display: flex;
@@ -135,14 +137,6 @@ a {text-decoration: none;}
 * { box-sizing: border-box; }
 body { font-family: 'SokchoBadaBatang'; }
 
-.dateSearch {
-    display: flex;
-    flex-direction: row;
-    padding: 10px;
-    margin-right: 10%;
-    border-radius: 20px;
-}
-
 
 #date1 {
     padding: 10px;
@@ -178,36 +172,34 @@ body { font-family: 'SokchoBadaBatang'; }
     justify-content: center;
     flex-direction: column;
 }
+@media (min-width: 1000px) {
+    .searchUpPart {
+        display: flex;
+        justify-content: space-around;
+        flex-direction: row;
+        padding-bottom: 1%;
+        margin-bottom: 20px;
+    }
 
-.searchUpPart {
-    display: flex;
-    justify-content: flex-start;
-    padding-left: 15%;
-    flex-direction: row;
-    padding-bottom: 1%;
+    .searchUpPart:nth-child(2) {
+        margin-top: 20px; /* 원하는 마진 값 */
+    }
+
 }
 
+.dateSearch {
+    display: flex;
+    flex-direction: row;
+    border-radius: 20px;
+}
 
 .date {
     font-size: 16px;
-    padding: 10px;
 }
-
-/*.search-part {
-    display: flex;
-    justify-content: center;
-    padding-left: 100px;
-}*/
-
-/*.search-bar {
-    width: 100%;
-=======*/
 
 .search-part {
     position: relative;
     display: inline-block;
-    margin-top: 20px;
-    right: 10%
 }
 
 .search-bar {
@@ -260,6 +252,7 @@ body { font-family: 'SokchoBadaBatang'; }
 
 .eventType, .locationName {
     display: flex;
+    justify-content: left;
     flex-wrap: wrap;
     gap: 10px;
 }

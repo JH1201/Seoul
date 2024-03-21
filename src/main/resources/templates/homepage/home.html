@@ -19,89 +19,67 @@
                 </a>
             </h1>
 
-           <div class="weather-toMap-container">
-               <div class="weather">
+            <div class="weather-toMap-container">
+                <div class="weather">
 
-                   <div class='CurrIcon'></div>
-                   <div class="weather-info" style="display: flex; flex-direction: column; align-items: flex-start; position: relative; right: 10px;">
-                       <div class='CurrTemp' style="text-align: center; font-size: 20px; font-weight: bold;"></div>
-                       <div class='City' style="text-align: center; font-size: 20px; font-weight: bold;"></div>
-                   </div>
-               </div>
+                    <div class="ToMAP">
+                        <a href="/mapPage" style="text-decoration: none">
+                            <img src="image/map.png" alt="지도 보기">
+                        </a>
+                    </div>
 
-               <div class="ToMAP">
-                   <a href="/mapPage" style="text-decoration: none">
-                       <img src="image/map.png" alt="지도 보기">
-                   </a>
-               </div>
-
-               <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-               <script>
-                   $(document).ready(function (){
-                       $.ajax({
-                           url: 'https://api.openweathermap.org/data/2.5/weather?q=Seoul&appid=5d9b3b800dfed24a20f68eeb480f5d9d&units=metric',
-                           dataType:'json',
-                           type:'GET',
-                           success: function (data){
-                               var iconUrl = 'http://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png';
-                               var temperature = Math.floor(data.main.temp) + '°C';
-                               var city = data.name;
-
-                               $('.CurrIcon').html('<img src="' + iconUrl + '">');
-                               $('.CurrTemp').text(temperature);
-                               $('.City').text(city);
-                           }
-                       })
-                   });
-               </script>
-
-               <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-               <script>
-                   $(document).ready(function (){
-                       $.ajax({
-                           url: 'https://api.openweathermap.org/data/2.5/weather?q=Seoul&appid=5d9b3b800dfed24a20f68eeb480f5d9d&units=metric',
-                           dataType:'json',
-                           type:'GET',
-                           success: function (data){
-                               var iconUrl = 'http://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png';
-                               var temperature = Math.floor(data.main.temp) + '°C';
-                               var city = data.name;
-
-                               $('.CurrIcon').html('<img src="' + iconUrl + '">');
-                               $('.CurrTemp').text(temperature);
-                               $('.City').text(city);
-                           }
-                       })
-                   });
-               </script>
+                    <div class='CurrIcon'></div>
+                    <div class="weather-info" style="display: flex; flex-direction: column; align-items: flex-start; position: relative; right: 10px;">
+                        <div class='CurrTemp' style="text-align: center; font-size: 20px; font-weight: bold;"></div>
+                        <div class='City' style="text-align: center; font-size: 20px; font-weight: bold;"></div>
+                    </div>
+                </div>
 
 
-               <!--<div id="clock">
-                   <div id="date" style="font-size: 30px">날짜</div>
-                   <div id="time" style="font-size: 30px; text-align: center">시간</div>
-               </div>-->
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script>
+                    $(document).ready(function (){
+                        $.ajax({
+                            url: 'https://api.openweathermap.org/data/2.5/weather?q=Seoul&appid=5d9b3b800dfed24a20f68eeb480f5d9d&units=metric',
+                            dataType:'json',
+                            type:'GET',
+                            success: function (data){
+                                var iconUrl = 'http://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png';
+                                var temperature = Math.floor(data.main.temp) + '°C';
+                                var city = data.name;
 
-           </div>
+                                $('.CurrIcon').html('<img src="' + iconUrl + '">');
+                                $('.CurrTemp').text(temperature);
+                                $('.City').text(city);
+                            }
+                        })
+                    });
+                </script>
+
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script>
+                    $(document).ready(function (){
+                        $.ajax({
+                            url: 'https://api.openweathermap.org/data/2.5/weather?q=Seoul&appid=5d9b3b800dfed24a20f68eeb480f5d9d&units=metric',
+                            dataType:'json',
+                            type:'GET',
+                            success: function (data){
+                                var iconUrl = 'http://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png';
+                                var temperature = Math.floor(data.main.temp) + '°C';
+                                var city = data.name;
+
+                                $('.CurrIcon').html('<img src="' + iconUrl + '">');
+                                $('.CurrTemp').text(temperature);
+                                $('.City').text(city);
+                            }
+                        })
+                    });
+                </script>
+
+            </div>
         </div>
     </div>
 
-    <script>
-        function clock() {
-            var now = new Date();
-            var month = now.getMonth();
-            var date = now.getDate();
-            var day = now.getDay();
-            var week = ['일', '월', '화', '수', '목', '금', '토'];
-            var hours = now.getHours();
-            var minutes = now.getMinutes();
-            var seconds = now.getSeconds();
-
-            document.getElementById('date').innerText = `${month + 1}월 ${date}일 ${week[day]}요일`;
-            document.getElementById('time').innerText = `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
-        }
-        clock();
-        setInterval(clock, 1000); // 1초마다 실행
-    </script>
     <div class="background-image-container">
         <div class="swiper-container">
             <!-- 슬라이더의 각 슬라이드를 담을 래퍼 -->
@@ -127,25 +105,24 @@
     <div class="search-container">
         <div class="searchUpPart">
             <div class="dateSearch">
-                <div class="date">
+                <div class="date" style="padding-right: 10px">
                     <label for="date1">
                         <input type="date" id="date1"></input>
                     </label>
                 </div>
-                <div class="date" style="display: flex; align-items: center; height: 60px;"> ~ </div>
-                <div class="date">
+                <div class="date" style="display: flex; align-items: center; height: 60px; padding-right: 10px; padding-left: 10px "> ~ </div>
+                <div class="date" style="padding-left: 10px">
                     <label for="date2">
                         <input type="date" id="date2" value="2024-12-31"></input>
                     </label>
                 </div>
             </div>
 
-            <div>
-                <form class="search-part" id="searchForm" action="/search" method="get">
-                    <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요." required>
-                    <button class="search-button" type="submit">🔍︎</button>
-                </form>
-            </div>
+            <form class="search-part" id="searchForm" action="/search" method="get">
+                <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요." required>
+                <button class="search-button" type="submit">🔍︎</button>
+            </form>
+
         </div>
         <br><br>
         <div class="searchDownPart">
