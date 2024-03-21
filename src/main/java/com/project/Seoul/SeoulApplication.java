@@ -23,6 +23,7 @@ public class SeoulApplication {
 
 
 		List<CultureInfo> list = homeService.getAllCultureInfoApiSortedByMonth();
+		System.out.println("list.size = " + list.size());
 
 		for (CultureInfo cultureInfo : list) {
 			homeService.saveEvents(cultureInfo);

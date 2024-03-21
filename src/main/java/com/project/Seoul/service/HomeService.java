@@ -84,10 +84,9 @@ public class HomeService {
         return cultureInfoList;
     }
 
-
-
     public List<CultureInfo> getAllCultureInfoApiSortedByMonth() {
         List<CultureInfo> cultureInfoList = getAllCultureInfoApi(); // 이전에 API로부터 받아온 리스트를 가져옴
+
         return cultureInfoList.stream()
                 .sorted(Comparator.comparing(CultureInfo::getDATE))
                 .collect(Collectors.toList());

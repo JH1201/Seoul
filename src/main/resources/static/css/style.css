@@ -147,21 +147,32 @@ body { font-family: Arial, sans-serif; font-family: 'SokchoBadaBatang'; }
 
 .searchUpPart {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
+    padding-left: 2%;
     flex-direction: row;
     padding-bottom: 1%;
     border-bottom: 1px solid gray;
 }
 
+.dateContainer {
+    display: flex;
+    flex-direction: row;
+}
 
+.date {
+    font-size: 16px;
+    padding: 10px;
+
+}
 
 .search-part {
     display: flex;
+    justify-content: center;
+    padding-left: 100px;
 }
 
 .search-bar {
     width: 100%;
-    padding: 10px;
     font-size: 16px;
     height: 45px;
 }
@@ -177,9 +188,10 @@ body { font-family: Arial, sans-serif; font-family: 'SokchoBadaBatang'; }
 
 .searchDownPart {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
+    padding-left: 2%;
     flex-direction: row;
-    padding-bottom: 1%;
+    padding-top: 2%;
 }
 
 .sort-part {

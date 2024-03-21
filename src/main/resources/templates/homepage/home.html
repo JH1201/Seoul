@@ -127,18 +127,21 @@
 
     <div class="search-container">
         <div class="searchUpPart">
-            <div>
-                <label for="date1"> 시작 날짜:
-                    <input type="date" id="date1"></input>
-                </label>
+            <div class="dateContainer">
+                <div class="date">
+                    <label for="date1"> 시작 날짜:
+                        <input type="date" id="date1"></input>
+                    </label>
 
+                </div>
+                <div class="date"> ~ </div>
+                <div class="date">
+                    <label for="date2"> 종료 날짜:
+                        <input type="date" id="date2" value="2024-12-31"></input>
+                    </label>
+                </div>
             </div>
-            -
-            <div>
-                <label for="date2"> 종료 날짜:
-                    <input type="date" id="date2" value="2024-12-31"></input>
-                </label>
-            </div>
+
             <div>
                 <form class="search-part" id="searchForm" action="/search" method="get">
                     <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요." required>
