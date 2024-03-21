@@ -15,7 +15,6 @@
 
 
 .header {
-    border-bottom: 1px solid black;
     display: flex;
     align-items: center;
 }
@@ -23,10 +22,10 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    padding-top: 35px;
-    padding-bottom: 35px;
+    padding-top: 25px;
+    padding-bottom: 25px;
     padding-left: 50px;
-    font-size: 45px;
+    font-size: 70px;
     font-family:'TTHakgyoansimMulgyeolB';
 }
 
@@ -37,12 +36,14 @@ a {text-decoration: none;}
 
 .weather-toMap-container {
     display: flex;
-    align-items: center;
+    position: relative;
+    left: 1150px;
 }
 
 .ToMAP {
     /* 필요한 경우 여기에 margin-right를 추가하여 간격 조정 */
     margin-left: 20px; /* 예시: .weather와의 간격 */
+    margin-top: 13px;
 }
 
 .ToMAP img {
@@ -61,20 +62,14 @@ a {text-decoration: none;}
     color: black;
     display: flex;
     flex-direction: column;
-    background-color: white;
     padding:10px;
     border-radius: 20px;
     font-weight: bold;
-    opacity: 0.8;
-    position: absolute;
-    top:8%;
-    right: 12%;
 }
 
 
 .background-image-container {
     position: relative; /* 가상 요소의 위치 기준점 */
-    border-bottom: 1px solid black;
 }
 
 
@@ -94,13 +89,12 @@ a {text-decoration: none;}
 
 
 .swiper-container {
-    width: 94%;
+    width: 90%;
     height: 100%;
-    margin: auto;
     overflow:hidden;
     padding-top: 2%;
     padding-bottom: 2%;
-    border-radius: 20px;
+    margin-left: 6%;
 }
 
 .swiper-wrapper {
@@ -114,25 +108,63 @@ a {text-decoration: none;}
 .image-container img {
     width: 290px; /* 이미지 크기 조정 */
     height: 420px;
-    box-shadow: 3px 3px 6px black;
     text-align: center;
+    border-radius: 20px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.image-container img:hover {
+    box-shadow: 4px 4px 10px gray;
+    transform: scale(1.08); /* 이미지를 1.08배 확대 */
 }
 
 .title {
-    background-color: transparent;
-    padding-top: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+    margin-top: 20px;
     width: 290px;
     text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 
 * { box-sizing: border-box; }
-body { font-family: Arial, sans-serif; font-family: 'SokchoBadaBatang'; }
+body { font-family: 'SokchoBadaBatang'; }
 
+.dateSearch {
+    padding: 10px;
+    margin-right: 10%;
+    border-radius: 20px;
+}
 
+#date1 {
+    padding: 10px;
+    border:2px solid darkgray;
+    border-radius: 10px;
+    width: 200px;
+    height: 50px;
+    font-size: 20px;
+    color: darkgray;
+    font-family: 'SokchoBadaBatang';
+}
+
+#date2 {
+    padding: 10px;
+    border:2px solid darkgray;
+    border-radius: 10px;
+    width: 200px;
+    height: 50px;
+    font-size: 20px;
+    color: darkgray;
+    font-family: 'SokchoBadaBatang';
+}
 
 .search-container {
-    margin-top: 4%;
+    margin-top: 2%;
     margin-bottom: 2%;
     margin-right: 8%;
     margin-left: 8%;
@@ -140,8 +172,7 @@ body { font-family: Arial, sans-serif; font-family: 'SokchoBadaBatang'; }
     padding-bottom: 2%;
 
     display: flex;
-    justify-content: center; /* 검색창을 중앙으로 */
-    border: 1px solid black;
+    justify-content: center;
     flex-direction: column;
 }
 
@@ -150,36 +181,92 @@ body { font-family: Arial, sans-serif; font-family: 'SokchoBadaBatang'; }
     justify-content: center;
     flex-direction: row;
     padding-bottom: 1%;
-    border-bottom: 1px solid gray;
 }
 
-
-
 .search-part {
-    display: flex;
+    position: relative;
+    display: inline-block;
+    padding-top: 9px;
 }
 
 .search-bar {
-    width: 100%;
+    width: 600px;
     padding: 10px;
     font-size: 16px;
-    height: 45px;
+    height: 50px;
+    border-radius:10px;
+    border: 2px solid darkgray;
 }
 
 .search-button {
     width: 65px;
-    height: 45px; /* 버튼의 높이 조절 */
-    font-size: 40px;
-    background-color: #C5D74A;
-    color: white;
+    height: 50px; /* 버튼의 높이 조절 */
+    font-size: 30px;
+    color: darkgray;
     cursor: pointer;
+    position: absolute;
+    right: 10px;
+    bottom:1px;
+    background-color: rgba(0, 0, 0, 0);
+    border: 0
 }
 
 .searchDownPart {
-    display: flex;
-    justify-content: center;
-    flex-direction: row;
     padding-bottom: 1%;
+    padding-left: 5%;
+    padding: 40px;
+    padding-top: 45px;
+    border-radius: 30px;
+}
+
+.eventType input[type="checkbox"],
+.locationName input[type="checkbox"] {
+    display: none;
+}
+
+.eventType label,
+.locationName label {
+    cursor: pointer; /* 마우스를 올렸을 때 포인터로 변경 */
+    margin-right: 20px;
+    font-size: 20px;
+    background-color: rgba(220, 220, 220, 0.9);
+    border-radius: 30px;
+    padding: 10px;
+}
+
+.eventType, .locationName {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* 선택된 체크박스에 대한 라벨 스타일을 변경합니다. */
+input[type="checkbox"]:checked + label {
+    font-weight: bold;
+    font-size: 23px;
+    background-color: rgba(200, 200, 200, 0.9);
+    border-radius: 30px;
+    padding: 10px;
+}
+
+.detailButton {
+    text-align: center;
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+.detailButton button {
+    padding: 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    border: 0;
+    font-family: 'SokchoBadaBatang';
+    font-size: 25px;
+    font-weight: bold;
+    padding: 15px;
+    margin-right: 10px;
+    margin-left: 10px;
+    background-color: rgba(220, 220, 220, 0.8);
 }
 
 .sort-part {
@@ -211,25 +298,32 @@ body { font-family: Arial, sans-serif; font-family: 'SokchoBadaBatang'; }
 
 .items-grid img {
     text-align: center;
-    width: 90%;
+    width: 85%;
     height: 360px;
+    border-radius: 20px;
+    padding-top: 10px;
 }
 
 .item {
-    border: 1px solid black;
-    /*border-radius: 10px;*/
+    border-radius: 20px;
+    background-color: rgba(245, 245, 245, 0.5);
     text-align: center;
-    background-color: transparent;
-    /*box-shadow: 2px 2px 5px;*/
+    border: 1px solid lightgray;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.item:hover {
+    box-shadow: 1px 1px 4px gray;
+    transform: scale(1.02);
+    background-color: rgba(230, 230, 230, 0.5);
 }
 
 .gridText {
     padding-top: 20px;
     text-align: center;
+    margin-left: 10px;
+    margin-right: 10px;
 }
-
-
-
 
 .button_number {
     margin-top: 20px;
