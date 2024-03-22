@@ -170,17 +170,6 @@
                 <input type="checkbox" id="location24" name="codename" value="중구"><label for="location24" id="location24Label"> 중구</label>
                 <input type="checkbox" id="location25" name="codename" value="중랑구"><label for="location25" id="location25Label"> 중랑구</label>
 
-                <!--<select id="location" onchange="sort()">
-                    <option value="종로구" th:selected="${selectedMonth == '종로구'}">종로구</option>
-                    <option value="즐겨찾기" th:selected="${selectedMonth == '즐겨찾기'}">즐겨찾기</option>
-                    <option value="강남구" th:selected="${selectedMonth == '강남구'}">강남구</option>
-                    <option value="강서구" th:selected="${selectedMonth == '강서구'}">강서구</option>
-                    <option value="중구" th:selected="${selectedMonth == '중구'}">중구</option>
-                    <option value="마포구" th:selected="${selectedMonth == '마포구'}">마포구</option>
-                    <option value="은평구" th:selected="${selectedMonth == '은평구'}">은평구</option>
-
-                </select>-->
-
                 <script>
                     function sort() {
                         var selectedOption = document.getElementById('sortOptions').value;
@@ -232,10 +221,27 @@
                     document.querySelectorAll('.searchDownPart input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
                 });
 
-                // '검색하기' 버튼 클릭 이벤트
                 document.getElementById('detailSearch').addEventListener('click', function() {
-                    // 검색 실행 로직
-                    console.log('검색 실행');
+                    var eventTypes = Array.from(document.querySelectorAll('.eventType input[type="checkbox"]:checked')).map(function(checkbox) {
+                        return checkbox.value;
+                    });
+
+                    var locations = Array.from(document.querySelectorAll('.locationName input[type="checkbox"]:checked')).map(function(checkbox) {
+                        return checkbox.value;
+                    });
+
+                    // AJAX 요청을 보냅니다.
+                    fetch(`/filterEvents?eventType=${eventTypes.join(",")}&location=${locations.join(",")}`, {
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            // 응답으로 받은 데이터로 페이지를 업데이트합니다.
+                            updateEventsContainer(data);
+                        })
+                        .catch(error => console.error('Error:', error));
                 });
             });
         </script>

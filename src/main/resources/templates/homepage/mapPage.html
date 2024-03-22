@@ -4,15 +4,162 @@
     <title>서울은 지금</title>
     <meta charset="UTF-8">
     <style>
-        .search-container {
+        @font-face {
+            font-family: 'TTHakgyoansimMulgyeolB';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2402_keris@1.0/TTHakgyoansimMulgyeolB.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'SokchoBadaBatang';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2402_1@1.0/SokchoBadaBatang.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        h1 {
+            font-family: 'TTHakgyoansimMulgyeolB';
+            text-align: center;
+            font-size: 80px;
+            position: relative;
+            bottom: 40px;
+        }
+
+        body {
+            font-family: 'SokchoBadaBatang';
+        }
+
+        .dateSearch {
             display: flex;
-            justify-content: center; /* 검색창을 중앙으로 */
-            margin-bottom: 20px;
+            flex-basis: 50%;
+            justify-content: center;
+        }
+
+
+        #date1 {
+            padding: 10px;
+            border:2px solid darkgray;
+            border-radius: 10px;
+            height: 30px;
+            font-size: 12px;
+            color: darkgray;
+            font-family: 'SokchoBadaBatang';
+        }
+
+        #date2 {
+            padding: 10px;
+            border:2px solid darkgray;
+            border-radius: 10px;
+            height: 30px;
+            font-size: 12px;
+            color: darkgray;
+            font-family: 'SokchoBadaBatang';
+        }
+
+        .search-container {
+            margin-top: 2%;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            position: relative;
+            bottom: 60px;
+        }
+
+        .searchUpPart {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            align-items: center;
+        }
+
+
+        .date {
+            font-size: 16px;
+            padding: 2px;
+        }
+
+        .search-part {
+            flex-basis: 50%;
+            justify-content: center;
+            position: relative;
+            display: inline-block;
+            margin-bottom: 5px;
+            margin-right: 20px;
         }
 
         .search-bar {
-            width: 340px;
-            height: 40px;
+            padding: 10px;
+            font-size: 12px;
+            height: 30px;
+            border-radius:10px;
+            border: 2px solid darkgray;
+            font-family: 'SokchoBadaBatang';
+        }
+
+        .search-button {
+            width: 20%;
+            height:30px; /* 버튼의 높이 조절 */
+            font-size: 20px;
+            color: darkgray;
+            cursor: pointer;
+            position: absolute;
+            right: 8px;
+            bottom:5px;
+            background-color: rgba(0, 0, 0, 0);
+            border: none;
+        }
+
+        .searchDownPart {
+            display: flex;
+            justify-content: flex-start;
+            padding-left: 1%;
+            flex-direction: column;
+        }
+
+        .eventType input[type="checkbox"],
+        .locationName input[type="checkbox"] {
+            display: none;
+        }
+
+        .eventType label,
+        .locationName label {
+            cursor: pointer; /* 마우스를 올렸을 때 포인터로 변경 */
+            font-size: 12px;
+            background-color: rgba(220, 220, 220, 0.9);
+            border-radius: 30px;
+            padding: 5px;
+        }
+
+        .eventType, .locationName {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        /* 선택된 체크박스에 대한 라벨 스타일을 변경합니다. */
+        input[type="checkbox"]:checked + label {
+            font-weight: bold;
+            font-size: 15px;
+            background-color: rgba(200, 200, 200, 0.9);
+            border-radius: 20px;
+            padding: 5px;
+        }
+
+        .detailButton {
+            text-align: center;
+        }
+
+        .detailButton button {
+            padding: 5px;
+            border-radius: 20px;
+            cursor: pointer;
+            border: 0;
+            font-family: 'SokchoBadaBatang';
+            font-size: 15px;
+            font-weight: bold;
+            margin-right: 5px;
+            margin-left: 5px;
+            background-color: rgba(220, 220, 220, 0.8);
         }
 
         .item {
@@ -33,7 +180,6 @@
         /* 세부 정보 섹션 스타일 설정 */
         #details {
             flex: 1; /* 화면의 1/4 차지 */
-            padding: 20px;
             overflow-y: auto; /* 내용이 높이를 초과하면 스크롤바 표시 */
             max-height: 100vh; /* 뷰포트 높이를 초과하지 않도록 제한 */
         }
@@ -50,19 +196,174 @@
 
 <div id="container">
     <div id="details">
-
-        <div>
-            <a href="/home">홈페이지로 가기</a>
-        </div>
+        <h1>
+            <a href="/home" style="text-decoration: none">서울은 지금</a>
+        </h1>
 
         <div class="search-container">
-            <form class="search-part" id="searchForm" action="/search" method="get">
-                <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요." required>
-                <button type="submit">Search</button>
-            </form>
+            <div class="searchUpPart">
+                <div class="dateSearch">
+                    <div class="date">
+                        <label for="date1">
+                            <input type="date" id="date1"></input>
+                        </label>
+                    </div>
+                    <div class="date" style="display: flex; align-items: center; height: 60px;"> ~ </div>
+                    <div class="date">
+                        <label for="date2">
+                            <input type="date" id="date2" value="2024-12-31"></input>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <form class="search-part" id="searchForm" action="/search" method="get">
+                        <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요." required>
+                        <button class="search-button" type="submit">🔍︎</button>
+                    </form>
+                </div>
+            </div>
+            <br><br>
+            <div class="searchDownPart">
+                <div class="eventType">
+                    <input type="checkbox" id="select0" name="codename" value="전체"><label for="select0" id="select0Label"> 전체</label>
+                    <input type="checkbox" id="select1" name="codename" value="뮤지컬/오페라"><label for="select1" id="select1Label"> 뮤지컬/오페라</label>
+                    <input type="checkbox" id="select2" name="codename" value="연극"><label for="select2" id="select2Label"> 연극</label>
+                    <input type="checkbox" id="select3" name="codename" value="무용"><label for="select3" id="select3Label"> 무용</label>
+                    <input type="checkbox" id="select4" name="codename" value="국악"><label for="select4" id="select4Label"> 국악</label>
+                    <input type="checkbox" id="select5" name="codename" value="클래식"><label for="select5" id="select5Label"> 클래식</label>
+                    <input type="checkbox" id="select6" name="codename" value="전시/미술"><label for="select6" id="select6Label"> 전시/미술</label>
+                    <input type="checkbox" id="select7" name="codename" value="교육/체험"><label for="select7" id="select7Label"> 교육/체험</label>
+                    <input type="checkbox" id="select8" name="codename" value="콘서트"><label for="select8" id="select8Label"> 콘서트</label>
+                    <input type="checkbox" id="select9" name="codename" value="영화"><label for="select9" id="select9Label"> 영화</label>
+                    <input type="checkbox" id="select10" name="codename" value="독주/독창회"><label for="select10" id="select10Label"> 독주/독창회</label>
+                    <input type="checkbox" id="select11" name="codename" value="축제"><label for="select11" id="select11Label"> 축제</label>
+                    <input type="checkbox" id="select12" name="codename" value="기타"><label for="select12" id="select12Label"> 기타</label>
+                </div><br><br>
+
+                <div class="locationName">
+                    <input type="checkbox" id="location0" name="codename" value="전체"><label for="location0" id="location0Label"> 전체</label>
+                    <input type="checkbox" id="location1" name="codename" value="강남구"><label for="location1" id="location1Label"> 강남구</label>
+                    <input type="checkbox" id="location2" name="codename" value="강동구"><label for="location2" id="location2Label"> 강동구</label>
+                    <input type="checkbox" id="location3" name="codename" value="강북구"><label for="location3" id="location3Label"> 강북구</label>
+                    <input type="checkbox" id="location4" name="codename" value="강서구"><label for="location4" id="location4Label"> 강서구</label>
+                    <input type="checkbox" id="location5" name="codename" value="관악구"><label for="location5" id="location5Label"> 관악구</label>
+                    <input type="checkbox" id="location6" name="codename" value="광진구"><label for="location6" id="location6Label"> 광진구</label>
+                    <input type="checkbox" id="location7" name="codename" value="구로구"><label for="location7" id="location7Label"> 구로구</label>
+                    <input type="checkbox" id="location8" name="codename" value="금천구"><label for="location8" id="location8Label"> 금천구</label>
+                    <input type="checkbox" id="location9" name="codename" value="노원구"><label for="location9" id="location9Label"> 노원구</label>
+                    <input type="checkbox" id="location10" name="codename" value="도봉구"><label for="location10" id="location10Label"> 도봉구</label>
+                    <input type="checkbox" id="location11" name="codename" value="동대문구"><label for="location11" id="location11Label"> 동대문구</label>
+                    <input type="checkbox" id="location12" name="codename" value="동작구"><label for="location12" id="location12Label"> 동작구</label>
+                    <input type="checkbox" id="location13" name="codename" value="마포구"><label for="location13" id="location13Label"> 마포구</label>
+                    <input type="checkbox" id="location14" name="codename" value="서대문구"><label for="location14" id="location14Label"> 서대문구</label>
+                    <input type="checkbox" id="location15" name="codename" value="서초구"><label for="location15" id="location15Label"> 서초구</label>
+                    <input type="checkbox" id="location16" name="codename" value="성동구"><label for="location16" id="location16Label"> 성동구</label>
+                    <input type="checkbox" id="location17" name="codename" value="성북구"><label for="location17" id="location17Label"> 성북구</label>
+                    <input type="checkbox" id="location18" name="codename" value="송파구"><label for="location18" id="location18Label"> 송파구</label>
+                    <input type="checkbox" id="location19" name="codename" value="양천구"><label for="location19" id="location19Label"> 양천구</label>
+                    <input type="checkbox" id="location20" name="codename" value="영등포구"><label for="location20" id="location20Label"> 영등포구</label>
+                    <input type="checkbox" id="location21" name="codename" value="용산구"><label for="location21" id="location21Label"> 용산구</label>
+                    <input type="checkbox" id="location22" name="codename" value="은평구"><label for="location22" id="location22Label"> 은평구</label>
+                    <input type="checkbox" id="location23" name="codename" value="종로구"><label for="location23" id="location23Label"> 종로구</label>
+                    <input type="checkbox" id="location24" name="codename" value="중구"><label for="location24" id="location24Label"> 중구</label>
+                    <input type="checkbox" id="location25" name="codename" value="중랑구"><label for="location25" id="location25Label"> 중랑구</label>
+
+                    <!--<select id="location" onchange="sort()">
+                        <option value="종로구" th:selected="${selectedMonth == '종로구'}">종로구</option>
+                        <option value="즐겨찾기" th:selected="${selectedMonth == '즐겨찾기'}">즐겨찾기</option>
+                        <option value="강남구" th:selected="${selectedMonth == '강남구'}">강남구</option>
+                        <option value="강서구" th:selected="${selectedMonth == '강서구'}">강서구</option>
+                        <option value="중구" th:selected="${selectedMonth == '중구'}">중구</option>
+                        <option value="마포구" th:selected="${selectedMonth == '마포구'}">마포구</option>
+                        <option value="은평구" th:selected="${selectedMonth == '은평구'}">은평구</option>
+
+                    </select>-->
+
+                    <script>
+                        function sort() {
+                            var selectedOption = document.getElementById('sortOptions').value;
+                            // 서버로 GET 요청 보내기
+                            fetch(`/get함수이름?지역=${location}`)
+                                .then(response => response.text())
+                                .then(html => {
+                                    // 페이지의 일부를 서버의 응답으로 업데이트
+                                    document.getElementById('content').innerHTML = html;
+                                })
+                                .catch(error => console.error('Error:', error));
+                        }
+                    </script>
+                </div><br><br>
+                <div class="detailButton">
+                    <button id="detailSearch"> 검색하기 </button>
+                    <button id="resetButton"> 선택 초기화 </button>
+                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    // eventType과 locationName 섹션의 모든 체크박스 처리
+                    document.querySelectorAll('.eventType input[type="checkbox"], .locationName input[type="checkbox"]').forEach(function(checkbox) {
+                        checkbox.addEventListener('change', function() {
+                            const parentDiv = this.closest('div'); // 현재 체크박스의 부모 div
+                            const allCheckbox = parentDiv.querySelector('input[type="checkbox"][value="전체"]'); // 현재 섹션의 '전체' 체크박스
+
+                            if (this.value === "전체") {
+                                // '전체' 체크박스가 선택된 경우, 다른 모든 체크박스 해제
+                                if (this.checked) {
+                                    parentDiv.querySelectorAll('input[type="checkbox"]:not([value="전체"])').forEach(cb => cb.checked = false);
+                                }
+                            } else {
+                                // '전체'가 아닌 체크박스 선택 시 '전체' 체크박스 해제
+                                allCheckbox.checked = false;
+
+                                // 다른 체크박스가 하나라도 선택된 경우 '전체' 체크박스 유지를 해제
+                                const anyChecked = Array.from(parentDiv.querySelectorAll('input[type="checkbox"]:not([value="전체"])')).some(cb => cb.checked);
+                                if (!anyChecked) {
+                                    // 모든 체크박스가 해제되면 '전체' 체크박스를 자동으로 선택하지 않음
+                                    allCheckbox.checked = false;
+                                }
+                            }
+                        });
+                    });
+
+                    // '선택 초기화' 버튼 클릭 이벤트
+                    document.getElementById('resetButton').addEventListener('click', function() {
+                        document.querySelectorAll('.searchDownPart input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
+                    });
+
+                    // '검색하기' 버튼 클릭 이벤트
+                    document.getElementById('detailSearch').addEventListener('click', function() {
+                        // 검색 실행 로직
+                        console.log('검색 실행');
+                    });
+                });
+            </script>
+            <script>
+                // 현재 날짜를 가져오는 함수
+                function getCurrentDate() {
+                    const today = new Date();
+                    const year = today.getFullYear();
+                    let month = today.getMonth() + 1;
+                    let day = today.getDate();
+
+                    // 월과 일이 한 자리 숫자인 경우 앞에 0을 추가해줍니다.
+                    if (month < 10) {
+                        month = '0' + month;
+                    }
+                    if (day < 10) {
+                        day = '0' + day;
+                    }
+
+                    return `${year}-${month}-${day}`;
+                }
+
+                // input 요소의 value 속성에 현재 날짜를 설정합니다.
+                document.getElementById('date1').value = getCurrentDate();
+            </script>
+
         </div>
 
-        <h1>지도에 있는 행사들의 리스트</h1>
+        <h3>지도에 있는 행사들의 리스트</h3>
         <div id="eventsContainer">
         <div class="items-grid">
             <div th:each="event : ${lists}" class="item">
