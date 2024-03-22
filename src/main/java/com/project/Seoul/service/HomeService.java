@@ -307,8 +307,5 @@ public class HomeService {
         return (int) Math.ceil((double) eventSize /size);
     }
 
-
-
-
 }
 

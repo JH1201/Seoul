@@ -9,9 +9,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class HomeController {
@@ -90,5 +93,28 @@ public class HomeController {
         List<CultureInfo> list = homeService.getDropBoxData(month);
         return ResponseEntity.ok(list); // JSON 형식으로 데이터 반환
     }
+
+    @GetMapping("/filterEvents")
+    @ResponseBody
+    public ResponseEntity<List<CultureInfo>> filterEvents(@RequestParam("eventType") List<String> eventTypes,
+                                                          @RequestParam("location") List<String> locations) {
+        List<CultureInfo> allEvents = homeService.getAllCultureInfoApiSortedByMonth();
+
+        // Use copies of the original lists that can be modified without affecting lambda expressions.
+        List<String> effectiveEventTypes = eventTypes.contains("전체") ? new ArrayList<>() : new ArrayList<>(eventTypes);
+        List<String> effectiveLocations = locations.contains("전체") ? new ArrayList<>() : new ArrayList<>(locations);
+
+        // "축제"가 eventType에 포함되어 있는지 확인합니다.
+        boolean includeFestivals = effectiveEventTypes.stream().anyMatch(type -> type.contains("축제"));
+
+        List<CultureInfo> filteredEvents = allEvents.stream()
+                .filter(event -> effectiveEventTypes.isEmpty() || effectiveEventTypes.contains(event.getCODENAME()) || (includeFestivals && event.getCODENAME().contains("축제")))
+                .filter(event -> effectiveLocations.isEmpty() || effectiveLocations.contains(event.getGUNAME()))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(filteredEvents);
+    }
+
+
 
 }
