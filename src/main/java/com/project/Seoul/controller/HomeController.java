@@ -34,12 +34,14 @@ public class HomeController {
     public String homepage(Model model,
                            @RequestParam(defaultValue = "1", name = "page") int page,
                            @RequestParam(defaultValue = "30", name = "size") int size) {
-        
 
+        LocalDate today = LocalDate.now(); // 오늘 날짜를 가져옵니다.
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
 
         // 페이징을 처리하기 전에 총 페이지 수를 미리 계산해야 합니다.
-        // 이 예제에서는 homeService.getTotalPages(size) 메서드가 총 페이지 수를 반환한다고 가정합니다.
-        List<CultureInfo> allCultureInfoApi = homeService.getAllCultureInfoApi();
+        List<CultureInfo> allCultureInfoApi = homeService.getAllCultureInfoApiSortedByMonth();
+
+
         int eventSize = allCultureInfoApi.size();
         int totalPageCount = homeService.getTotalPages(size, eventSize);
 
