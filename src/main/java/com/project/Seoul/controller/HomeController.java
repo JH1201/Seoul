@@ -35,8 +35,6 @@ public class HomeController {
                            @RequestParam(defaultValue = "1", name = "page") int page,
                            @RequestParam(defaultValue = "30", name = "size") int size) {
 
-        LocalDate today = LocalDate.now(); // 오늘 날짜를 가져옵니다.
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
 
         // 페이징을 처리하기 전에 총 페이지 수를 미리 계산해야 합니다.
         List<CultureInfo> allCultureInfoApi = homeService.getAllCultureInfoApiSortedByMonth();
@@ -58,6 +56,7 @@ public class HomeController {
         // 페이지 번호 조정 후에 한 번만 호출
         Page<CultureInfo> eventPaging = homeService.paging(page, size);
 
+        System.out.println("eventSize = " + eventSize);
         System.out.println("totalPageCount = " + totalPageCount);
         System.out.println("startPage = " + startPage);
         System.out.println("endPage = " + endPage);
@@ -67,7 +66,7 @@ public class HomeController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPageCount);
 
-        List<CultureInfo> items = homeService.getAllCultureInfoApi(); // API로부터 아이템들을 가져오는 메서드
+        List<CultureInfo> items = homeService.getAllCultureInfoApiSortedByMonth(); // API로부터 아이템들을 가져오는 메서드
         Collections.shuffle(items); // 아이템들을 랜덤하게 섞는다
         List<CultureInfo> selectedItems = items.subList(0, 10); // 상위 10개 아이템을 선택
 

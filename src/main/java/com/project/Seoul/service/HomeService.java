@@ -71,6 +71,7 @@ public class HomeService {
 
         List<CultureInfo> cultureInfoList = wrapper.getCulturalEventInfo().getRow();
 
+
         // Remove items where the start date is in 2023 or the end date is not in 2024
         cultureInfoList.removeIf(info -> {
             String date = info.getDATE();
@@ -78,8 +79,10 @@ public class HomeService {
                 String[] dates = date.split(" ~ ");
                 String startDate = dates[0];
                 String endDate = dates[1];
-                return startDate.startsWith("2023-") || !endDate.startsWith("2024-");
+                // 2023년에 끝나는 행사를 지움. 2023년에 시작해서 2024년에 끝나는 행사는 유지됨
+                return endDate.startsWith("2023-");
             } else {
+                // 날짜가 단일 값이고, 그 값이 2023년에 해당하는 경우 해당 항목을 지움
                 return date.startsWith("2023-");
             }
         });
@@ -90,14 +93,15 @@ public class HomeService {
     public List<CultureInfo> getAllCultureInfoApiSortedByMonth() {
         List<CultureInfo> cultureInfoList = getAllCultureInfoApi(); // 이전에 API로부터 받아온 리스트를 가져옴
 
+        //오늘 날짜 변수
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
 
         return cultureInfoList.stream()
                 .filter(cultureInfo -> {
-                    LocalDateTime eventDateTime = LocalDateTime.parse(cultureInfo.getEND_DATE(), formatter);
+                    LocalDateTime eventDateTime = LocalDateTime.parse(cultureInfo.getEND_DATE(), formatter); // 이벤트의 종료 날짜를 파싱
                     LocalDate eventDate = eventDateTime.toLocalDate();
-                    return eventDate.isAfter(today);
+                    return !eventDate.isBefore(today); // 오늘 날짜가 종료일인 행사 포함
                 })
                 .sorted(Comparator.comparing(CultureInfo::getDATE))
                 .collect(Collectors.toList());
@@ -140,29 +144,6 @@ public class HomeService {
         eventsRepository.save(cultureInfo);
     }
 
-    /*
-
-    // 즐겨찾기 저장
-    public void findAndSaveEventById(Long id) {
-        Optional<CultureInfo> optionalCultureInfo = eventsRepository.findById(id);
-        if (optionalCultureInfo.isPresent()) {
-            CultureInfo cultureInfo = optionalCultureInfo.get();
-
-            // ModelMapper의 인스턴스를 생성합니다.
-            ModelMapper modelMapper = new ModelMapper();
-            // CultureInfo 객체를 FavoriteCultureInfo 객체로 매핑합니다.
-            FavoriteCultureInfo favoriteCultureInfo = modelMapper.map(cultureInfo, FavoriteCultureInfo.class);
-
-            favoriteEventsRepository.save(favoriteCultureInfo);
-        }
-    }
-
-    //즐겨찾기 디비에 있는 모든 데이터
-    public List<FavoriteCultureInfo> getAllFavoriteEvents() {
-        return favoriteEventsRepository.findAll();
-    }
-
-     */
 
 
 
