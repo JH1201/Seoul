@@ -450,20 +450,23 @@
         }
 
         function addMarkersToMap2(map, cultureInfoList) {
-            removeMarkers();
+            removeMarkers(); // 기존 마커 삭제
             markersInfo = cultureInfoList;
+
+            // cultureInfoList가 비어있는지 확인
+            if (!cultureInfoList || cultureInfoList.length === 0) {
+                // 지도의 중심좌표와 확대 레벨 설정
+                map.setCenter(new kakao.maps.LatLng(37.566535, 126.9779692));
+                map.setLevel(7);
+                return; // 함수 종료
+            }
+
             // 현재 지도의 경계를 가져옴
             var bounds = new kakao.maps.LatLngBounds();
-            var southWest = bounds.getSouthWest(); // 남서쪽 좌표
-            var northEast = bounds.getNorthEast(); // 북동쪽 좌표
-
-            console.log(southWest);
-            console.log(northEast);
-
 
             cultureInfoList.forEach(function(cultureInfo) {
                 var lat = parseFloat(cultureInfo.lat);
-                var lng = parseFloat(cultureInfo.lot); // 오타 수정 'lot' -> 'lng'
+                var lng = parseFloat(cultureInfo.lot);
 
                 var position = new kakao.maps.LatLng(lng, lat);
                 bounds.extend(position);
@@ -475,8 +478,10 @@
                 // 새로운 마커를 배열에 추가
                 markers.push(marker);
             });
+
             map.setBounds(bounds);
         }
+
 
         function removeMarkers() {
             for (var i = 0; i < markers.length; i++) {

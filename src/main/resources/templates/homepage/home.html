@@ -196,6 +196,7 @@
                             // '전체' 체크박스가 선택된 경우, 다른 모든 체크박스 해제
                             if (this.checked) {
                                 parentDiv.querySelectorAll('input[type="checkbox"]:not([value="전체"])').forEach(cb => cb.checked = false);
+
                             }
                         } else {
                             // '전체'가 아닌 체크박스 선택 시 '전체' 체크박스 해제
@@ -216,6 +217,8 @@
                     document.querySelectorAll('.searchDownPart input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
                 });
 
+
+
                 document.getElementById('detailSearch').addEventListener('click', function() {
                     var eventTypes = Array.from(document.querySelectorAll('.eventType input[type="checkbox"]:checked')).map(function(checkbox) {
                         return checkbox.value;
@@ -224,6 +227,20 @@
                     var locations = Array.from(document.querySelectorAll('.locationName input[type="checkbox"]:checked')).map(function(checkbox) {
                         return checkbox.value;
                     });
+
+
+                    // '전체' 체크박스가 체크되었는지 확인
+                    if (eventTypes.includes("전체") || locations.includes("전체")) {
+                        // '전체'가 선택되었다면 리다이렉션
+                        window.location.href = '/home';
+                        return; // 리다이렉션 후 함수 종료
+                    }
+
+                    // 체크박스가 하나도 선택되지 않았을 때 리다이렉션
+                    if (eventTypes.length === 0 && locations.length === 0) {
+                        window.location.href = '/home';
+                        return; // 추가 코드 실행 방지
+                    }
 
                     // AJAX 요청을 보냅니다.
                     fetch(`/detailfilterEvents?eventType=${eventTypes.join(",")}&location=${locations.join(",")}`, {
@@ -318,7 +335,7 @@
     </div>
 
     <!-- 페이지 버튼 -->
-    <div th:if="${totalPages > 1}">
+    <div id="pagination" th:if="${totalPages > 1}">
         <div class="button_number">
             <div class="row">
                 <button style="display: inline-block">
@@ -345,37 +362,7 @@
         </div>
     </div> <br>
 
-    <!--<script>
-        // 모든 별을 선택합니다.
-        document.querySelectorAll('.star').forEach(function(star) {
-            star.addEventListener('click', function(e) {
-                // 클릭된 별에 'active' 클래스를 토글합니다.
-                e.target.classList.toggle('active');
 
-                var cultureInfoId = e.target.dataset.cultureInfoId; // 데이터 속성을 통해 cultureInfo ID를 가져옵니다.
-
-                // AJAX 요청을 서버에 보냅니다.
-                fetch('/home', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ cultureInfoId: cultureInfoId }),
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        // 여기서 응답 처리를 합니다. 예를 들어, UI를 업데이트합니다.
-                        console.log('Success:', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error:', error);
-                    });
-            });
-        });
-
-
-
-    </script>-->
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <script>
         const swiper = new Swiper('.swiper-container', {
@@ -412,7 +399,7 @@
                 return; // 함수를 여기서 종료하여 더 이상 실행하지 않음
             }
 
-            // 서버로 GET 요청 보내기
+            // 서버로 GET 요청 보내기 (페이징 파라미터 포함)
             fetch(`/monthlySort?month=${selectedOption}`)
                 .then(response => response.json()) // JSON 형식으로 응답 받기
                 .then(data => {
@@ -475,6 +462,7 @@
             }
 
             eventsContainer.innerHTML = ''; // 기존 내용 지우기
+            pagination.innerHTML = ''; // 페이지 버튼 지우기
             eventsContainer.appendChild(itemsGrid);
         }
 
