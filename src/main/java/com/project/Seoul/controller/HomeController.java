@@ -76,13 +76,14 @@ public class HomeController {
     @ResponseBody
     public ResponseEntity<List<CultureInfo>> sort(@RequestParam("month") String month) {
 
+
         List<CultureInfo> list = homeService.getDropBoxData(month);
 
 
         return ResponseEntity.ok(list); // JSON 형식으로 데이터 반환
     }
 
-    @GetMapping("/filterEvents")
+    @GetMapping("/detailfilterEvents")
     @ResponseBody
     public ResponseEntity<List<CultureInfo>> filterEvents(@RequestParam("eventType") List<String> eventTypes,
                                                           @RequestParam("location") List<String> locations) {
