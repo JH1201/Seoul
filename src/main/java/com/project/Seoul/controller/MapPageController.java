@@ -1,8 +1,10 @@
 package com.project.Seoul.controller;
 
 import com.project.Seoul.domain.CultureInfo;
+import com.project.Seoul.repository.EventsRepository;
 import com.project.Seoul.service.HomeService;
 import com.project.Seoul.service.MapPageService;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +22,12 @@ public class MapPageController {
     public final HomeService homeService;
     public final MapPageService mapPageService;
 
-    public MapPageController(HomeService homeService, MapPageService mapPageService) {
+    public final EventsRepository repository;
+
+    public MapPageController(HomeService homeService, MapPageService mapPageService, EventsRepository repository) {
         this.homeService = homeService;
         this.mapPageService = mapPageService;
+        this.repository = repository;
     }
 
     @GetMapping("/mapPage")
@@ -87,4 +91,6 @@ public class MapPageController {
         List<CultureInfo> searchResults = homeService.searchCulturalEvents(keyword);
         return ResponseEntity.ok(searchResults); // JSON 형식으로 검색 결과 반환
     }
+
+
 }

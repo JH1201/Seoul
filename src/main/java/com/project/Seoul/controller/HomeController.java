@@ -3,6 +3,7 @@ package com.project.Seoul.controller;
 import com.project.Seoul.domain.CultureInfo;
 import com.project.Seoul.service.HomeService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -72,25 +76,16 @@ public class HomeController {
     }
 
 
-    /*
-    //즐겨찾기 기능
-    @PostMapping("/home")
-    public ResponseEntity<?> saveFavoriteEvent(@RequestBody Map<String, Long> payload) {
-        Long cultureInfoId = payload.get("cultureInfoId");
-
-
-        // ID를 사용하여 cultureInfo를 찾고, 이벤트를 저장하는 로직을 수행합니다.
-        homeService.findAndSaveEventById(cultureInfoId);
-
-        return ResponseEntity.ok().build();
-    }
-
-     */
-
     @GetMapping("/monthlySort")
     @ResponseBody
     public ResponseEntity<List<CultureInfo>> sort(@RequestParam("month") String month) {
+
+
         List<CultureInfo> list = homeService.getDropBoxData(month);
+
+
+
+
         return ResponseEntity.ok(list); // JSON 형식으로 데이터 반환
     }
 
@@ -104,12 +99,29 @@ public class HomeController {
         List<String> effectiveEventTypes = eventTypes.contains("전체") ? new ArrayList<>() : new ArrayList<>(eventTypes);
         List<String> effectiveLocations = locations.contains("전체") ? new ArrayList<>() : new ArrayList<>(locations);
 
+        LocalDate today = LocalDate.now(); // 오늘 날짜를 가져옵니다.
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+
+
         // "축제"가 eventType에 포함되어 있는지 확인합니다.
         boolean includeFestivals = effectiveEventTypes.stream().anyMatch(type -> type.contains("축제"));
 
         List<CultureInfo> filteredEvents = allEvents.stream()
-                .filter(event -> effectiveEventTypes.isEmpty() || effectiveEventTypes.contains(event.getCODENAME()) || (includeFestivals && event.getCODENAME().contains("축제")))
+                .filter(event -> (effectiveEventTypes.isEmpty() || effectiveEventTypes.contains(event.getCODENAME()) || (includeFestivals && event.getCODENAME().contains("축제"))))
                 .filter(event -> effectiveLocations.isEmpty() || effectiveLocations.contains(event.getGUNAME()))
+                .filter(event -> {
+                    if (event.getEND_DATE() == null) return true; // 종료 날짜가 없는 경우 필터링하지 않음
+                    LocalDate endDate;
+                    try {
+                        // 종료 날짜 문자열을 LocalDateTime 객체로 파싱 후 LocalDate로 변환
+                        endDate = LocalDateTime.parse(event.getEND_DATE(), formatter).toLocalDate();
+                    } catch (Exception e) {
+                        e.printStackTrace(); // 파싱 실패시 에러 출력
+                        return false; // 잘못된 데이터는 필터링에서 제외
+                    }
+                    return !endDate.isBefore(today); // 오늘 날짜 이전인 이벤트는 제외
+                })
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(filteredEvents);

@@ -2,7 +2,9 @@ package com.project.Seoul.service;
 
 import com.project.Seoul.domain.CultureInfo;
 import com.project.Seoul.repository.EventsRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+
 
 import java.util.Collections;
 import java.util.List;
@@ -42,5 +44,6 @@ public class MapPageService {
                 })
                 .collect(Collectors.toList());
     }
+
 
 }
