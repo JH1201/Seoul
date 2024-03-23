@@ -231,7 +231,7 @@
                     });
 
                     // AJAX 요청을 보냅니다.
-                    fetch(`/filterEvents?eventType=${eventTypes.join(",")}&location=${locations.join(",")}`, {
+                    fetch(`/detailfilterEvents?eventType=${eventTypes.join(",")}&location=${locations.join(",")}`, {
                         headers: {
                             'Accept': 'application/json'
                         }
