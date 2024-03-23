@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -89,7 +90,15 @@ public class HomeService {
     public List<CultureInfo> getAllCultureInfoApiSortedByMonth() {
         List<CultureInfo> cultureInfoList = getAllCultureInfoApi(); // 이전에 API로부터 받아온 리스트를 가져옴
 
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+
         return cultureInfoList.stream()
+                .filter(cultureInfo -> {
+                    LocalDateTime eventDateTime = LocalDateTime.parse(cultureInfo.getEND_DATE(), formatter);
+                    LocalDate eventDate = eventDateTime.toLocalDate();
+                    return eventDate.isAfter(today);
+                })
                 .sorted(Comparator.comparing(CultureInfo::getDATE))
                 .collect(Collectors.toList());
     }
