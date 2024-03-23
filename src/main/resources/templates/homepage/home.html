@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" type="text/css" href="/css/css.css">
 
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
 </head>
 <body>
     <div id="content">
@@ -104,7 +109,7 @@
 
     <div class="search-container">
         <div class="searchUpPart">
-            <div class="dateSearch">
+            <form class="dateSearch" id="dateSearchForm" action="/dateSearch">
                 <div class="date" style="padding-right: 10px">
                     <label for="date1">
                         <input type="date" id="date1"></input>
@@ -116,7 +121,9 @@
                         <input type="date" id="date2" value="2024-12-31"></input>
                     </label>
                 </div>
-            </div>
+
+            </form>
+
 
             <form class="search-part" id="searchForm" action="/search" method="get">
                 <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요." required>
@@ -298,13 +305,18 @@
             function sort() {
                 var selectedOption = document.getElementById('sortOptions').value;
                 // 서버로 GET 요청 보내기
-                fetch(`/monthlySort?month=${selectedOption}`)
-                    .then(response => response.text())
-                    .then(html => {
-                        // 페이지의 일부를 서버의 응답으로 업데이트
-                        document.getElementById('content').innerHTML = html;
-                    })
-                    .catch(error => console.error('Error:', error));
+                if(selectedOption === '전체') {
+                    // Make a GET request to the "/home" endpoint
+                    window.location.href = '/homepage/home'; // This will redirect to the home page
+                } else {
+                    // Otherwise, proceed with the month sorting as before
+                    fetch(`/monthSort?month=${selectedOption}`)
+                        .then(response => response.text())
+                        .then(html => {
+                            document.getElementById('content').innerHTML = html;
+                        })
+                        .catch(error => console.error('Error:', error));
+                }
             }
         </script>
     </div>

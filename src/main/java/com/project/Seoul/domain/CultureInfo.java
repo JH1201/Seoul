@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 
 //각각의 문화행사 정보 필드 값
 
@@ -17,6 +19,7 @@ public class CultureInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
 
     private String CODENAME; //분류
     private String GUNAME; //자치구
@@ -44,6 +47,9 @@ public class CultureInfo {
     private String MAIN_IMG; //메인 이미지
     private String RGSTDATE; //신청일
     private String TICKET; //시민,기관
+
+
+
     private String STRTDATE; //시작일
     private String END_DATE; //종료일
     private String THEMECODE; //테마분류
@@ -54,6 +60,7 @@ public class CultureInfo {
 
     // 기본 생성자
     public CultureInfo() {
+
     }
 
 }

@@ -1,6 +1,7 @@
 package com.project.Seoul.service;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.project.Seoul.domain.*;
 import com.project.Seoul.repository.EventsRepository;
 import com.project.Seoul.repository.FavoriteEventsRepository;
@@ -64,6 +65,7 @@ public class HomeService {
         String jsonInput = response.getBody();
 
         Gson gson = new Gson();
+
         CulturalEventInfoWrapper wrapper = gson.fromJson(jsonInput, CulturalEventInfoWrapper.class);
 
         List<CultureInfo> cultureInfoList = wrapper.getCulturalEventInfo().getRow();
@@ -174,31 +176,6 @@ public class HomeService {
         if(mon.equals("전체")) {
             return getAllCultureInfoApiSortedByMonth();
         }
-        /*
-
-        else if(mon.equals("즐겨찾기")) {
-
-            List<FavoriteCultureInfo> favoriteList = getAllFavoriteEvents();
-            List<CultureInfo> cultureList = new ArrayList<>();
-
-            for(FavoriteCultureInfo favorite : favoriteList) {
-                //출력 타입을 FavoriteCultureInfo -> CultureInfo 변환
-                CultureInfo cultureInfo = convertFavoriteToCulture(favorite);
-
-                System.out.println("cultureInfo Title = " + cultureInfo.getTITLE());
-                System.out.println("cultureInfo.getDATE() = " + cultureInfo.getDATE());
-
-                cultureList.add(cultureInfo);
-            }
-
-            //즐겨찾기 목록 출력 시 날짜 순으로
-            return cultureList.stream()
-                    .sorted(Comparator.comparing(CultureInfo::getDATE))
-                    .collect(Collectors.toList());
-
-        }
-
-         */
 
         //데이터베이스에서 month에 해당하는 데이터 조회
         List<CultureInfo> filteredList = new ArrayList<>();
@@ -288,7 +265,7 @@ public class HomeService {
 
         }
 
-        
+
         return filteredList.stream()
                 .sorted(Comparator.comparing(CultureInfo::getDATE))
                 .collect(Collectors.toList());

@@ -1,13 +1,17 @@
 package com.project.Seoul.controller;
 
 import com.project.Seoul.domain.CultureInfo;
+import com.project.Seoul.repository.EventsRepository;
 import com.project.Seoul.service.HomeService;
 import com.project.Seoul.service.MapPageService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -18,9 +22,12 @@ public class MapPageController {
     public final HomeService homeService;
     public final MapPageService mapPageService;
 
-    public MapPageController(HomeService homeService, MapPageService mapPageService) {
+    public final EventsRepository repository;
+
+    public MapPageController(HomeService homeService, MapPageService mapPageService, EventsRepository repository) {
         this.homeService = homeService;
         this.mapPageService = mapPageService;
+        this.repository = repository;
     }
 
     @GetMapping("/mapPage")
@@ -88,4 +95,6 @@ public class MapPageController {
         model.addAttribute("searchResults", searchResults);
         return "/homepage/mapPage";
     }
+
+
 }
