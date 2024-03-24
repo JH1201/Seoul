@@ -109,23 +109,23 @@
 
     <div class="search-container">
         <div class="searchUpPart">
-            <form class="dateSearch" id="dateSearchForm" action="/dateSearch">
+            <form class="dateSearch" id="dateSearchForm" action="/submit-date-range" method="post">
                 <div class="date" style="padding-right: 10px">
                     <label for="date1">
-                        <input type="date" id="date1"></input>
+                        <input type="date" id="date1" name="startDate"></input>
                     </label>
                 </div>
                 <div class="date" style="display: flex; align-items: center; height: 60px; padding-right: 10px; padding-left: 10px "> ~ </div>
                 <div class="date" style="padding-left: 10px">
                     <label for="date2">
-                        <input type="date" id="date2" value="2024-12-31"></input>
+                        <input type="date" id="date2" name="endDate" value="2024-12-31"></input>
                     </label>
                 </div>
-
+                <button class="search-button" type="submit">🔍︎</button>
             </form>
 
 
-            <form class="search-part" id="searchForm" action="/search" method="get">
+            <form class="search-part" id="searchForm" action="/search" method="post">
                 <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요." required>
                 <button class="search-button" type="submit">🔍︎</button>
             </form>
@@ -228,9 +228,12 @@
                         return checkbox.value;
                     });
 
+                    const startDate = document.getElementById('date1').value;
+                    const endDate = document.getElementById('date2').value;
+
 
                     // '전체' 체크박스가 체크되었는지 확인
-                    if (eventTypes.includes("전체") || locations.includes("전체")) {
+                    if ((eventTypes.includes("전체") && locations.includes("전체")) || eventTypes.includes("전체") || locations.includes("전체")) {
                         // '전체'가 선택되었다면 리다이렉션
                         window.location.href = '/home';
                         return; // 리다이렉션 후 함수 종료
@@ -256,6 +259,7 @@
                         .catch(error => console.error('Error:', error));
                 });
             });
+
         </script>
 
     </div>
@@ -486,6 +490,38 @@
                 })
                 .catch(error => console.error('Error:', error));
         });
+
+        document.getElementById('dateSearchForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // 기본 이벤트 처리 방지
+
+            // 입력된 날짜 값을 가져옵니다.
+            var startDate = document.getElementById('date1').value;
+            var endDate = document.getElementById('date2').value;
+
+            console.log(startDate);
+            console.log(endDate);
+
+
+            // fetch API를 사용하여 서버에 비동기 요청을 보냅니다.
+            fetch('/dateRange', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                // 요청 본문에 날짜 데이터를 포함합니다.
+                body: JSON.stringify({ startDate: startDate, endDate: endDate }),
+            })
+                .then(function(response) {
+                    return response.json(); // 응답을 JSON 형태로 파싱합니다.
+                })
+                .then(function(data) {
+                    updateEventsContainer(data);
+                })
+                .catch(function(error) {
+                    console.error('Error:', error);
+                });
+        });
+
     </script>
 
 </body>
