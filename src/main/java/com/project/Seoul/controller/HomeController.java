@@ -130,4 +130,31 @@ public class HomeController {
 
 
 
+
+    @PostMapping("/dateRange")
+    @ResponseBody
+    public ResponseEntity<List<CultureInfo>> dateRangeSearchEvent(@RequestBody DateRange dateRange) {
+        // 서비스 레이어에 날짜 범위를 전달하고 결과를 받아옵니다.
+        return ResponseEntity.ok(homeService.findByDate(dateRange.getStartDate(), dateRange.getEndDate()));
+    }
+
+    // DateRange 클래스는 예시로, startDate와 endDate 필드를 가지고 있어야 합니다.
+    public static class DateRange {
+        private String startDate;
+        private String endDate;
+
+        // Getter와 Setter
+        public String getStartDate() {
+            return startDate;
+        }
+
+        public void setStartDate(String startDate) {
+            this.startDate = startDate;
+        }
+
+        public String getEndDate() {
+            return endDate;
+        }
+
+    }
 }
