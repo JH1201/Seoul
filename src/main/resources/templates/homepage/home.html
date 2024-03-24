@@ -233,7 +233,7 @@
 
 
                     // '전체' 체크박스가 체크되었는지 확인
-                    if (eventTypes.includes("전체") && locations.includes("전체")) {
+                    if ((eventTypes.includes("전체") && locations.includes("전체")) || eventTypes.includes("전체") || locations.includes("전체")) {
                         // '전체'가 선택되었다면 리다이렉션
                         window.location.href = '/home';
                         return; // 리다이렉션 후 함수 종료
