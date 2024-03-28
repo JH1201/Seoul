@@ -372,8 +372,14 @@
 
 
     <script>
-        function sort() {
+
+        let currentPage = 1;
+        const pageSize = 10; // Set the page size here
+
+        function sort(page) {
+            currentPage = page || 1; // Use the provided page or the current page if not provided
             var selectedOption = document.getElementById('sortOptions').value;
+
 
             // "전체"가 선택되었을 때 홈페이지로 리다이렉트
             if (selectedOption === "전체") {
@@ -381,15 +387,93 @@
                 return; // 함수를 여기서 종료하여 더 이상 실행하지 않음
             }
 
-            // 서버로 GET 요청 보내기 (페이징 파라미터 포함)
-            fetch(`/monthlySort?month=${selectedOption}`)
-                .then(response => response.json()) // JSON 형식으로 응답 받기
+            // 서버로 드롭박스에서 선택된 월과 페이징 정보를 넘김
+            fetch(`/monthlySort?month=${selectedOption}&page=${currentPage}&size=${pageSize}`)
+                .then(response => response.json())
                 .then(data => {
-                    // 검색 결과를 받아서 UI 업데이트
-                    updateEventsContainer(data);
+                    updateEventsContainer(data.data); // 화면 업데이트
+                    updatePagination(data.currentPage, data.totalPages); // 페이지 번호 업데이트
+
                 })
                 .catch(error => console.error('Error:', error));
         }
+
+        function updatePagination(currentPage, totalPages) {
+            // 기존에 존재하는 .button_number 및 .row 요소를 찾거나 새로 생성합니다.
+            const paginationContainer = document.getElementById('pagination');
+            let buttonNumberDiv = paginationContainer.querySelector('.button_number');
+            let rowDiv = buttonNumberDiv ? buttonNumberDiv.querySelector('.row') : null;
+
+            // .button_number나 .row가 없다면 새로 만듭니다.
+            if (!buttonNumberDiv) {
+                buttonNumberDiv = document.createElement('div');
+                buttonNumberDiv.className = 'button_number';
+                paginationContainer.appendChild(buttonNumberDiv);
+            }
+            if (!rowDiv) {
+                rowDiv = document.createElement('div');
+                rowDiv.className = 'row';
+                buttonNumberDiv.appendChild(rowDiv);
+            }
+
+            // .row 내부를 초기화합니다.
+            rowDiv.innerHTML = '';
+
+            const pagesPerGroup = 10;
+            const currentGroup = Math.ceil(currentPage / pagesPerGroup);
+            const groupStartPage = (currentGroup - 1) * pagesPerGroup + 1;
+            const groupEndPage = Math.min(groupStartPage + pagesPerGroup - 1, totalPages);
+
+            // 첫 페이지 버튼
+            if (currentPage > 1) {
+                rowDiv.appendChild(createPageButton(1, '<<'));
+            }
+
+            // 이전 페이지 그룹 버튼
+            if (currentGroup > 1) {
+                rowDiv.appendChild(createPageButton(groupStartPage - 1, '<'));
+            }
+
+            // 페이지 번호 버튼
+            // 페이지 버튼들을 .row에 추가합니다.
+            for (let i = groupStartPage; i <= groupEndPage; i++) {
+                rowDiv.appendChild(createPageButton(i, i.toString(), currentPage === i));
+            }
+
+            // 다음 페이지 그룹 버튼
+            if (currentGroup < Math.ceil(totalPages / pagesPerGroup)) {
+                rowDiv.appendChild(createPageButton(groupEndPage + 1, '>'));
+            }
+
+            // 마지막 페이지 버튼
+            if (currentPage < totalPages) {
+                rowDiv.appendChild(createPageButton(totalPages, '>>'));
+            }
+        }
+
+        function createPageButton(page, text, isActive) {
+            const button = document.createElement('button');
+
+            button.textContent = text;
+            button.style.backgroundColor = isActive ? '#C5D7A4' : '기본 버튼 색상'; // 활성화 상태일 때 색상을 적용하기 위해 삼항 연산자 사용
+            button.style.color = 'white'; // 모든 버튼의 글자 색상을 하얗게 가정
+
+
+
+
+            button.textContent = text;
+            button.disabled = isActive; // 현재 페이지는 비활성화
+            button.onclick = function() { sort(page); };
+
+            // 이미 존재하는 .row div에 접근
+            const rowDiv = document.querySelector('#pagination .button_number .row');
+
+            // rowDiv 안에 버튼 추가
+            rowDiv.appendChild(button);
+
+            return button;
+        }
+
 
 
         function updateEventsContainer(data) {
