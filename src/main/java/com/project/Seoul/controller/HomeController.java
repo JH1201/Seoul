@@ -5,6 +5,7 @@ import com.project.Seoul.service.HomeService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,9 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -80,17 +79,36 @@ public class HomeController {
 
     @GetMapping("/monthlySort")
     @ResponseBody
-    public ResponseEntity<List<CultureInfo>> sort(@RequestParam("month") String month) {
-
+    public ResponseEntity<Map<String, Object>> sort(
+            @RequestParam("month") String month,
+            @RequestParam("page") int page,
+            @RequestParam("size") int size) {
 
         List<CultureInfo> list = homeService.getDropBoxData(month);
 
+        int totalItems = list.size();
+        int totalPages = (int) Math.ceil((double) totalItems / size);
 
+        // Calculate the correct start and end index for sublist
+        int start = (page - 1) * size;
+        int end = Math.min(start + size, totalItems);
 
+        // Check for index out of bounds
+        if (start > end || start < 0 || end > totalItems) {
+            // Respond with a BAD_REQUEST or any other appropriate status
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
 
-        return ResponseEntity.ok(list); // JSON 형식으로 데이터 반환
+        List<CultureInfo> paginatedList = list.subList(start, end);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", paginatedList);
+        response.put("currentPage", page);
+        response.put("totalItems", totalItems);
+        response.put("totalPages", totalPages);
+
+        return ResponseEntity.ok(response);
     }
-
     @GetMapping("/detailfilterEvents")
     @ResponseBody
     public ResponseEntity<List<CultureInfo>> filterEvents(@RequestParam("eventType") List<String> eventTypes,
