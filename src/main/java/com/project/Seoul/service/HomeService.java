@@ -107,7 +107,7 @@ public class HomeService {
                 .collect(Collectors.toList());
     }
 
-    public List<CultureInfo> findByDate(String Str_D, String End_D) {
+    /*public List<CultureInfo> findByDate(String Str_D, String End_D) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate startDate = LocalDate.parse(Str_D, formatter);
         LocalDate endDate = LocalDate.parse(End_D, formatter);
@@ -125,12 +125,12 @@ public class HomeService {
                     LocalDate cultureEndDate = LocalDate.parse(cultureInfo.getEND_DATE(), formatter1);
 
                     // startDate 이후 및 endDate 이전이거나 같은 날짜인지 확인
-                    return (cultureStartDate.isAfter(startDate) || cultureStartDate.isEqual(startDate)) &&
-                            (cultureEndDate.isBefore(endDate) || cultureEndDate.isEqual(endDate));
+                    return (cultureEndDate.isAfter(startDate) || cultureEndDate.isEqual(startDate)) &&
+                            (cultureStartDate.isBefore(endDate) || cultureStartDate.isEqual(endDate));
                 })
                 .sorted(Comparator.comparing(cultureInfo -> LocalDate.parse(cultureInfo.getSTRTDATE(), formatter1)))
                 .collect(Collectors.toList());
-    }
+    }*/
 
 
 
@@ -140,9 +140,12 @@ public class HomeService {
     public List<CultureInfo> searchCulturalEvents(String keyword) {
         List<CultureInfo> allEvents = getAllCultureInfoApiSortedByMonth();
 
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return allEvents;
+        }
 
         List<CultureInfo> filteredEvents = allEvents.stream()
-                .filter(event -> event.getTITLE().contains(keyword))
+                .filter(event -> event.getTITLE().contains(keyword) || event.getPLACE().contains(keyword))
                 .collect(Collectors.toList());
         return filteredEvents.isEmpty() ? new ArrayList<>() : filteredEvents;
     }
@@ -184,6 +187,34 @@ public class HomeService {
 
 
         return cultureInfo;
+    }
+
+    public List<CultureInfo> comprehensiveSearch(String keyword, LocalDate startDate, LocalDate endDate, List<String> eventTypes, List<String> locations) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+        LocalDate today = LocalDate.now();
+
+        boolean includeAllEventTypes = eventTypes.contains("전체");
+        boolean includeAllLocations = locations.contains("전체");
+        boolean includeFestivals = eventTypes.stream().anyMatch(type -> type.equalsIgnoreCase("축제"));
+
+        return getAllCultureInfoApiSortedByMonth().stream()
+                .filter(event -> (keyword == null || keyword.trim().isEmpty() || event.getTITLE().contains(keyword) || event.getPLACE().contains(keyword)))
+                .filter(event -> includeAllEventTypes || eventTypes.isEmpty() || eventTypes.contains(event.getCODENAME()) || (includeFestivals && event.getCODENAME().contains("축제")))
+                .filter(event -> includeAllLocations || locations.isEmpty() || locations.contains(event.getGUNAME()))
+                .filter(event -> {
+                    if (startDate == null && endDate == null && event.getEND_DATE() == null) {
+                        return true; // 시작 및 종료 날짜 필터링이 없고, 이벤트의 종료 날짜 정보가 없는 경우
+                    }
+                    if (event.getEND_DATE() == null) {
+                        return true; // 종료 날짜가 없는 경우 필터링하지 않음
+                    }
+                    // 이벤트 종료 날짜 처리
+                    LocalDate eventEndDate = LocalDate.parse(event.getEND_DATE().substring(0, 10), DateTimeFormatter.ISO_LOCAL_DATE);
+                    return (startDate == null || !eventEndDate.isBefore(startDate)) &&
+                            (endDate == null || !eventEndDate.isAfter(endDate)) &&
+                            !eventEndDate.isBefore(today); // 오늘 날짜 이전인 이벤트는 제외
+                })
+                .collect(Collectors.toList());
     }
 
     //선택된 드롭박스에 해당되는 데이터
@@ -300,6 +331,8 @@ public class HomeService {
 
         return (int) Math.ceil((double) eventSize /size);
     }
+
+
 
 }
 
