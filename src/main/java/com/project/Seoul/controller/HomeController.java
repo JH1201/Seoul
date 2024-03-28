@@ -4,6 +4,7 @@ import com.project.Seoul.domain.CultureInfo;
 import com.project.Seoul.service.HomeService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -131,7 +132,7 @@ public class HomeController {
 
 
 
-    @PostMapping("/dateRange")
+    /*@PostMapping("/dateRange")
     @ResponseBody
     public ResponseEntity<List<CultureInfo>> dateRangeSearchEvent(@RequestBody DateRange dateRange) {
         // 서비스 레이어에 날짜 범위를 전달하고 결과를 받아옵니다.
@@ -156,5 +157,20 @@ public class HomeController {
             return endDate;
         }
 
+
+
+    }
+*/
+
+    @GetMapping("/searchEvents")
+    public ResponseEntity<List<CultureInfo>> searchEvents(
+            @RequestParam String keyword,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam List<String> eventTypes,
+            @RequestParam List<String> locations) {
+
+        List<CultureInfo> events = homeService.comprehensiveSearch(keyword, startDate, endDate, eventTypes, locations);
+        return ResponseEntity.ok(events);
     }
 }

@@ -72,7 +72,7 @@ public class MapPageController {
     }
 
 
-    @GetMapping("/search")
+    /*@GetMapping("/search")
     @ResponseBody
     public ResponseEntity<List<CultureInfo>> searchEvent(@RequestParam("keyword") String keyword) {
         if (keyword.trim().isEmpty()) {
@@ -90,7 +90,7 @@ public class MapPageController {
         }
         List<CultureInfo> searchResults = homeService.searchCulturalEvents(keyword);
         return ResponseEntity.ok(searchResults); // JSON 형식으로 검색 결과 반환
-    }
+    }*/
 
 
 }

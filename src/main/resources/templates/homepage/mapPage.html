@@ -218,7 +218,7 @@
 
                 <div>
                     <form class="search-part" id="searchForm" action="/search" method="get">
-                        <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요." required>
+                        <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요. (ex: 행사명, 장소, 역 등)" >
                         <button class="search-button" type="submit">🔍︎</button>
                     </form>
                 </div>
@@ -375,26 +375,22 @@
                     document.querySelectorAll('.searchDownPart input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
                 });
 
-                document.getElementById('detailSearch').addEventListener('click', function() {
-                    var eventTypes = Array.from(document.querySelectorAll('.eventType input[type="checkbox"]:checked')).map(function(checkbox) {
-                        return checkbox.value;
-                    });
+                document.getElementById('detailSearch').addEventListener('click', function(event) {
+                    event.preventDefault();
+                    var eventTypes = Array.from(document.querySelectorAll('.eventType input[type="checkbox"]:checked')).map(checkbox => checkbox.value).join(",");
+                    var locations = Array.from(document.querySelectorAll('.locationName input[type="checkbox"]:checked')).map(checkbox => checkbox.value).join(",");
+                    var keyword = document.querySelector('.search-bar').value.trim(); // 키워드 검색어
+                    var startDate = document.getElementById('date1').value; // 시작 날짜
+                    var endDate = document.getElementById('date2').value; // 종료 날짜
 
-                    var locations = Array.from(document.querySelectorAll('.locationName input[type="checkbox"]:checked')).map(function(checkbox) {
-                        return checkbox.value;
-                    });
-
-                    // AJAX 요청을 보냅니다.
-                    fetch(`/detailfilterEvents?eventType=${eventTypes.join(",")}&location=${locations.join(",")}`, {
+                    fetch(`/searchEvents?keyword=${encodeURIComponent(keyword)}&startDate=${startDate}&endDate=${endDate}&eventTypes=${eventTypes}&locations=${locations}`, {
                         headers: {
                             'Accept': 'application/json'
                         }
                     })
                         .then(response => response.json())
                         .then(data => {
-                            // 검색 결과를 받아서 UI 업데이트
-                            updateEventsContainer(data);
-                            addMarkersToMap2(map, data);
+                            updatePageWithFilteredEvents(data); // 검색 결과로 UI 업데이트하는 함수
                         })
                         .catch(error => console.error('Error:', error));
                 });
@@ -644,9 +640,6 @@
             event.preventDefault(); // 기본 이벤트 처리 방지
 
             var keyword = document.querySelector('.search-bar').value.trim();
-            if (keyword === '') {
-                return; // 검색어가 비어 있으면 아무런 작업도 하지 않음
-            }
 
             // 서버로 GET 요청 보내기
             fetch(`/search?keyword=${encodeURIComponent(keyword)}`)
