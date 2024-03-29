@@ -216,26 +216,108 @@
                     document.querySelectorAll('.searchDownPart input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
                 });
 
-
                 document.getElementById('detailSearch').addEventListener('click', function(event) {
-                    event.preventDefault();
+                    event.preventDefault(); // 기본 동작 방지
+                    searchEvents(1); // 항상 첫 페이지로부터 검색 시작
+                });
+
+                let currentPage = 1;
+                const pageSize = 20; // Set the page size here
+
+                function searchEvents(page) {
+                    currentPage = page || 1;
+
                     var eventTypes = Array.from(document.querySelectorAll('.eventType input[type="checkbox"]:checked')).map(checkbox => checkbox.value).join(",");
                     var locations = Array.from(document.querySelectorAll('.locationName input[type="checkbox"]:checked')).map(checkbox => checkbox.value).join(",");
-                    var keyword = document.querySelector('.search-bar').value.trim(); // 키워드 검색어
-                    var startDate = document.getElementById('date1').value; // 시작 날짜
-                    var endDate = document.getElementById('date2').value; // 종료 날짜
+                    var keyword = document.querySelector('.search-bar').value.trim();
+                    var startDate = document.getElementById('date1').value;
+                    var endDate = document.getElementById('date2').value;
 
-                    fetch(`/searchEvents?keyword=${encodeURIComponent(keyword)}&startDate=${startDate}&endDate=${endDate}&eventTypes=${eventTypes}&locations=${locations}`, {
+                    fetch(`/searchEvents?keyword=${encodeURIComponent(keyword)}&startDate=${startDate}&endDate=${endDate}&eventTypes=${eventTypes}&locations=${locations}&page=${currentPage}&size=${pageSize}`, {
                         headers: {
                             'Accept': 'application/json'
                         }
                     })
                         .then(response => response.json())
                         .then(data => {
-                            updateEventsContainer(data); // 검색 결과로 UI 업데이트하는 함수
+                            updateEventsContainer(data.data);
+                            detatilUpdatePagination(data.currentPage, data.totalPages);
                         })
                         .catch(error => console.error('Error:', error));
-                });
+                }
+
+                function detatilUpdatePagination(currentPage, totalPages) {
+                    // 기존에 존재하는 .button_number 및 .row 요소를 찾거나 새로 생성합니다.
+                    const paginationContainer = document.getElementById('pagination');
+                    let buttonNumberDiv = paginationContainer.querySelector('.button_number');
+                    let rowDiv = buttonNumberDiv ? buttonNumberDiv.querySelector('.row') : null;
+
+                    // .button_number나 .row가 없다면 새로 만듭니다.
+                    if (!buttonNumberDiv) {
+                        buttonNumberDiv = document.createElement('div');
+                        buttonNumberDiv.className = 'button_number';
+                        paginationContainer.appendChild(buttonNumberDiv);
+                    }
+                    if (!rowDiv) {
+                        rowDiv = document.createElement('div');
+                        rowDiv.className = 'row';
+                        buttonNumberDiv.appendChild(rowDiv);
+                    }
+
+                    // .row 내부를 초기화합니다.
+                    rowDiv.innerHTML = '';
+
+                    const pagesPerGroup = 10;
+                    const currentGroup = Math.ceil(currentPage / pagesPerGroup);
+                    const groupStartPage = (currentGroup - 1) * pagesPerGroup + 1;
+                    const groupEndPage = Math.min(groupStartPage + pagesPerGroup - 1, totalPages);
+
+                    // 첫 페이지 버튼
+                    if (currentPage > 1) {
+                        rowDiv.appendChild(detailCreatePageButton(1, '<<'));
+                    }
+
+                    // 이전 페이지 그룹 버튼
+                    if (currentGroup > 1) {
+                        rowDiv.appendChild(detailCreatePageButton(groupStartPage - 1, '<'));
+                    }
+
+                    // 페이지 번호 버튼
+                    // 페이지 버튼들을 .row에 추가합니다.
+                    for (let i = groupStartPage; i <= groupEndPage; i++) {
+                        rowDiv.appendChild(detailCreatePageButton(i, i.toString(), currentPage === i));
+                    }
+
+                    // 다음 페이지 그룹 버튼
+                    if (currentGroup < Math.ceil(totalPages / pagesPerGroup)) {
+                        rowDiv.appendChild(detailCreatePageButton(groupEndPage + 1, '>'));
+                    }
+
+                    // 마지막 페이지 버튼
+                    if (currentPage < totalPages) {
+                        rowDiv.appendChild(detailCreatePageButton(totalPages, '>>'));
+                    }
+                }
+
+                function detailCreatePageButton(page, text, isActive) {
+                    const button = document.createElement('button');
+
+                    button.textContent = text;
+                    button.style.backgroundColor = isActive ? '#C5D7A4' : '기본 버튼 색상'; // 활성화 상태일 때 색상을 적용하기 위해 삼항 연산자 사용
+                    button.style.color = 'white'; // 모든 버튼의 글자 색상을 하얗게 가정
+
+                    button.disabled = isActive; // 현재 페이지는 비활성화
+                    button.onclick = function() { searchEvents(page); };
+
+                    // 이미 존재하는 .row div에 접근
+                    const rowDiv = document.querySelector('#pagination .button_number .row');
+
+                    // rowDiv 안에 버튼 추가
+                    rowDiv.appendChild(button);
+
+                    return button;
+                }
+
             });
 
         </script>
@@ -374,7 +456,7 @@
     <script>
 
         let currentPage = 1;
-        const pageSize = 10; // Set the page size here
+        const pageSize = 20; // Set the page size here
 
         function sort(page) {
             currentPage = page || 1; // Use the provided page or the current page if not provided
@@ -458,10 +540,6 @@
             button.style.backgroundColor = isActive ? '#C5D7A4' : '기본 버튼 색상'; // 활성화 상태일 때 색상을 적용하기 위해 삼항 연산자 사용
             button.style.color = 'white'; // 모든 버튼의 글자 색상을 하얗게 가정
 
-
-
-
-            button.textContent = text;
             button.disabled = isActive; // 현재 페이지는 비활성화
             button.onclick = function() { sort(page); };
 

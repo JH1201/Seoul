@@ -107,33 +107,6 @@ public class HomeService {
                 .collect(Collectors.toList());
     }
 
-    /*public List<CultureInfo> findByDate(String Str_D, String End_D) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate startDate = LocalDate.parse(Str_D, formatter);
-        LocalDate endDate = LocalDate.parse(End_D, formatter);
-
-        List<CultureInfo> cultureInfoList = getAllCultureInfoApi(); // 이전에 API로부터 받아온 리스트를 가져옴
-
-        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
-
-        return cultureInfoList.stream()
-                .filter(cultureInfo -> {
-                    // CultureInfo 객체의 날짜를 LocalDate 객체로 변환
-                    LocalDate cultureStartDate = LocalDate.parse(cultureInfo.getSTRTDATE(), formatter1);
-
-
-                    LocalDate cultureEndDate = LocalDate.parse(cultureInfo.getEND_DATE(), formatter1);
-
-                    // startDate 이후 및 endDate 이전이거나 같은 날짜인지 확인
-                    return (cultureEndDate.isAfter(startDate) || cultureEndDate.isEqual(startDate)) &&
-                            (cultureStartDate.isBefore(endDate) || cultureStartDate.isEqual(endDate));
-                })
-                .sorted(Comparator.comparing(cultureInfo -> LocalDate.parse(cultureInfo.getSTRTDATE(), formatter1)))
-                .collect(Collectors.toList());
-    }*/
-
-
-
 
 
     //keyword를 통해 events 찾기
