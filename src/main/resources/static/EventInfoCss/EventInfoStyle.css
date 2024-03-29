@@ -1,0 +1,84 @@
+@font-face {
+    font-family: 'TTHakgyoansimMulgyeolB';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2402_keris@1.0/TTHakgyoansimMulgyeolB.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SokchoBadaBatang';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2402_1@1.0/SokchoBadaBatang.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-family: 'TTHakgyoansimMulgyeolB';
+    text-align: left;
+    font-size: 65px;
+    padding-left: 30px;
+    padding-bottom: 40px;
+}
+
+/* 컨테이너 스타일 설정 */
+#container {
+    display: flex;
+    height: 100vh;
+
+}
+/* 세부 정보 섹션 스타일 설정 */
+#details {
+    flex: 1; /* 화면의 1/4 차지 */
+    height: 100%; /* Adjust the height as necessary */
+    overflow-y: scroll; /* This will add a vertical scrollbar if the content overflows */
+}
+/* 지도 섹션 스타일 설정 */
+#map {
+    flex: 3; /* 화면의 3/4 차지 */
+    height: 100%; /* 지도 높이 설정 */
+}
+
+.eventInfoImage img {
+    width: 350px;
+    height: 500px;
+    box-shadow: 2px 2px 4px rgb(128, 128, 128);
+}
+
+.eventInfoImage {
+    text-align: center;
+    padding-bottom: 15px;
+    right: 5px;
+
+}
+
+
+.EventContents {
+    font-weight: bold;
+    font-size: 18px;
+    bottom: 60px;
+    margin-right: 2%;
+    margin-bottom: 5%;
+}
+
+.EventContents li {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgb(220, 220, 220);
+}
+
+.button_wrap {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.button_wrap button {
+    font-size: 15px;
+    width: 100px;
+    margin-left: 10px;
+    margin-right: 10px;
+    height: 50px;
+}

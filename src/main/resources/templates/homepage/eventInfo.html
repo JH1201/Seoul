@@ -4,68 +4,7 @@
 <head>
     <title>서울은 지금</title>
     <meta charset="UTF-8">
-    <style>
-        @font-face {
-            font-family: 'TTHakgyoansimMulgyeolB';
-            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2402_keris@1.0/TTHakgyoansimMulgyeolB.woff2') format('woff2');
-            font-weight: 700;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'SokchoBadaBatang';
-            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2402_1@1.0/SokchoBadaBatang.woff2') format('woff2');
-            font-weight: normal;
-            font-style: normal;
-        }
-        
-        h1 {
-            font-family: 'TTHakgyoansimMulgyeolB';
-            text-align: center;
-            font-size: 80px;
-            position: relative;
-            bottom: 40px;
-        }
-
-        /* 컨테이너 스타일 설정 */
-        #container {
-            display: flex;
-            height: 100vh;
-        }
-        /* 세부 정보 섹션 스타일 설정 */
-        #details {
-            flex: 1; /* 화면의 1/4 차지 */
-        }
-        /* 지도 섹션 스타일 설정 */
-        #map {
-            flex: 3; /* 화면의 3/4 차지 */
-            height: 100%; /* 지도 높이 설정 */
-        }
-
-        .eventInfoImage img {
-            width: 380px;
-            height: 500px;
-            box-shadow: 2px 2px 4px gray;
-        }
-
-        .eventInfoImage {
-            text-align: center;
-            position: relative;
-            bottom: 70px;
-            right: 5px;
-        }
-
-
-        .EventContents {
-            font-weight: bold;
-            font-size: 18px;
-            position: relative;
-            bottom: 60px;
-            margin-right: 2%;
-            margin-bottom: 5%;
-        }
-
-
-    </style>
+    <link rel="stylesheet" type="text/css" href="/EventInfoCss/EventInfoCss.css">
 </head>
 <body>
 
@@ -82,19 +21,38 @@
         <div class="eventInfoImage">
             <img th:src="${main_img}" alt="image">
         </div>
-        <!--<p>Homepage URL:
-            <a th:href="${homePage}" style="text-decoration: none; color: black;" target="_blank">
-                <span th:text="${homePage}"></span>
-            </a>
-        </p>-->
+
+
         <div class="EventContents">
         <ul>
-        <li>이름: <span th:text="${title}"></span></li><br>
-        <li>기간: <span th:text="${date}"></span></li><br>
-        <li>장소: <span th:text="${place}"></span></li><br>
-        <li>유무료: <span th:text="${free}"></span> </li><br>
+        <li>이름: <span th:text="${title}"></span></li>
+        <li>기간: <span th:text="${date}"></span></li>
+        <li>장소: <span th:text="${place}"></span></li>
+        <li>유무료: <span th:text="${free}"></span> </li>
         <li>금액: <span th:text="${fee}"></span></li>
         </ul>
+        </div>
+
+        <div class="button_wrap">
+            <button style="background-color: dodgerblue; color: white">
+                <a href="https://m.map.kakao.com/actions/routeView" style="text-decoration: none; color: white;" target="_blank">
+                길 찾기
+                </a>
+            </button>
+
+            <button style="background-color: yellow">
+                <a th:href="${homePage}" style="text-decoration: none; color: black;" target="_blank">
+                    상세 페이지
+                </a>
+            </button>
+
+            <button style="background-color: green">
+                <a href="/mapPage" style="text-decoration: none; color: white;">
+                    맵으로 보기
+                </a>
+            </button>
+
+
         </div>
 
     </div>
