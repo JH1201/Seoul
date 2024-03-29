@@ -7,12 +7,16 @@ import com.project.Seoul.service.MapPageService;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -71,26 +75,17 @@ public class MapPageController {
         // getters and setters
     }
 
+    @GetMapping("/mapsearchEvents")
+    public ResponseEntity<List<CultureInfo>> searchEvents(
+            @RequestParam String keyword,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam List<String> eventTypes,
+            @RequestParam List<String> locations) {
 
-    /*@GetMapping("/search")
-    @ResponseBody
-    public ResponseEntity<List<CultureInfo>> searchEvent(@RequestParam("keyword") String keyword) {
-        if (keyword.trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(Collections.emptyList()); // 비어 있는 경우 빈 목록 반환
-        }
-        List<CultureInfo> searchResults = homeService.searchCulturalEvents(keyword);
-        return ResponseEntity.ok(searchResults); // JSON 형식으로 검색 결과 반환
+        List<CultureInfo> events = homeService.comprehensiveSearch(keyword, startDate, endDate, eventTypes, locations);
+        return ResponseEntity.ok(events);
     }
-
-    @GetMapping("/search2")
-    @ResponseBody
-    public ResponseEntity<List<CultureInfo>> searchEvent2(@RequestParam("keyword") String keyword) {
-        if (keyword.trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(Collections.emptyList()); // 비어 있는 경우 빈 목록 반환
-        }
-        List<CultureInfo> searchResults = homeService.searchCulturalEvents(keyword);
-        return ResponseEntity.ok(searchResults); // JSON 형식으로 검색 결과 반환
-    }*/
 
 
 }
