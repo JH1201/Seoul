@@ -33,7 +33,7 @@ public class HomeController {
     @GetMapping("/home")
     public String homepage(Model model,
                            @RequestParam(defaultValue = "1", name = "page") int page,
-                           @RequestParam(defaultValue = "30", name = "size") int size) {
+                           @RequestParam(defaultValue = "20", name = "size") int size) {
 
 
         // 페이징을 처리하기 전에 총 페이지 수를 미리 계산해야 합니다.
@@ -89,7 +89,7 @@ public class HomeController {
         int totalItems = list.size();
         int totalPages = (int) Math.ceil((double) totalItems / size);
 
-        // Calculate the correct start and end index for sublist
+        // 페이지 시작과 끝 계산
         int start = (page - 1) * size;
         int end = Math.min(start + size, totalItems);
 
@@ -109,6 +109,8 @@ public class HomeController {
 
         return ResponseEntity.ok(response);
     }
+
+
     @GetMapping("/detailfilterEvents")
     @ResponseBody
     public ResponseEntity<List<CultureInfo>> filterEvents(@RequestParam("eventType") List<String> eventTypes,
@@ -148,47 +150,39 @@ public class HomeController {
     }
 
 
-
-
-    /*@PostMapping("/dateRange")
-    @ResponseBody
-    public ResponseEntity<List<CultureInfo>> dateRangeSearchEvent(@RequestBody DateRange dateRange) {
-        // 서비스 레이어에 날짜 범위를 전달하고 결과를 받아옵니다.
-        return ResponseEntity.ok(homeService.findByDate(dateRange.getStartDate(), dateRange.getEndDate()));
-    }
-
-    // DateRange 클래스는 예시로, startDate와 endDate 필드를 가지고 있어야 합니다.
-    public static class DateRange {
-        private String startDate;
-        private String endDate;
-
-        // Getter와 Setter
-        public String getStartDate() {
-            return startDate;
-        }
-
-        public void setStartDate(String startDate) {
-            this.startDate = startDate;
-        }
-
-        public String getEndDate() {
-            return endDate;
-        }
-
-
-
-    }
-*/
-
     @GetMapping("/searchEvents")
-    public ResponseEntity<List<CultureInfo>> searchEvents(
+    public ResponseEntity<Map<String, Object>> searchEvents(
             @RequestParam String keyword,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @RequestParam List<String> eventTypes,
-            @RequestParam List<String> locations) {
+            @RequestParam List<String> locations,
+            @RequestParam("page") int page,
+            @RequestParam("size") int size) {
 
         List<CultureInfo> events = homeService.comprehensiveSearch(keyword, startDate, endDate, eventTypes, locations);
-        return ResponseEntity.ok(events);
+
+        int totalItems = events.size();
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        // 페이지 시작과 끝 계산
+        int start = (page - 1) * size;
+        int end = Math.min(start + size, totalItems);
+
+        // Check for index out of bounds
+        if (start > end || start < 0 || end > totalItems) {
+            // Respond with a BAD_REQUEST or any other appropriate status
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        List<CultureInfo> paginatedList = events.subList(start, end);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", paginatedList);
+        response.put("currentPage", page);
+        response.put("totalItems", totalItems);
+        response.put("totalPages", totalPages);
+
+        return ResponseEntity.ok(response);
     }
 }
