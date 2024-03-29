@@ -20,6 +20,10 @@
     justify-content: space-between;
 }
 
+body button {
+    cursor: pointer;
+}
+
 h1 {
     display: flex;
     align-items: center;
