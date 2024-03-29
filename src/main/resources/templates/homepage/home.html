@@ -221,6 +221,11 @@
                     searchEvents(1); // 항상 첫 페이지로부터 검색 시작
                 });
 
+                document.getElementById('searchForm').addEventListener('click', function(event) {
+                    event.preventDefault(); // 기본 동작 방지
+                    searchEvents(1); // 항상 첫 페이지로부터 검색 시작
+                });
+
                 let currentPage = 1;
                 const pageSize = 20; // Set the page size here
 
@@ -610,54 +615,6 @@
             eventsContainer.appendChild(itemsGrid);
         }
 
-
-    </script>
-    <script>
-        document.getElementById('searchForm').addEventListener('submit', function (event) {
-            event.preventDefault(); // 기본 이벤트 처리 방지
-
-            var keyword = document.querySelector('.search-bar').value.trim();
-
-            // 서버로 GET 요청 보내기
-            fetch(`/search?keyword=${encodeURIComponent(keyword)}`)
-                .then(response => response.json()) // JSON 형식으로 응답 받기
-                .then(data => {
-                    // 검색 결과를 받아서 UI 업데이트
-                    updateEventsContainer(data);
-                })
-                .catch(error => console.error('Error:', error));
-        });
-
-        document.getElementById('dateSearchForm').addEventListener('submit', function (event) {
-            event.preventDefault(); // 기본 이벤트 처리 방지
-
-            // 입력된 날짜 값을 가져옵니다.
-            var startDate = document.getElementById('date1').value;
-            var endDate = document.getElementById('date2').value;
-
-            console.log(startDate);
-            console.log(endDate);
-
-
-            // fetch API를 사용하여 서버에 비동기 요청을 보냅니다.
-            fetch('/dateRange', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                // 요청 본문에 날짜 데이터를 포함합니다.
-                body: JSON.stringify({ startDate: startDate, endDate: endDate }),
-            })
-                .then(function(response) {
-                    return response.json(); // 응답을 JSON 형태로 파싱합니다.
-                })
-                .then(function(data) {
-                    updateEventsContainer(data);
-                })
-                .catch(function(error) {
-                    console.error('Error:', error);
-                });
-        });
 
     </script>
 
