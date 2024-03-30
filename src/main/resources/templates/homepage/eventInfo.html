@@ -35,7 +35,7 @@
 
         <div class="button_wrap">
             <button style="background-color: dodgerblue; color: white">
-                <a href="https://m.map.kakao.com/actions/routeView" style="text-decoration: none; color: white;" target="_blank">
+                <a th:href="'https://map.kakao.com/link/to/' + ${place} + ',' + ${lot} + ',' + ${lat}" style="text-decoration: none; color: white;" target="_blank">
                 길 찾기
                 </a>
             </button>
