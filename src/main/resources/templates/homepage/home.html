@@ -61,26 +61,6 @@
                     });
                 </script>
 
-                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                <script>
-                    $(document).ready(function (){
-                        $.ajax({
-                            url: 'https://api.openweathermap.org/data/2.5/weather?q=Seoul&appid=5d9b3b800dfed24a20f68eeb480f5d9d&units=metric',
-                            dataType:'json',
-                            type:'GET',
-                            success: function (data){
-                                var iconUrl = 'http://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png';
-                                var temperature = Math.floor(data.main.temp) + '°C';
-                                var city = data.name;
-
-                                $('.CurrIcon').html('<img src="' + iconUrl + '">');
-                                $('.CurrTemp').text(temperature);
-                                $('.City').text(city);
-                            }
-                        })
-                    });
-                </script>
-
             </div>
         </div>
     </div>
