@@ -1,9 +1,14 @@
 package com.project.Seoul.service;
 
+import com.google.gson.Gson;
 import com.project.Seoul.domain.CultureInfo;
+import com.project.Seoul.domain.SubwayInfo;
+import com.project.Seoul.domain.SubwayWrapper;
 import com.project.Seoul.repository.EventsRepository;
-import org.springframework.data.domain.Page;
+import com.project.Seoul.repository.SubwayRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 
 import java.util.Collections;
@@ -15,11 +20,32 @@ import java.util.stream.Collectors;
 public class MapPageService {
 
     public final EventsRepository eventsRepository;
+    public final SubwayRepository subwayRepository;
     public final HomeService homeService;
 
-    public MapPageService(EventsRepository eventsRepository, HomeService homeService) {
+    public MapPageService(EventsRepository eventsRepository, SubwayRepository subwayRepository, HomeService homeService) {
         this.eventsRepository = eventsRepository;
+        this.subwayRepository = subwayRepository;
         this.homeService = homeService;
+    }
+
+    public List<SubwayInfo> getSubway() {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.getForEntity("http://openapi.seoul.go.kr:8088/5441476e45776c673630537351474b/json/tbTraficElvtr/1/5/", String.class);
+
+        String jsonInput = response.getBody();
+        System.out.println("jsonInput = " + jsonInput);
+        
+        Gson gson = new Gson();
+
+        SubwayWrapper wrapper = gson.fromJson(jsonInput, SubwayWrapper.class);
+        List<SubwayInfo> subwayInfoList = wrapper.getTbTraficElvtr().getRow();
+
+        return subwayInfoList;
+    }
+
+    public void saveParkingArea(SubwayInfo subwayInfo) {
+        subwayRepository.save(subwayInfo);
     }
 
     public List<CultureInfo> filterEventsByBounds(List<CultureInfo> markersInfo, Map<String, Double> bounds) {
