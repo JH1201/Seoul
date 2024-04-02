@@ -454,10 +454,10 @@
                             currentMarker = marker;
 
                             setTimeout(() => {
-                                document.querySelector('.markerinfo-container').addEventListener('wheel', function(event) {
+                                document.querySelector('.markerinfo-container2').addEventListener('wheel', function(event) {
                                     event.preventDefault();
                                     event.stopPropagation();
-                                    this.scrollTop += event.deltaY * 0.5;
+                                    this.scrollTop += event.deltaY * 2;
                                 }, { passive: false });
                             }, 0);
                         }
