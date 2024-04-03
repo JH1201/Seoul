@@ -24,40 +24,77 @@
 
 
         <div class="EventContents">
-        <ul>
-        <li>이름: <span th:text="${title}"></span></li>
-        <li>기간: <span th:text="${date}"></span></li>
-        <li>장소: <span th:text="${place}"></span></li>
-        <li>유무료: <span th:text="${free}"></span> </li>
-        <li>금액: <span th:text="${fee}"></span></li>
-        </ul>
+            <ul>
+                <li>이름: <span th:text="${title}"></span></li>
+                <li>기간: <span th:text="${date}"></span></li>
+                <li>장소: <span th:text="${place}"></span></li>
+                <li>유무료: <span th:text="${free}"></span> </li>
+                <li>금액: <span th:text="${fee}"></span></li>
+            </ul>
         </div>
 
-        <div class="button_wrap">
-            <button style="background-color: dodgerblue; color: white">
+        <!--<div class="button_wrap">
+            <button>
                 <a th:href="'https://map.kakao.com/link/to/' + ${place} + ',' + ${lot} + ',' + ${lat}" style="text-decoration: none; color: white;" target="_blank">
-                길 찾기
+                    길 찾기
                 </a>
             </button>
 
-            <button style="background-color: yellow">
+            <button>
                 <a th:href="${homePage}" style="text-decoration: none; color: black;" target="_blank">
                     상세 페이지
                 </a>
             </button>
 
-            <button style="background-color: green">
+            <button>
                 <a href="/mapPage" style="text-decoration: none; color: white;">
                     맵으로 보기
                 </a>
             </button>
 
+        </div>-->
 
+        <div class="button_wrap">
+            <a th:href="'https://map.kakao.com/link/to/' + ${place} + ',' + ${lot} + ',' + ${lat}" class="button button--ujarak button--border-thin button--text-thick" style="text-decoration: none" target="_blank">
+                길찾기
+            </a>
+
+            <a th:href="${homePage}" class="button button--ujarak button--border-thin button--text-thick" style="text-decoration: none" target="_blank">
+                상세내용
+            </a>
+
+            <a href="/mapPage" class="button button--ujarak button--border-thin button--text-thick" style="text-decoration: none">
+                Map
+            </a>
         </div>
 
     </div>
 
-    <div id="map"></div>
+
+
+
+    <div class="map_wrap">
+        <div id="map"></div>
+        <div class="custom_typecontrol radius_border">
+            <span id="btnRoadmap" class="selected_btn" onclick="setMapType('roadmap')">지도</span>
+            <span id="btnSkyview" class="btn" onclick="setMapType('skyview')">스카이뷰</span>
+        </div>
+        <!-- 지도 확대, 축소 컨트롤 div 입니다 -->
+        <div class="custom_zoomcontrol radius_border">
+            <span onclick="zoomIn()"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png" alt="확대"></span>
+            <span onclick="zoomOut()"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png" alt="축소"></span>
+        </div>
+        <ul id="category">
+            <li id="SW8">
+                <img src="image/128654.png">
+                지하철역
+            </li>
+            <li id="PK6">
+                <img src="image/128655.png">
+                주차장
+            </li>
+        </ul>
+    </div>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=33db73c119b1dea112b5e9038fd6ef2a"></script>
     <script>
 
@@ -92,6 +129,29 @@
         // 마커가 지도 위에 표시
         marker.setMap(map);
 
+        function setMapType(maptype) {
+            var roadmapControl = document.getElementById('btnRoadmap');
+            var skyviewControl = document.getElementById('btnSkyview');
+            if (maptype === 'roadmap') {
+                map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
+                roadmapControl.className = 'selected_btn';
+                skyviewControl.className = 'btn';
+            } else {
+                map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
+                skyviewControl.className = 'selected_btn';
+                roadmapControl.className = 'btn';
+            }
+        }
+        function zoomIn() {
+            map.setLevel(map.getLevel() - 1, {animate: true});
+        }
+
+        function zoomOut() {
+            map.setLevel(map.getLevel() + 1, {animate: true});
+        }
+
+
+
     </script>
 
 </div>
@@ -99,4 +159,3 @@
 
 </body>
 </html>
-
