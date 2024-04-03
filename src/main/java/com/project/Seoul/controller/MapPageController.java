@@ -40,7 +40,11 @@ public class MapPageController {
         model.addAttribute("lists", cultureInfoList); // 행사 정보 추가
 
         List<SubwayInfo> subwayInfos = mapPageService.getSubway();
-
+        for (SubwayInfo subwayInfo : subwayInfos) {
+            mapPageService.saveSubway(subwayInfo);
+            System.out.print("swNm = " + subwayInfo.getSW_NM() + ", ");
+            System.out.println("NODE_WKT = " + subwayInfo.getNODE_WKT());
+        }
 
         return "homepage/mapPage"; // 맵 페이지 템플릿 반환
     }
@@ -64,7 +68,7 @@ public class MapPageController {
         // getters and setters
     }
 
-    @GetMapping("/mapsearchEvents")
+    @GetMapping("/mapSearchEvents")
     public ResponseEntity<List<CultureInfo>> searchEvents(
             @RequestParam String keyword,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,

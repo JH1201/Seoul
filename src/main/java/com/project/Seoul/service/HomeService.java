@@ -3,7 +3,6 @@ package com.project.Seoul.service;
 import com.google.gson.Gson;
 import com.project.Seoul.domain.*;
 import com.project.Seoul.repository.EventsRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -122,6 +121,8 @@ public class HomeService {
     public List<CultureInfo> comprehensiveSearch(String keyword, LocalDate startDate, LocalDate endDate, List<String> eventTypes, List<String> locations) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
         LocalDate today = LocalDate.now();
+
+
 
         boolean includeAllEventTypes = eventTypes.contains("전체");
         boolean includeAllLocations = locations.contains("전체");
