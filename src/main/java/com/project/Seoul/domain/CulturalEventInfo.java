@@ -14,5 +14,4 @@ public class CulturalEventInfo {
     private List<CultureInfo> row;
 
 
-    // getters and setters
 }

@@ -10,6 +10,8 @@
     font-weight: normal;
     font-style: normal;
 }
+
+
 html, body {
     margin: 0;
     padding: 0;
@@ -32,14 +34,44 @@ h1 {
 /* 세부 정보 섹션 스타일 설정 */
 #details {
     flex: 1; /* 화면의 1/4 차지 */
-    height: 100%; /* Adjust the height as necessary */
-    overflow-y: scroll; /* This will add a vertical scrollbar if the content overflows */
+    overflow-y: auto; /* 내용이 높이를 초과하면 스크롤바 표시 */
+    max-height: 100vh; /* 뷰포트 높이를 초과하지 않도록 제한 */
+    padding: 10px;
 }
 /* 지도 섹션 스타일 설정 */
-#map {
+.map_wrap {
     flex: 3; /* 화면의 3/4 차지 */
     height: 100%; /* 지도 높이 설정 */
 }
+#map {
+    height: 100%;
+}
+
+.radius_border{border:1px solid #919191;border-radius:5px;}
+.custom_typecontrol {position:absolute;top:30px;right:30px;overflow:hidden;width:130px;height:30px;margin:0;padding:0;z-index:1;font-size:12px;font-family:'Malgun Gothic', '맑은 고딕', sans-serif;}
+.custom_typecontrol span {display:block;width:65px;height:30px;float:left;text-align:center;line-height:30px;cursor:pointer;}
+.custom_typecontrol .btn {background:#fff;background:linear-gradient(#fff,  #e6e6e6);}
+.custom_typecontrol .btn:hover {background:#f5f5f5;background:linear-gradient(#f5f5f5,#e3e3e3);}
+.custom_typecontrol .btn:active {background:#e6e6e6;background:linear-gradient(#e6e6e6, #fff);}
+.custom_typecontrol .selected_btn {color:#fff;background:#425470;background:linear-gradient(#425470, #5b6d8a);}
+.custom_typecontrol .selected_btn:hover {color:#fff;}
+.custom_zoomcontrol {position:absolute;top:70px;right:30px;width:36px;height:80px;overflow:hidden;z-index:1;background-color:#f5f5f5;}
+.custom_zoomcontrol span {display:block;width:36px;height:40px;text-align:center;cursor:pointer;}
+.custom_zoomcontrol span img {width:15px;height:15px;padding:12px 0;border:none;}
+.custom_zoomcontrol span:first-child{border-bottom:1px solid #bfbfbf;}
+
+#category {position:absolute;top:30px;left:30%;border-radius: 10px; border:1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);background: #fff;overflow: hidden;z-index: 2; padding-left:0;}
+#category li {float:left;list-style: none;width:70px;border-right:1px solid #acacac;padding:6px 0;text-align: center; cursor: pointer;}
+#category li img { /* 이미지 크기 조정 */
+    width: 40px; /* 새 이미지 너비 */
+    height: 42px; /* 새 이미지 높이 */
+    display: block;
+    margin: 0 auto; /* 중앙 정렬 */
+}
+#category li.on {background: #eee;}
+#category li:hover {background: #ffe6e6;border-left:1px solid #acacac;margin-left: -1px;}
+#category li:last-child{margin-right:0;border-right:0;}
+#category li span {display: block;margin:0 auto 3px;width:27px;height: 28px;}
 
 
 
@@ -72,16 +104,80 @@ h1 {
     border-bottom: 1px solid rgb(220, 220, 220);
 }
 
+.button {
+    float: left;
+    min-width: 100px;
+    max-width: 250px;
+    display: block;
+    margin: 2%;
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 8px;
+    padding-left: 8px;
+    border: none; /* This removes the border */
+    background: none;
+    color: inherit;
+    vertical-align: middle;
+    position: relative;
+    z-index: 1;
+    -webkit-backface-visibility: hidden;
+    -moz-osx-font-smoothing: grayscale;
+}
+
 .button_wrap {
     display: flex;
     justify-content: center;
     padding: 10px;
 }
 
-.button_wrap button {
-    font-size: 15px;
-    width: 100px;
-    margin-left: 10px;
-    margin-right: 10px;
-    height: 50px;
+.button_wrap .button {
+
+    color: #37474f;
+    border-color: #37474f;
+}
+
+/* Typography and Roundedness */
+.button--text-thick {
+    font-weight: 600;
+}
+
+/* Borders */
+.button--border-thin {
+    border: 1px solid;
+}
+
+/* Ujarak */
+.button--ujarak {
+    -webkit-transition: border-color 0.4s, color 0.4s;
+    transition: border-color 0.4s, color 0.4s;
+}
+
+.button--ujarak::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #37474f;
+    z-index: -1;
+    opacity: 0;
+    -webkit-transform: scale3d(0.7, 1, 1);
+    transform: scale3d(0.7, 1, 1);
+    -webkit-transition: -webkit-transform 0.4s, opacity 0.4s;
+    transition: transform 0.4s, opacity 0.4s;
+    -webkit-transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
+    transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+.button--ujarak:hover {
+    color: #fff;
+    border-color: #37474f;
+}
+
+.button--ujarak:hover::before {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
 }

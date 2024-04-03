@@ -1,11 +1,8 @@
 package com.project.Seoul.service;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.project.Seoul.domain.*;
 import com.project.Seoul.repository.EventsRepository;
-import com.project.Seoul.repository.FavoriteEventsRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,45 +16,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class HomeService {
 
     public final EventsRepository eventsRepository;
-    public final FavoriteEventsRepository favoriteEventsRepository;
 
-    public HomeService(EventsRepository eventsRepository, FavoriteEventsRepository favoriteEventsRepository) {
+    public HomeService(EventsRepository eventsRepository) {
         this.eventsRepository = eventsRepository;
-        this.favoriteEventsRepository = favoriteEventsRepository;
     }
 
-
-    //문화행사 정보 api
-    /*
-    public List<CultureInfo> getAllCultureInfoApi() {
-
-        //RestTemplate응 이용해 api 받아오는 방법
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.getForEntity("http://openapi.seoul.go.kr:8088/5a6f416d79776c6735304c6142424e/json/culturalEventInfo/1/1000", String.class);
-
-        String jsonInput = response.getBody();
-
-        Gson gson = new Gson();
-
-        CulturalEventInfoWrapper wrapper = gson.fromJson(jsonInput, CulturalEventInfoWrapper.class);
-
-        //받아온 api데이터(json형식)의 row 부분을 CultureInfo 객체로 만들어서 리스트에 저장
-        //curtureInfoList == 받아온 문화행사 정보들의 객체
-        List<CultureInfo> curtureInfoList = wrapper.getCulturalEventInfo().getRow();
-
-
-
-        return curtureInfoList;
-    }
-
-     */
 
     public List<CultureInfo> getAllCultureInfoApi() {
         RestTemplate restTemplate = new RestTemplate();
@@ -149,22 +118,11 @@ public class HomeService {
 
 
 
-
-    //출력 타입을 FavoriteCultureInfo -> CultureInfo 변환
-    private CultureInfo convertFavoriteToCulture(FavoriteCultureInfo favorite) {
-        // ModelMapper의 인스턴스를 생성합니다.
-        ModelMapper modelMapper = new ModelMapper();
-
-        // CultureInfo 객체를 FavoriteCultureInfo 객체로 매핑합니다.
-        CultureInfo cultureInfo = modelMapper.map(favorite, CultureInfo.class);
-
-
-        return cultureInfo;
-    }
-
     public List<CultureInfo> comprehensiveSearch(String keyword, LocalDate startDate, LocalDate endDate, List<String> eventTypes, List<String> locations) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
         LocalDate today = LocalDate.now();
+
+
 
         boolean includeAllEventTypes = eventTypes.contains("전체");
         boolean includeAllLocations = locations.contains("전체");
@@ -220,6 +178,7 @@ public class HomeService {
             LocalDate date2 = null;
             LocalDate year = null;
             LocalDate year2 = null;
+
 
 
             // "2024-12-07~2024-12-07" 형태일 때

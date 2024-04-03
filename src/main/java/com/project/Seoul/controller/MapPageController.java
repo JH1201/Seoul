@@ -1,6 +1,7 @@
 package com.project.Seoul.controller;
 
 import com.project.Seoul.domain.CultureInfo;
+import com.project.Seoul.domain.SubwayInfo;
 import com.project.Seoul.repository.EventsRepository;
 import com.project.Seoul.service.HomeService;
 import com.project.Seoul.service.MapPageService;
@@ -8,15 +9,12 @@ import com.project.Seoul.service.MapPageService;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,17 +39,12 @@ public class MapPageController {
 
         model.addAttribute("lists", cultureInfoList); // 행사 정보 추가
 
-        /*
-        //37.53681, 126.9268
-        //37.59586, 127.0207
-        Double swLat = 37.53681;
-        Double swLng = 126.9268;
-        Double neLat = 37.59586;
-        Double neLng = 127.0207;
-
-        List<CultureInfo> filteredEvents = mapPageService.filterEventsByBounds(swLat, swLng, neLat, neLng);
-
-         */
+        List<SubwayInfo> subwayInfos = mapPageService.getSubway();
+        for (SubwayInfo subwayInfo : subwayInfos) {
+            mapPageService.saveSubway(subwayInfo);
+            System.out.print("swNm = " + subwayInfo.getSW_NM() + ", ");
+            System.out.println("NODE_WKT = " + subwayInfo.getNODE_WKT());
+        }
 
         return "homepage/mapPage"; // 맵 페이지 템플릿 반환
     }
@@ -75,7 +68,7 @@ public class MapPageController {
         // getters and setters
     }
 
-    @GetMapping("/mapsearchEvents")
+    @GetMapping("/mapSearchEvents")
     public ResponseEntity<List<CultureInfo>> searchEvents(
             @RequestParam String keyword,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
