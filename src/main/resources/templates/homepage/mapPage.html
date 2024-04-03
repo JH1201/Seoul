@@ -269,7 +269,11 @@
                 주차장
             </li>
         </ul>
+        <ul id="CurrentLocation">
+            <li>현재 위치로 보기</li>
+        </ul>
     </div>
+
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=33db73c119b1dea112b5e9038fd6ef2a&libraries=services"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script th:inline="javascript">
@@ -781,14 +785,20 @@
         }
         function moveToLocation(lat, lng) {
             var moveLatLon = new kakao.maps.LatLng(lng, lat);
-            var currentLevel = map.getLevel();
-            map.panTo(moveLatLon);
-            setTimeout(function() {
-                if(currentLevel > 2) {
-                    map.setLevel(currentLevel-2, {
-                        animate: {
-                            duration: 500
-                        }});}}, 500);
+
+            map.panTo(moveLatLon); // 지정한 위치로 지도 중심 이동
+
+            // 지도 레벨 조정을 위한 함수
+            function adjustLevel() {
+                var currentLevel = map.getLevel();
+                if (currentLevel > 3) {
+                    map.setLevel(currentLevel - 2, {animate: {duration: 300}}); // 레벨 조정
+                    setTimeout(adjustLevel, 300); // 500ms 후에 다시 레벨 조정
+                }
+            }
+
+            // 최초의 레벨 조정 실행
+            setTimeout(adjustLevel, 300);
         }
 
     </script>
