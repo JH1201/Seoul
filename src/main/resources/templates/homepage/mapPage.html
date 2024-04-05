@@ -4,39 +4,19 @@
     <title>서울은 지금</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="/mapPageCss/MapPageCss.css">
+
 </head>
 <body>
 
 
 <div id="container">
-    <div id="details">
+    <div id="details" style="width: 400px">
         <h1>
             <a href="/home" style="text-decoration: none">서울은 지금</a>
         </h1>
 
         <div class="search-container">
-            <div class="searchUpPart">
-                <div class="dateSearch">
-                    <div class="date">
-                        <label for="date1">
-                            <input type="date" id="date1"></input>
-                        </label>
-                    </div>
-                    <div class="date" style="display: flex; align-items: center; height: 60px;"> ~ </div>
-                    <div class="date">
-                        <label for="date2">
-                            <input type="date" id="date2" value="2024-12-31"></input>
-                        </label>
-                    </div>
-                </div>
 
-                <div>
-                    <form class="search-part" id="searchForm" action="/search" method="get">
-                        <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요.&#10;(ex: 행사명, 장소, 역 등)" >
-                        <button class="search-button" type="submit">🔍︎</button>
-                    </form>
-                </div>
-            </div>
             <br><br>
             <div class="searchDownPart">
                 <div class="eventType">
@@ -113,28 +93,7 @@
                     <button id="resetButton"> 선택 초기화 </button>
                 </div>
             </div>
-            <script>
-                // 현재 날짜를 가져오는 함수
-                function getCurrentDate() {
-                    const today = new Date();
-                    const year = today.getFullYear();
-                    let month = today.getMonth() + 1;
-                    let day = today.getDate();
 
-                    // 월과 일이 한 자리 숫자인 경우 앞에 0을 추가해줍니다.
-                    if (month < 10) {
-                        month = '0' + month;
-                    }
-                    if (day < 10) {
-                        day = '0' + day;
-                    }
-
-                    return `${year}-${month}-${day}`;
-                }
-
-                // input 요소의 value 속성에 현재 날짜를 설정합니다.
-                document.getElementById('date1').value = getCurrentDate();
-            </script>
 
         </div>
 
@@ -247,9 +206,82 @@
             });
         </script>
 
+        <button id="toggle-button">
+            <img src="image/left-chevron.png" alt="Toggle Detail View" id="toggle-icon" />
+        </button>
+
+        <script>
+            document.getElementById('toggle-button').addEventListener('click', function() {
+                var details = document.getElementById('details');
+                var button = document.getElementById('toggle-button');
+                var icon = document.getElementById('toggle-icon');
+                if (details.style.width === '400px') {
+                    details.style.width = '0'; // 상세 정보를 접습니다.
+                    button.style.left = '0'; // 버튼의 위치를 조정합니다.
+                    icon.src = "image/right-chevron.png";
+                } else {
+                    details.style.width = '400px'; // 상세 정보를 펼칩니다.
+                    button.style.left = '400px'; // 버튼의 위치를 원래대로 돌립니다.
+                    icon.src = "image/left-chevron.png";
+                }
+            });
+
+
+
+        </script>
+
     </div>
     <div class="map_wrap">
         <div id="map"></div>
+
+        <div class="searchUpPart">
+            <div class="dateSearch">
+                <div class="date">
+                    <label for="date1">
+                        <input type="date" id="date1"></input>
+                    </label>
+                </div>
+                <div class="date" style="display: flex; align-items: center; height: 60px;"> ~ </div>
+                <div class="date">
+                    <label for="date2">
+                        <input type="date" id="date2" value="2024-12-31"></input>
+                    </label>
+                </div>
+
+                <div style="margin-left:10px">
+                    <form class="search-part" id="searchForm" action="/search" method="get">
+                        <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요.&#10;" >
+                        <button class="search-button" type="submit">🔍︎</button>
+                    </form>
+                </div>
+            </div>
+
+
+        </div>
+
+        <script>
+            // 현재 날짜를 가져오는 함수
+            function getCurrentDate() {
+                const today = new Date();
+                const year = today.getFullYear();
+                let month = today.getMonth() + 1;
+                let day = today.getDate();
+
+                // 월과 일이 한 자리 숫자인 경우 앞에 0을 추가해줍니다.
+                if (month < 10) {
+                    month = '0' + month;
+                }
+                if (day < 10) {
+                    day = '0' + day;
+                }
+
+                return `${year}-${month}-${day}`;
+            }
+
+            // input 요소의 value 속성에 현재 날짜를 설정합니다.
+            document.getElementById('date1').value = getCurrentDate();
+        </script>
+
         <div class="custom_typecontrol radius_border">
             <span id="btnRoadmap" class="selected_btn" onclick="setMapType('roadmap')">지도</span>
             <span id="btnSkyview" class="btn" onclick="setMapType('skyview')">스카이뷰</span>
