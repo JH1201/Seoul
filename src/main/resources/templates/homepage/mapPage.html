@@ -224,6 +224,11 @@
                     button.style.left = '400px'; // 버튼의 위치를 원래대로 돌립니다.
                     icon.src = "image/left-chevron.png";
                 }
+
+                setTimeout(function() {
+                    map.relayout();
+                    // 토글 했을 때 오른쪽 맵 짤리는 현상 해결
+                }, 300); // 300ms 후에 실행
             });
 
 
@@ -423,7 +428,9 @@
                                     event.stopPropagation();
                                     this.scrollTop += event.deltaY * 2;
                                 }, { passive: false });
-                            }, 0);
+                            },0);
+
+
                         }
                     }
                 });

@@ -214,7 +214,8 @@ img {
 /* 지도 섹션 스타일 설정 */
 .map_wrap {
     flex-grow: 1;
-    height: 100%; /* 지도 높이 설정 */
+    height: 100vh; /* 지도 높이 설정 */
+    width: 100vh;
     position: relative;
 
 }
