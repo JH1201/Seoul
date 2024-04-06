@@ -299,7 +299,6 @@ img {
     gap: 5px; /* 요소들 사이의 간격 */
     max-height: 200px;
     overflow-y: auto; /* 세로 스크롤바 생성 */
-    position: relative;
 }
 .markerinfo a, .markerinfo a:hover, .markerinfo a:active{color:#fff;text-decoration: none; white-space: normal; display: block;}
 .markerinfo a, .markerinfo span {display: block; text-overflow: ellipsis;overflow: hidden;white-space: normal;}
