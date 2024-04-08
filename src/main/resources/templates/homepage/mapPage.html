@@ -217,15 +217,19 @@
                 var details = document.getElementById('details');
                 var button = document.getElementById('toggle-button');
                 var icon = document.getElementById('toggle-icon');
-                if (details.style.width === '450px') {
+                if (details.style.width === '400px') {
                     details.style.width = '0'; // 상세 정보를 접습니다.
                     button.style.left = '0'; // 버튼의 위치를 조정합니다.
                     icon.src = "image/right-chevron.png";
                 } else {
-                    details.style.width = '450px'; // 상세 정보를 펼칩니다.
-                    button.style.left = '450px'; // 버튼의 위치를 원래대로 돌립니다.
+                    details.style.width = '400px'; // 상세 정보를 펼칩니다.
+                    button.style.left = '400px'; // 버튼의 위치를 원래대로 돌립니다.
                     icon.src = "image/left-chevron.png";
                 }
+                setTimeout(function() {
+                    map.relayout();
+                    // 토글 했을 때 오른쪽 맵 짤리는 현상 해결
+                }, 300); // 300ms 후에 실행
             });
 
 
