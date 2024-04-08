@@ -19,10 +19,10 @@ html, body {
 
 h1 {
     font-family: 'TTHakgyoansimMulgyeolB';
-    text-align: left;
     font-size: 65px;
-    padding-left: 30px;
-    padding-bottom: 40px;
+    text-align: center;
+    position: relative;
+    margin-top: 20px;
 }
 
 /* 컨테이너 스타일 설정 */

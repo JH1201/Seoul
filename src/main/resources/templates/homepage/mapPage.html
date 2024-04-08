@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>서울은 지금</title>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="/mapPageCss/MapPageCss.css">
 
 </head>
@@ -10,7 +10,7 @@
 
 
 <div id="container">
-    <div id="details" style="width: 400px">
+    <div id="details" style="width: 450px">
         <h1>
             <a href="/home" style="text-decoration: none">서울은 지금</a>
         </h1>
@@ -102,11 +102,13 @@
             <div class="items-grid">
                 <div th:each="event : ${lists}" class="item">
                     <a th:href="@{/eventInfo(title=${event.getTITLE()})}">
-                        <img th:src="${event.getMAIN_IMG()}" alt="Event Image">
+                        <img th:src="${event.getMAIN_IMG()}" alt="Event Image" class="itemimg">
                     </a>
                     <div>
                         <h4 th:text="${event.getTITLE()}"></h4>
                         <p class="is-free" th:text="${event.getIS_FREE()}"></p>
+                        <p class="eventdate" th:text="${event.getDATE()}"></p>
+                        <p class="place" th:text="${event.getPLACE()}"></p>
                     </div>
                     <button class="event-location" type="submit" th:data-lat="${event.getLAT()}" th:data-lng="${event.getLOT()}">
                         <img src="/image/13807908.png" alt="위치로딩">
@@ -224,7 +226,6 @@
                     button.style.left = '400px'; // 버튼의 위치를 원래대로 돌립니다.
                     icon.src = "image/left-chevron.png";
                 }
-
                 setTimeout(function() {
                     map.relayout();
                     // 토글 했을 때 오른쪽 맵 짤리는 현상 해결
@@ -311,7 +312,7 @@
         </ul>
     </div>
 
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=33db73c119b1dea112b5e9038fd6ef2a&libraries=services"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=33db73c119b1dea112b5e9038fd6ef2a&libraries=services,clusterer,drawing"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script th:inline="javascript">
         // 마커를 클릭했을 때 해당 장소의 상세정보를 보여줄 커스텀오버레이입니다
@@ -324,10 +325,11 @@
         var mapContainer = document.getElementById('map'), // 지도를 표시할 div
             mapOption = {
                 center: new kakao.maps.LatLng(37.566535, 126.9779692), // 지도의 중심좌표
-                level: 7 // 지도의 확대 레벨
+                level: 8, // 지도의 확대 레벨
+                maxLevel: 8
             };
 
-        var map = new kakao.maps.Map(mapContainer, mapOption);
+        let map = new kakao.maps.Map(mapContainer, mapOption);
         var ps = new kakao.maps.services.Places(map);
         function setMapType(maptype) {
             var roadmapControl = document.getElementById('btnRoadmap');
@@ -355,7 +357,174 @@
         var markers = [];
         var currentMarker = null;
         var currentOverlay = null;
-        addMarkersToMap(map, cultureInfoList);
+        var polygons = [];
+        let customOverlay = new kakao.maps.CustomOverlay({});
+        var polygonNames = new Map();
+
+        $.getJSON("image/seoul.json", function(geojson) {
+            var data = geojson.features;
+            let coordinates = []; // 좌표 저장 배열
+            let name = ''; // 구 이름
+
+            $.each(data, function (index, val) {
+                coordinates = val.geometry.coordinates;
+                name = val.properties.SIG_KOR_NM;
+
+                displayArea(coordinates, name);
+            });
+
+            addMarkersToMap(map, cultureInfoList);
+        });
+
+        function displayArea(coordinates, name) {
+            var path = [];
+            var points = [];
+
+           $.each(coordinates[0], function(index, coordinate) {
+               var point = new Object();
+               point.x = coordinate[1];
+               point.y = coordinate[0];
+               points.push(point);
+               path.push(new kakao.maps.LatLng(coordinate[1], coordinate[0]));
+           })
+
+            var polygon = new kakao.maps.Polygon({
+                map: map,
+                path: path,
+                strokeWeight: 2,
+                strokeColor : '#004c80',
+                strokeOpacity : 0.8,
+                fillColor : '#fff',
+                fillOpacity : 0.7
+            });
+            polygons.push(polygon);
+            polygonNames.set(polygon, name);
+
+            kakao.maps.event.addListener(polygon, 'mouseover', function(mouseEvent) {
+                polygon.setOptions({ fillColor: '#09f' });
+                //customOverlay.setContent('<div class="area">' + name + '</div>');
+                customOverlay.setPosition(mouseEvent.latLng);
+                customOverlay.setMap(map);
+            });
+
+            kakao.maps.event.addListener(polygon, 'mouseout', function() {
+                polygon.setOptions({
+                    fillColor: '#fff'
+                });
+                customOverlay.setMap(null);
+            });
+
+            kakao.maps.event.addListener(polygon,'click', function() {
+                var level = map.getLevel()-2;
+                map.setLevel(level, {anchor: centroid(points), animate: {
+                        duration:350
+                    }});
+                deletePolygon(polygons);
+            });
+
+            kakao.maps.event.addListener(map, 'zoom_changed', function() {
+                var level = map.getLevel();
+                if (level >= 8) {
+                    // 확대 레벨이 8 이상일 때
+                    hideMarkers(); // 모든 마커 숨기기
+                    displayPolygonsWithCount(); // 폴리곤과 마커 수 표시
+                } else {
+                    // 확대 레벨이 8 미만일 때
+                    showMarkers(); // 마커 표시
+                    hidePolygons(); // 폴리곤 숨기기
+                }
+            });
+
+        }
+
+        function hideMarkers() {
+            markers.forEach(marker => marker.setMap(null));
+        }
+
+        function showMarkers() {
+            markers.forEach(marker => marker.setMap(map));
+        }
+
+        function hidePolygons() {
+            polygons.forEach(polygon => {
+                polygon.setMap(null);
+                if (polygon.label) {
+                    polygon.label.setMap(null); // 레이블이 있으면 숨깁니다.
+                    polygon.label = null; // 레이블 참조를 제거합니다.
+                }
+            });
+        }
+
+        function displayPolygonsWithCount() {
+            var level = map.getLevel();
+            if (level < 8) {
+                hidePolygons(); // 확대 레벨이 8 이하인 경우, 모든 폴리곤과 레이블을 숨깁니다.
+                return; // 함수 실행을 종료합니다.
+            }
+            hideMarkers();
+            polygons.forEach(function(polygon) {
+                var name = polygonNames.get(polygon); // 폴리곤 객체로부터 이름을 조회
+                var count = 0;
+                markersInfo.forEach(function(markerInfo) {
+                    if (markerInfo.guname === name) {
+                        count++; // 같은 구 이름이면 카운트 증가
+                    }
+                });
+                polygon.setMap(map); // 폴리곤 표시
+
+                var content = `<div style="padding:5px; background-color: green; color: white; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; flex-direction: column; background-image: radial-gradient(circle at center, rgba(0,128,0,1) 0%, rgba(0,128,0,0.6) 40%, rgba(0,128,0,0) 70%); border-radius: 50%;">
+            <div style="font-size: 15px;">${name}</div>
+            <div style="font-size: 18px; font-weight: bold;">${count}</div>
+        </div>`;
+
+                // 레이블 업데이트 또는 생성
+                if (polygon.label) {
+                    polygon.label.setContent(content);
+                    polygon.label.setMap(map);
+                } else {
+                    var overlay = new kakao.maps.CustomOverlay({
+                        content: content,
+                        map: map,
+                        position: centroidbypath(polygon.getPath())
+                    });
+                    polygon.label = overlay; // 새로운 레이블을 생성하고 폴리곤에 참조를 추가합니다.
+                }
+            });
+
+        }
+
+        // 폴리곤 중심 계산 함수
+        function centroid(points) {
+            var i, j, len, p1, p2, f, area, x, y;
+            area = x = y = 0;
+            for(i = 0, len = points.length, j = len - 1; i < len; j = i++) {
+                p1 = points[i];
+                p2 = points[j];
+
+                f = p1.y * p2.x - p2.y * p1.x;
+                x += (p1.x + p2.x) * f;
+                y += (p1.y + p2.y) * f;
+                area += f * 3;
+            }
+            return new kakao.maps.LatLng(x/area, y/area);
+        }
+
+        function centroidbypath(path) {
+            var x = 0, y = 0, len = path.length;
+            path.forEach(function(coord) {
+                x += coord.getLng();
+                y += coord.getLat();
+            });
+            return new kakao.maps.LatLng(y / len, x / len);
+        }
+
+        function deletePolygon(polygons) {
+            polygons.forEach(function(polygon) {
+                polygon.setMap(null);
+            });
+            polygons = [];
+        }
+
 
         function addMarkersToMap(map, cultureInfoList) {
             removeMarkers();
@@ -410,32 +579,37 @@
                             }).join('');
                             containerHTML += eventsHTML + '</div>';
 
-                            var overlayPosition = new kakao.maps.LatLng(marker.getPosition().getLat() + 0.0055, marker.getPosition().getLng()); // 오버레이 위치 조정
+                            var overlayPosition = new kakao.maps.LatLng(marker.getPosition().getLat(), marker.getPosition().getLng()); // 오버레이 위치 조정
 
                             var overlay = new kakao.maps.CustomOverlay({
                                 content: containerHTML,
                                 map: map,
                                 position: overlayPosition,
-                                yAnchor: 1
+                                yAnchor: 1.2
                             });
 
                             currentOverlay = overlay;
                             currentMarker = marker;
 
-                            setTimeout(() => {
-                                document.querySelector('.markerinfo-container').addEventListener('wheel', function(event) {
-                                    event.preventDefault();
-                                    event.stopPropagation();
-                                    this.scrollTop += event.deltaY * 2;
-                                }, { passive: false });
-                            },0);
-
-
+                            requestAnimationFrame(() => {
+                                var overlayContainer = document.querySelector('.markerinfo-container');
+                                if (overlayContainer) {
+                                    overlayContainer.addEventListener('wheel', function(event) {
+                                        event.preventDefault();
+                                        event.stopPropagation();
+                                        this.scrollTop += event.deltaY * 2;
+                                    }, { passive: false });
+                                } else {
+                                    console.error("The '.markerinfo-container' element was not found.");
+                                }
+                            });
                         }
                     }
                 });
 
             });
+            displayPolygonsWithCount();
+
         }
 
         function addMarkersToMap2(map, cultureInfoList) {
@@ -484,7 +658,7 @@
                         }
 
                         if (matchingEvents.length > 0) {
-                            var containerHTML = '<div class="markerinfo-container2" style="position: relative; bottom: 35px; margin-bottom: 8px;">';
+                            var containerHTML = '<div class="markerinfo-container2">';
                             var eventsHTML = matchingEvents.map(function(event) {
                                 var eventInfoUrl = `/eventInfo?title=${encodeURIComponent(event.title)}`;
                                 return `<div class="markerinfo2">
@@ -494,23 +668,30 @@
                             }).join('');
                             containerHTML += eventsHTML + '</div>';
 
+                            var overlayPosition = new kakao.maps.LatLng(marker.getPosition().getLat(), marker.getPosition().getLng()); // 오버레이 위치 조정
+
                             var overlay = new kakao.maps.CustomOverlay({
                                 content: containerHTML,
                                 map: map,
-                                position: marker.getPosition(),
-                                yAnchor: 1
+                                position: overlayPosition,
+                                yAnchor: 1.2
                             });
 
                             currentOverlay = overlay;
                             currentMarker = marker;
 
-                            setTimeout(() => {
-                                document.querySelector('.markerinfo-container2').addEventListener('wheel', function(event) {
-                                    event.preventDefault();
-                                    event.stopPropagation();
-                                    this.scrollTop += event.deltaY * 2;
-                                }, { passive: false });
-                            }, 0);
+                            requestAnimationFrame(() => {
+                                var overlayContainer = document.querySelector('.markerinfo-container2');
+                                if (overlayContainer) {
+                                    overlayContainer.addEventListener('wheel', function(event) {
+                                        event.preventDefault();
+                                        event.stopPropagation();
+                                        this.scrollTop += event.deltaY * 2;
+                                    }, { passive: false });
+                                } else {
+                                    console.error("The '.markerinfo-container' element was not found.");
+                                }
+                            });
                         }
                     }
                 });
@@ -518,6 +699,7 @@
             });
 
             map.setBounds(bounds);
+            displayPolygonsWithCount();
         }
 
 
@@ -764,6 +946,8 @@
 
                 var item = document.createElement('div');
                 item.classList.add('item');
+                item.style.margin='10px';
+                item.style.marginLeft='5px';
 
                 var imageLink = document.createElement('a');
                 imageLink.href = `/eventInfo?title=${encodeURIComponent(event.title)}`;
@@ -771,21 +955,40 @@
                 var image = document.createElement('img');
                 image.src = event.main_IMG;
                 image.alt = 'Event Image';
+                image.style.borderRadius='5px';
 
                 var title = document.createElement('h4');
                 title.innerText = event.title;
+                title.style.marginTop='0px';
+                title.style.marginBottom='12px';
+                title.style.marginLeft='5px';
 
                 var isFree = document.createElement('p');
                 isFree.innerText = event.is_FREE ? '무료' : '유료';
                 isFree.classList.add('is-free');
+                isFree.style.margin = '5px';
 
                 var imageContainer = document.createElement('div');
                 imageLink.appendChild(image);
                 imageContainer.appendChild(imageLink);
+                imageContainer.style.width='80px';
+                imageContainer.style.height='120px';
+                imageContainer.style.boxShadow='2px 2px gray';
+                imageContainer.style.borderRadius='5px';
+
+                var eventdate = document.createElement('p');
+                eventdate.innerText = event.date;
+                eventdate.style.margin = '5px';
+
+                var place = document.createElement('p');
+                place.innerText = event.place;
+                place.style.margin = '5px';
 
                 var titleContainer = document.createElement('div');
                 titleContainer.appendChild(title);
                 titleContainer.appendChild(isFree);
+                titleContainer.appendChild(eventdate);
+                titleContainer.appendChild(place);
 
                 var locationButton = document.createElement('button');
                 locationButton.className = 'event-location';
@@ -800,8 +1003,8 @@
                 locationImage.style.height = "25px"; // 이미지 높이 설정
                 locationButton.appendChild(locationImage);
                 locationButton.style.position = 'absolute';
-                locationButton.style.right = '30px';
-                locationButton.style.bottom = '15px';
+                locationButton.style.right = '15px';
+                locationButton.style.bottom = '5px';
                 locationButton.style.width = '25px';
                 locationButton.style.height = '25px';
                 locationButton.style.background = 'transparent';
