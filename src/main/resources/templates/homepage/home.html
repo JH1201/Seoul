@@ -67,9 +67,7 @@
 
 <div class="background-image-container">
     <div class="swiper-container">
-        <!-- 슬라이더의 각 슬라이드를 담을 래퍼 -->
         <div class="swiper-wrapper">
-            <!-- Thymeleaf를 사용하여 아이템들을 반복하여 각 슬라이드 생성 -->
             <div th:each="item : ${items}" class="swiper-slide">
                 <div class="image-container">
                     <a th:href="@{/eventInfo(title=${item.TITLE})}">
@@ -108,60 +106,90 @@
             <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요. (ex: 행사명, 장소, 역 등 )" >
             <button class="search-button" type="submit">🔍︎</button>
         </form>
-    </div>
-    <br><br>
-    <div class="searchDownPart">
-        <div class="eventType">
-            <input type="checkbox" id="select0" name="eventType" value="전체"><label for="select0" id="select0Label"> 전체</label>
-            <input type="checkbox" id="select1" name="eventType" value="뮤지컬/오페라"><label for="select1" id="select1Label"> 뮤지컬/오페라</label>
-            <input type="checkbox" id="select2" name="eventType" value="연극"><label for="select2" id="select2Label"> 연극</label>
-            <input type="checkbox" id="select3" name="eventType" value="무용"><label for="select3" id="select3Label"> 무용</label>
-            <input type="checkbox" id="select4" name="eventType" value="국악"><label for="select4" id="select4Label"> 국악</label>
-            <input type="checkbox" id="select5" name="eventType" value="클래식"><label for="select5" id="select5Label"> 클래식</label>
-            <input type="checkbox" id="select6" name="eventType" value="전시/미술"><label for="select6" id="select6Label"> 전시/미술</label>
-            <input type="checkbox" id="select7" name="eventType" value="교육/체험"><label for="select7" id="select7Label"> 교육/체험</label>
-            <input type="checkbox" id="select8" name="eventType" value="콘서트"><label for="select8" id="select8Label"> 콘서트</label>
-            <input type="checkbox" id="select9" name="eventType" value="영화"><label for="select9" id="select9Label"> 영화</label>
-            <input type="checkbox" id="select10" name="eventType" value="독주/독창회"><label for="select10" id="select10Label"> 독주/독창회</label>
-            <input type="checkbox" id="select11" name="eventType" value="축제"><label for="select11" id="select11Label"> 축제</label>
-            <input type="checkbox" id="select12" name="eventType" value="기타"><label for="select12" id="select12Label"> 기타</label>
-        </div><br><br>
+        <ul id="detailSearchToggle">
+            상세검색 열기 &#9660;
+        </ul>
 
-        <div class="locationName">
-            <input type="checkbox" id="location0" name="location" value="전체"><label for="location0" id="location0Label"> 전체</label>
-            <input type="checkbox" id="location1" name="location" value="강남구"><label for="location1" id="location1Label"> 강남구</label>
-            <input type="checkbox" id="location2" name="location" value="강동구"><label for="location2" id="location2Label"> 강동구</label>
-            <input type="checkbox" id="location3" name="location" value="강북구"><label for="location3" id="location3Label"> 강북구</label>
-            <input type="checkbox" id="location4" name="location" value="강서구"><label for="location4" id="location4Label"> 강서구</label>
-            <input type="checkbox" id="location5" name="location" value="관악구"><label for="location5" id="location5Label"> 관악구</label>
-            <input type="checkbox" id="location6" name="location" value="광진구"><label for="location6" id="location6Label"> 광진구</label>
-            <input type="checkbox" id="location7" name="location" value="구로구"><label for="location7" id="location7Label"> 구로구</label>
-            <input type="checkbox" id="location8" name="location" value="금천구"><label for="location8" id="location8Label"> 금천구</label>
-            <input type="checkbox" id="location9" name="location" value="노원구"><label for="location9" id="location9Label"> 노원구</label>
-            <input type="checkbox" id="location10" name="location" value="도봉구"><label for="location10" id="location10Label"> 도봉구</label>
-            <input type="checkbox" id="location11" name="location" value="동대문구"><label for="location11" id="location11Label"> 동대문구</label>
-            <input type="checkbox" id="location12" name="location" value="동작구"><label for="location12" id="location12Label"> 동작구</label>
-            <input type="checkbox" id="location13" name="location" value="마포구"><label for="location13" id="location13Label"> 마포구</label>
-            <input type="checkbox" id="location14" name="location" value="서대문구"><label for="location14" id="location14Label"> 서대문구</label>
-            <input type="checkbox" id="location15" name="location" value="서초구"><label for="location15" id="location15Label"> 서초구</label>
-            <input type="checkbox" id="location16" name="location" value="성동구"><label for="location16" id="location16Label"> 성동구</label>
-            <input type="checkbox" id="location17" name="location" value="성북구"><label for="location17" id="location17Label"> 성북구</label>
-            <input type="checkbox" id="location18" name="location" value="송파구"><label for="location18" id="location18Label"> 송파구</label>
-            <input type="checkbox" id="location19" name="location" value="양천구"><label for="location19" id="location19Label"> 양천구</label>
-            <input type="checkbox" id="location20" name="location" value="영등포구"><label for="location20" id="location20Label"> 영등포구</label>
-            <input type="checkbox" id="location21" name="location" value="용산구"><label for="location21" id="location21Label"> 용산구</label>
-            <input type="checkbox" id="location22" name="location" value="은평구"><label for="location22" id="location22Label"> 은평구</label>
-            <input type="checkbox" id="location23" name="location" value="종로구"><label for="location23" id="location23Label"> 종로구</label>
-            <input type="checkbox" id="location24" name="location" value="중구"><label for="location24" id="location24Label"> 중구</label>
-            <input type="checkbox" id="location25" name="location" value="중랑구"><label for="location25" id="location25Label"> 중랑구</label>
+        <div id="popupDetail">
+            <br><br>
+            <div class="searchDownPart">
+                <div class="eventType">
+                    <input type="checkbox" id="select0" name="eventType" value="전체"><label for="select0" id="select0Label"> 전체</label>
+                    <input type="checkbox" id="select1" name="eventType" value="뮤지컬/오페라"><label for="select1" id="select1Label"> 뮤지컬/오페라</label>
+                    <input type="checkbox" id="select2" name="eventType" value="연극"><label for="select2" id="select2Label"> 연극</label>
+                    <input type="checkbox" id="select3" name="eventType" value="무용"><label for="select3" id="select3Label"> 무용</label>
+                    <input type="checkbox" id="select4" name="eventType" value="국악"><label for="select4" id="select4Label"> 국악</label>
+                    <input type="checkbox" id="select5" name="eventType" value="클래식"><label for="select5" id="select5Label"> 클래식</label>
+                    <input type="checkbox" id="select6" name="eventType" value="전시/미술"><label for="select6" id="select6Label"> 전시/미술</label>
+                    <input type="checkbox" id="select7" name="eventType" value="교육/체험"><label for="select7" id="select7Label"> 교육/체험</label>
+                    <input type="checkbox" id="select8" name="eventType" value="콘서트"><label for="select8" id="select8Label"> 콘서트</label>
+                    <input type="checkbox" id="select9" name="eventType" value="영화"><label for="select9" id="select9Label"> 영화</label>
+                    <input type="checkbox" id="select10" name="eventType" value="독주/독창회"><label for="select10" id="select10Label"> 독주/독창회</label>
+                    <input type="checkbox" id="select11" name="eventType" value="축제"><label for="select11" id="select11Label"> 축제</label>
+                    <input type="checkbox" id="select12" name="eventType" value="기타"><label for="select12" id="select12Label"> 기타</label>
+                </div><br><br>
+
+                <div class="locationName">
+                    <input type="checkbox" id="location0" name="location" value="전체"><label for="location0" id="location0Label"> 전체</label>
+                    <input type="checkbox" id="location1" name="location" value="강남구"><label for="location1" id="location1Label"> 강남구</label>
+                    <input type="checkbox" id="location2" name="location" value="강동구"><label for="location2" id="location2Label"> 강동구</label>
+                    <input type="checkbox" id="location3" name="location" value="강북구"><label for="location3" id="location3Label"> 강북구</label>
+                    <input type="checkbox" id="location4" name="location" value="강서구"><label for="location4" id="location4Label"> 강서구</label>
+                    <input type="checkbox" id="location5" name="location" value="관악구"><label for="location5" id="location5Label"> 관악구</label>
+                    <input type="checkbox" id="location6" name="location" value="광진구"><label for="location6" id="location6Label"> 광진구</label>
+                    <input type="checkbox" id="location7" name="location" value="구로구"><label for="location7" id="location7Label"> 구로구</label>
+                    <input type="checkbox" id="location8" name="location" value="금천구"><label for="location8" id="location8Label"> 금천구</label>
+                    <input type="checkbox" id="location9" name="location" value="노원구"><label for="location9" id="location9Label"> 노원구</label>
+                    <input type="checkbox" id="location10" name="location" value="도봉구"><label for="location10" id="location10Label"> 도봉구</label>
+                    <input type="checkbox" id="location11" name="location" value="동대문구"><label for="location11" id="location11Label"> 동대문구</label>
+                    <input type="checkbox" id="location12" name="location" value="동작구"><label for="location12" id="location12Label"> 동작구</label>
+                    <input type="checkbox" id="location13" name="location" value="마포구"><label for="location13" id="location13Label"> 마포구</label>
+                    <input type="checkbox" id="location14" name="location" value="서대문구"><label for="location14" id="location14Label"> 서대문구</label>
+                    <input type="checkbox" id="location15" name="location" value="서초구"><label for="location15" id="location15Label"> 서초구</label>
+                    <input type="checkbox" id="location16" name="location" value="성동구"><label for="location16" id="location16Label"> 성동구</label>
+                    <input type="checkbox" id="location17" name="location" value="성북구"><label for="location17" id="location17Label"> 성북구</label>
+                    <input type="checkbox" id="location18" name="location" value="송파구"><label for="location18" id="location18Label"> 송파구</label>
+                    <input type="checkbox" id="location19" name="location" value="양천구"><label for="location19" id="location19Label"> 양천구</label>
+                    <input type="checkbox" id="location20" name="location" value="영등포구"><label for="location20" id="location20Label"> 영등포구</label>
+                    <input type="checkbox" id="location21" name="location" value="용산구"><label for="location21" id="location21Label"> 용산구</label>
+                    <input type="checkbox" id="location22" name="location" value="은평구"><label for="location22" id="location22Label"> 은평구</label>
+                    <input type="checkbox" id="location23" name="location" value="종로구"><label for="location23" id="location23Label"> 종로구</label>
+                    <input type="checkbox" id="location24" name="location" value="중구"><label for="location24" id="location24Label"> 중구</label>
+                    <input type="checkbox" id="location25" name="location" value="중랑구"><label for="location25" id="location25Label"> 중랑구</label>
 
 
-        </div><br><br>
-        <div class="detailButton">
-            <button id="detailSearch"> 검색하기 </button>
-            <button id="resetButton"> 선택 초기화 </button>
+                </div><br>
+                <div class="detailButton">
+                    <button id="detailSearch"> 검색하기 </button>
+                    <button id="resetButton"> 선택 초기화 </button>
+                </div>
+            </div>
         </div>
     </div>
+
+
+
+
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var popup = document.getElementById('popupDetail');
+            popup.style.display = 'none'; // 초기에 팝업을 숨깁니다.
+        });
+
+        document.getElementById('detailSearchToggle').addEventListener('click', function() {
+            var popup = document.getElementById('popupDetail');
+            if (popup.style.display === 'none') {
+                popup.style.display = 'block'; // 팝업을 보여줍니다.
+            } else {
+                popup.style.display = 'none'; // 팝업을 숨깁니다.
+            }
+        });
+
+    </script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // eventType과 locationName 섹션의 모든 체크박스 처리
@@ -396,9 +424,12 @@
                 <a class="page-link" th:href="@{${'/home?page=' + (startPage - 1)}}"><</a>
             </button>
 
-            <button th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}" style="display: inline-block">
+
+            <button th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}"
+                    th:classappend="${pageNumber == currentPage} ? 'current-page'">
                 <a class="page-link" th:href="@{${'/home?page=' + pageNumber}}" th:text="${pageNumber}"></a>
             </button>
+
 
 
             <button th:if="${currentPage < totalPages}" style="display: inline-block">
@@ -435,6 +466,28 @@
         slidesPerView: 5,
         slidesPerGroup: 1,
         spaceBetween:10,
+        breakpoints: {
+            300: {
+                slidesPerView: 1,
+                spaceBetween: 10
+            },
+            650: {
+                slidesPerView: 2,
+                spaceBetween: 20
+            },
+            1000: {
+                slidesPerView: 3,
+                spaceBetween: 30
+            },
+            1350: {
+                slidesPerView: 4,
+                spaceBetween: 40
+            },
+            1700: {
+                slidesPerView: 5,
+                spaceBetween: 50
+            }
+        }
     });
 </script>
 
