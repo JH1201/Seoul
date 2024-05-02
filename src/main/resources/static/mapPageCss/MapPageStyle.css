@@ -16,8 +16,16 @@ h1 {
     text-align: center;
     font-size: 400%;
     position: fixed;
-    padding-left: 20px;
-    /*bottom: 30px;*/
+    left: 20px;
+    top: -10px;
+}
+
+h3 {
+    text-align: center;
+    font-size: 130%;
+    position: fixed;
+    top: 100px;
+    left: 10px;
 }
 
 html, body {
@@ -57,16 +65,6 @@ body {
     font-family: 'SokchoBadaBatang';
 }
 
-.search-container {
-    margin-top: 2%;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    position: fixed;
-    top: 100px;
-    width: 400px;
-    /*bottom: 60px;*/
-}
 
 
 .searchUpPart {
@@ -125,6 +123,37 @@ body {
     justify-content: flex-start;
     padding-left: 1%;
     flex-direction: column;
+}
+
+#detailSearchToggle {
+    cursor: pointer; /* 마우스 오버 시 커서 변경 */
+    position:absolute;
+    top:4%;
+    left:1%;
+    padding: 12px;
+    border-radius: 10px;
+    border:1px solid #909090;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+    background: #fff;
+    overflow: hidden;
+    z-index: 9;
+}
+
+#detailSearchToggle:active {
+    transform: scale(0.98); /* 클릭 시 약간 축소되어 눌린 느낌을 줌 */
+}
+
+#popupDetail {
+    display: none; /* 기본적으로는 숨김 처리 */
+    position: absolute; /* 화면에 고정 x */
+    left: 1%; /* 중앙 정렬을 위한 설정 */
+    top: 12%; /* 화면의 상단으로부터 20% 떨어진 위치에 표시 */
+    z-index: 100; /* 다른 요소들 위에 표시 */
+    background-color: white; /* 배경색 */
+    border: 1px solid #ccc; /* 테두리 */
+    border-radius: 10px;
+    padding: 10px; /* 내부 여백 */
+    width: 20%;
 }
 
 .eventType input[type="checkbox"],
@@ -240,11 +269,15 @@ img {
 }
 
 #eventsContainer {
+
     position: fixed;
-    top: 500px;
-    height: calc(96vh - 450px);
+    top: 150px;
+    height: calc(96vh - 110px);
     width: 400px;
     overflow-y: auto;
+
+
+
 }
 /* 지도 섹션 스타일 설정 */
 .map_wrap {
@@ -298,7 +331,7 @@ img {
 .custom_zoomcontrol span img {width:15px;height:15px;padding:12px 0;border:none;}
 .custom_zoomcontrol span:first-child{border-bottom:1px solid #bfbfbf;}
 
-#category {position:absolute;top:3%;left:5%;border-radius: 10px; border:1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);background: #fff;overflow: hidden;z-index: 9; padding-left:0;}
+#category {position:absolute;bottom:3%;left:1%;border-radius: 10px; border:1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);background: #fff;overflow: hidden;z-index: 9; padding-left:0;}
 #category li {float:left;list-style: none;width:70px;border-right:1px solid #acacac;padding:6px 0;text-align: center; cursor: pointer;}
 #category li img { /* 이미지 크기 조정 */
     width: 40px; /* 새 이미지 너비 */
