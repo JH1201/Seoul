@@ -43,7 +43,7 @@ a {text-decoration: none;}
 .weather-toMap-container {
     display: flex;
     position: relative;
-    right: 10px;
+    right: 2%;
 }
 
 .ToMAP img {
@@ -53,8 +53,7 @@ a {text-decoration: none;}
 }
 
 .ToMAP {
-    /* 필요한 경우 여기에 margin-right를 추가하여 간격 조정 */
-    margin-left: 20px; /* 예시: .weather와의 간격 */
+    margin-left: 20px;
     margin-top: 13px;
 }
 
@@ -96,7 +95,6 @@ a {text-decoration: none;}
 }
 
 .swiper-wrapper {
-    /* image와 title 위아래로 묶어주기 위해 사용 */
 }
 
 .swiper-slide {
@@ -348,6 +346,7 @@ input[type="checkbox"]:checked + label {
         margin-left: 8%;
         margin-right: 8%;
     }
+
 }
 
 

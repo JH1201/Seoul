@@ -67,9 +67,7 @@
 
 <div class="background-image-container">
     <div class="swiper-container">
-        <!-- 슬라이더의 각 슬라이드를 담을 래퍼 -->
         <div class="swiper-wrapper">
-            <!-- Thymeleaf를 사용하여 아이템들을 반복하여 각 슬라이드 생성 -->
             <div th:each="item : ${items}" class="swiper-slide">
                 <div class="image-container">
                     <a th:href="@{/eventInfo(title=${item.TITLE})}">
@@ -468,6 +466,28 @@
         slidesPerView: 5,
         slidesPerGroup: 1,
         spaceBetween:10,
+        breakpoints: {
+            300: {
+                slidesPerView: 1,
+                spaceBetween: 10
+            },
+            650: {
+                slidesPerView: 2,
+                spaceBetween: 20
+            },
+            1000: {
+                slidesPerView: 3,
+                spaceBetween: 30
+            },
+            1350: {
+                slidesPerView: 4,
+                spaceBetween: 40
+            },
+            1700: {
+                slidesPerView: 5,
+                spaceBetween: 50
+            }
+        }
     });
 </script>
 
