@@ -384,13 +384,13 @@
             var path = [];
             var points = [];
 
-           $.each(coordinates[0], function(index, coordinate) {
-               var point = new Object();
-               point.x = coordinate[1];
-               point.y = coordinate[0];
-               points.push(point);
-               path.push(new kakao.maps.LatLng(coordinate[1], coordinate[0]));
-           })
+            $.each(coordinates[0], function(index, coordinate) {
+                var point = new Object();
+                point.x = coordinate[1];
+                point.y = coordinate[0];
+                points.push(point);
+                path.push(new kakao.maps.LatLng(coordinate[1], coordinate[0]));
+            })
 
             var polygon = new kakao.maps.Polygon({
                 map: map,

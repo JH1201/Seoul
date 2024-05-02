@@ -6,12 +6,11 @@
     font-style: normal;
 }
 @font-face {
-    font-family: 'SokchoBadaBatang';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2402_1@1.0/SokchoBadaBatang.woff2') format('woff2');
+    font-family: 'EF_watermelonSalad';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2210-EF@1.0/EF_watermelonSalad.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
 }
-
 
 .header {
     display: flex;
@@ -63,15 +62,6 @@ a {text-decoration: none;}
     display: flex;
     align-items: center;
     justify-content: flex-end;
-}
-
-.clock {
-    color: black;
-    display: flex;
-    flex-direction: column;
-    padding:10px;
-    border-radius: 20px;
-    font-weight: bold;
 }
 
 
@@ -140,7 +130,7 @@ a {text-decoration: none;}
 
 
 * { box-sizing: border-box; }
-body { font-family: 'SokchoBadaBatang'; }
+body { font-family: 'EF_watermelonSalad'; }
 
 
 #date1 {
@@ -151,7 +141,7 @@ body { font-family: 'SokchoBadaBatang'; }
     height: 60px;
     font-size: 20px;
     color: darkgray;
-    font-family: 'SokchoBadaBatang';
+    font-family: 'EF_watermelonSalad';
 }
 
 #date2 {
@@ -162,7 +152,7 @@ body { font-family: 'SokchoBadaBatang'; }
     height: 60px;
     font-size: 20px;
     color: darkgray;
-    font-family: 'SokchoBadaBatang';
+    font-family: 'EF_watermelonSalad';
 }
 
 .search-container {
@@ -214,7 +204,7 @@ body { font-family: 'SokchoBadaBatang'; }
     height: 60px;
     border-radius:10px;
     border: 2px solid darkgray;
-    font-family: 'SokchoBadaBatang';
+    font-family: 'EF_watermelonSalad';
 }
 
 .search-button {
@@ -249,7 +239,7 @@ body { font-family: 'SokchoBadaBatang'; }
 .locationName label {
     cursor: pointer; /* 마우스를 올렸을 때 포인터로 변경 */
     margin-right: 20px;
-    font-size: 20px;
+    font-size: 18px;
     background-color: rgba(220, 220, 220, 0.9);
     border-radius: 30px;
     padding: 10px;
@@ -282,7 +272,7 @@ input[type="checkbox"]:checked + label {
     border-radius: 20px;
     cursor: pointer;
     border: 0;
-    font-family: 'SokchoBadaBatang';
+    font-family: 'EF_watermelonSalad';
     font-size: 25px;
     font-weight: bold;
     padding: 15px;
@@ -332,6 +322,7 @@ input[type="checkbox"]:checked + label {
     text-align: center;
     border: 1px solid lightgray;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 300px;
 }
 
 .item:hover {
@@ -341,10 +332,26 @@ input[type="checkbox"]:checked + label {
 }
 
 .gridText {
-    padding-top: 20px;
-    text-align: center;
+    margin-top: 20px;
     margin-left: 10px;
     margin-right: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.eventdate, .place {
+    margin-top: 20px;
+    margin-left: 10px;
+    text-align: left;
+    font-size: 15px;
+    position: relative;
+    top: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .button_number {
