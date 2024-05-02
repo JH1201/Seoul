@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>서울은 지금</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <link rel="stylesheet" type="text/css" href="/homeCss/css.css">
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
 
 </head>
 <body>
@@ -370,6 +370,8 @@
                     <div class="gridText">
                         <span th:text="${event.TITLE}" ></span>
                     </div>
+                    <p class="eventdate" th:text="${event.getDATE()}"></p>
+                    <p class="place" th:text="${event.getPLACE()}"></p>
                     <br><br>
                 </div>
 
@@ -539,59 +541,64 @@
 
 
     function updateEventsContainer(data) {
-        // eventsContainer 업데이트
         var eventsContainer = document.getElementById('eventsContainer');
-
-        // 검색 결과를 보여주는 부분 업데이트
-        var itemsGrid = document.createElement('div');
-        itemsGrid.classList.add('items-grid');
+        eventsContainer.innerHTML = ''; // 기존 내용 지우기
 
         if (data && data.length > 0) {
+            var itemsGrid = document.createElement('div');
+            itemsGrid.classList.add('items-grid');
+
             data.forEach(event => {
                 var item = document.createElement('div');
                 item.classList.add('item');
 
+                var imageContainer = document.createElement('div');
+                imageContainer.style.paddingTop = '10px';
+                imageContainer.style.paddingLeft = '10px';
+                imageContainer.style.paddingRight = '10px';
+
                 var imageLink = document.createElement('a');
                 imageLink.href = `/eventInfo?title=${encodeURIComponent(event.title)}`;
+                imageContainer.appendChild(imageLink);
 
                 var image = document.createElement('img');
                 image.src = event.main_IMG;
                 image.alt = 'Event Image';
-                image.width = 240;
-                image.height = 360;
-                image.style.marginTop='12px';
-
-                var title = document.createElement('span');
-                title.innerText = event.title;
-                title.classList.add('gridText');
-                title.style.display='inline-block';
-                title.style.marginLeft='10px';
-                title.style.marginRight='10px';
-                title.style.marginBottom='40px';
-
-
-                var imageContainer = document.createElement('div');
+                image.width = 200;
+                image.height = 280;
                 imageLink.appendChild(image);
-                imageContainer.appendChild(imageLink);
 
                 var titleContainer = document.createElement('div');
+                titleContainer.classList.add('gridText');
+                var title = document.createElement('span');
+                title.innerText = event.title;
+                title.style.marginLeft = '10px';
                 titleContainer.appendChild(title);
+
+                var date = document.createElement('p');
+                date.innerText = event.date;
+                date.classList.add('eventdate');
+                date.style.marginLeft ='20px';
+
+                var place = document.createElement('p');
+                place.innerText = event.place;
+                place.classList.add('place');
+                place.style.marginBottom = '50px';
+                place.style.marginLeft = '20px';
 
                 item.appendChild(imageContainer);
                 item.appendChild(titleContainer);
+                item.appendChild(date);
+                item.appendChild(place);
                 itemsGrid.appendChild(item);
             });
+
+            eventsContainer.appendChild(itemsGrid);
         } else {
             var noResultMessage = document.createElement('p');
             noResultMessage.innerText = '검색 결과가 없습니다.';
-            eventsContainer.innerHTML = ''; // 기존 내용 지우기
             eventsContainer.appendChild(noResultMessage);
-            return;
         }
-
-        eventsContainer.innerHTML = ''; // 기존 내용 지우기
-        pagination.innerHTML = ''; // 페이지 버튼 지우기
-        eventsContainer.appendChild(itemsGrid);
     }
 
 
