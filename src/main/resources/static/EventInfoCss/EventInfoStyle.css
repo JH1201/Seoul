@@ -19,10 +19,11 @@ html, body {
 
 h1 {
     font-family: 'TTHakgyoansimMulgyeolB';
-    font-size: 65px;
     text-align: center;
-    position: relative;
-    margin-top: 20px;
+    font-size: 400%;
+    position: fixed;
+    left: 72px;
+    top: -20px;
 }
 
 /* 컨테이너 스타일 설정 */
@@ -33,15 +34,44 @@ h1 {
 }
 /* 세부 정보 섹션 스타일 설정 */
 #details {
-    flex: 1; /* 화면의 1/4 차지 */
+    width: 500px;
     overflow-y: auto; /* 내용이 높이를 초과하면 스크롤바 표시 */
     max-height: 100vh; /* 뷰포트 높이를 초과하지 않도록 제한 */
-    padding: 10px;
+    transition: width 0.5s; /* 너비 변경에 대한 부드러운 전환 효과 */
+    position : relative;
+
 }
+
+
+#toggle-button {
+    position: absolute;
+    top: 440px;
+    left: 500px; /* 상세 정보 너비만큼 왼쪽으로 오프셋 */
+    z-index: 10; /* 버튼이 맨 위에 오도록 z-index 설정 */
+    transition: left 0.5s; /* 버튼에도 부드러운 효과 */
+    border: none;
+    border-top: solid 1px;
+    border-right: solid 1px;
+    border-bottom: solid 1px;
+    border-radius: 0 10px 10px 0; /* 오른쪽 상단 모서리만 10px로 둥글게 */
+    background-color: white; /* 배경색 투명 */
+    cursor: pointer; /* 마우스 오버시 커서 모양 변경 */
+    padding: 0; /* 패딩 제거 */
+}
+
+#toggle-button img {
+    width: 25px;
+    height: 50px;
+
+}
+
+
 /* 지도 섹션 스타일 설정 */
 .map_wrap {
-    flex: 3; /* 화면의 3/4 차지 */
-    height: 100%; /* 지도 높이 설정 */
+    flex-grow: 1;
+    height: 100vh; /* 지도 높이 설정 */
+    width: 100vh;
+    position: relative;
 }
 #map {
     height: 100%;
@@ -60,7 +90,7 @@ h1 {
 .custom_zoomcontrol span img {width:15px;height:15px;padding:12px 0;border:none;}
 .custom_zoomcontrol span:first-child{border-bottom:1px solid #bfbfbf;}
 
-#category {position:absolute;top:30px;left:30%;border-radius: 10px; border:1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);background: #fff;overflow: hidden;z-index: 2; padding-left:0;}
+#category {position:absolute;top:2%;left:1%;border-radius: 10px; border:1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);background: #fff;overflow: hidden;z-index: 2; padding-left:0;}
 #category li {float:left;list-style: none;width:70px;border-right:1px solid #acacac;padding:6px 0;text-align: center; cursor: pointer;}
 #category li img { /* 이미지 크기 조정 */
     width: 40px; /* 새 이미지 너비 */
@@ -83,6 +113,7 @@ h1 {
 .placeinfo .jibun {color:#999;font-size:11px;margin-top:0;}
 
 .eventInfoImage img {
+    left: 75px;
     width: 350px;
     height: 500px;
     box-shadow: 2px 2px 4px rgb(128, 128, 128);
@@ -91,8 +122,6 @@ h1 {
 .eventInfoImage {
     text-align: center;
     padding-bottom: 15px;
-    right: 5px;
-
 }
 
 

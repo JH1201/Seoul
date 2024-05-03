@@ -10,64 +10,78 @@
 
 
 <div id="container">
-    <div id="details">
-        <div>
-            <a href="home" style="text-decoration: none">
-                <h1>
-                    서울은 지금
-                </h1>
-            </a>
-        </div>
-        <div class="eventInfoImage">
-            <img th:src="${main_img}" alt="image">
-        </div>
-
-
-        <div class="EventContents">
-            <ul>
-                <li>이름: <span th:text="${title}"></span></li>
-                <li>기간: <span th:text="${date}"></span></li>
-                <li>장소: <span th:text="${place}"></span></li>
-                <li>유무료: <span th:text="${free}"></span> </li>
-                <li>금액: <span th:text="${fee}"></span></li>
-            </ul>
-        </div>
-
-        <!--<div class="button_wrap">
-            <button>
-                <a th:href="'https://map.kakao.com/link/to/' + ${place} + ',' + ${lot} + ',' + ${lat}" style="text-decoration: none; color: white;" target="_blank">
-                    길 찾기
+    <div>
+        <div id="details" style="width: 500px">
+            <div>
+                <a href="home" style="text-decoration: none">
+                    <h1>
+                        서울은 지금
+                    </h1>
                 </a>
+            </div>
+
+            <div class="eventsContainer" style="position: fixed;top: 150px;height: calc(96vh - 110px);width: 500px;overflow-y: auto;">
+                <div class="eventInfoImage">
+                    <img th:src="${main_img}" alt="image">
+                </div>
+
+
+                <div class="EventContents">
+                    <ul>
+                        <li>이름: <span th:text="${title}"></span></li>
+                        <li>기간: <span th:text="${date}"></span></li>
+                        <li>장소: <span th:text="${place}"></span></li>
+                        <li th:if="${free} == '유료'">금액: <span th:text="${fee}"></span></li>
+                        <li th:if="${free} == '무료'">유무료: <span th:text="${free}"></span></li>
+                    </ul>
+                </div>
+
+                <div class="button_wrap">
+                    <a th:href="'https://map.kakao.com/link/to/' + ${place} + ',' + ${lot} + ',' + ${lat}" class="button button--ujarak button--border-thin button--text-thick" style="text-decoration: none" target="_blank">
+                        길찾기
+                    </a>
+
+                    <a th:href="${homePage}" class="button button--ujarak button--border-thin button--text-thick" style="text-decoration: none" target="_blank">
+                        상세내용
+                    </a>
+
+                    <a href="/home" class="button button--ujarak button--border-thin button--text-thick" style="text-decoration: none">
+                        Home
+                    </a>
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+        <div class="toggleBTN">
+            <button id="toggle-button">
+                <img src="image/left-chevron.png" alt="Toggle Detail View" id="toggle-icon" />
             </button>
 
-            <button>
-                <a th:href="${homePage}" style="text-decoration: none; color: black;" target="_blank">
-                    상세 페이지
-                </a>
-            </button>
-
-            <button>
-                <a href="/mapPage" style="text-decoration: none; color: white;">
-                    맵으로 보기
-                </a>
-            </button>
-
-        </div>-->
-
-        <div class="button_wrap">
-            <a th:href="'https://map.kakao.com/link/to/' + ${place} + ',' + ${lot} + ',' + ${lat}" class="button button--ujarak button--border-thin button--text-thick" style="text-decoration: none" target="_blank">
-                길찾기
-            </a>
-
-            <a th:href="${homePage}" class="button button--ujarak button--border-thin button--text-thick" style="text-decoration: none" target="_blank">
-                상세내용
-            </a>
-
-            <a href="/mapPage" class="button button--ujarak button--border-thin button--text-thick" style="text-decoration: none">
-                Map
-            </a>
+            <script>
+                document.getElementById('toggle-button').addEventListener('click', function() {
+                    var details = document.getElementById('details');
+                    var button = document.getElementById('toggle-button');
+                    var icon = document.getElementById('toggle-icon');
+                    if (details.style.width === '500px') {
+                        details.style.width = '0'; // 상세 정보를 접습니다.
+                        button.style.left = '0'; // 버튼의 위치를 조정합니다.
+                        icon.src = "image/right-chevron.png";
+                    } else {
+                        details.style.width = '500px'; // 상세 정보를 펼칩니다.
+                        button.style.left = '500px'; // 버튼의 위치를 원래대로 돌립니다.
+                        icon.src = "image/left-chevron.png";
+                    }
+                    setTimeout(function() {
+                        map.relayout();
+                        // 토글 했을 때 오른쪽 맵 짤리는 현상 해결
+                    }, 300); // 300ms 후에 실행
+                });
+            </script>
         </div>
-
     </div>
 
 
