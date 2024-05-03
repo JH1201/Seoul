@@ -16,18 +16,18 @@
                 <a href="/home" style="text-decoration: none">서울은 지금</a>
             </h1>
             <h3>
-                지도에 있는 행사들의 리스트
+                지도에 있는 행사 리스트
             </h3>
             <div id="eventsContainer">
 
 
                 <div class="items-grid">
-                    <div th:each="event : ${lists}" class="item">
+                    <div th:each="event : ${lists}" class="item" style="margin-bottom: 18px;">
                         <a th:href="@{/eventInfo(title=${event.getTITLE()})}">
                             <img th:src="${event.getMAIN_IMG()}" alt="Event Image" class="itemimg">
                         </a>
                         <div>
-                            <h4 th:text="${event.getTITLE()}"></h4>
+                            <h4 class="eventtitle" th:text="${event.getTITLE()}"></h4>
                             <p class="is-free" th:text="${event.getIS_FREE()}"></p>
                             <p class="eventdate" th:text="${event.getDATE()}"></p>
                             <p class="place" th:text="${event.getPLACE()}"></p>
@@ -232,12 +232,23 @@
             </li>
         </ul>
         <ul id="CurrentLocation">
-            <li>현재 위치로 보기</li>
+            <li>현재 위치</li>
         </ul>
 
-        <ul id="detailSearchToggle">
+        <ul id="detailSearchToggle" onclick="changeBtnName()">
             상세검색 열기 &#9660;
         </ul>
+
+        <script>
+            function changeBtnName() {
+                const btnElement = document.getElementById('detailSearchToggle');
+                if (btnElement.innerText.includes('열기')) {
+                    btnElement.innerText = '상세검색 닫기 ▲';
+                } else {
+                    btnElement.innerText = '상세검색 열기 ▼';
+                }
+            }
+        </script>
 
         <div id="popupDetail">
             <br>
@@ -475,10 +486,18 @@
                 });
                 polygon.setMap(map); // 폴리곤 표시
 
-                var content = `<div style="padding:5px; background-color: green; color: white; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; flex-direction: column; background-image: radial-gradient(circle at center, rgba(0,128,0,1) 0%, rgba(0,128,0,0.6) 40%, rgba(0,128,0,0) 70%); border-radius: 50%;">
-            <div style="font-size: 15px;">${name}</div>
-            <div style="font-size: 18px; font-weight: bold;">${count}</div>
-        </div>`;
+                var color = '#599468'; // 기본 색상
+                if (count >= 40) {
+                    color = '#F05650'; // 빨간색
+                } else if (count >= 20) {
+                    color = '#FFD400'; // 노란색
+                }
+
+                var content = `<div style="padding:5px; background: radial-gradient(circle, ${color}, transparent); color: white; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; flex-direction: column; border-radius: 50%;">
+                    <div style="font-size: 15px; font-weight: bold; text-shadow: -2px 0 #444444, 0 2px #444444, 2px 0 #444444, 0 -2px #444444;">${name}</div>
+                    <div style="font-size: 15px; font-weight: bold; margin-top: 5px; text-shadow: -2px 0 #444444, 0 2px #444444, 2px 0 #444444, 0 -2px #444444;">${count}</div>
+                </div>
+                `;
 
                 // 레이블 업데이트 또는 생성
                 if (polygon.label) {
@@ -949,8 +968,8 @@
 
                 var item = document.createElement('div');
                 item.classList.add('item');
-                item.style.margin='10px';
-                item.style.marginLeft='5px';
+                item.style.marginBottom='20px';
+                item.style.marginLeft='8px';
 
                 var imageLink = document.createElement('a');
                 imageLink.href = `/eventInfo?title=${encodeURIComponent(event.title)}`;
@@ -959,33 +978,48 @@
                 image.src = event.main_IMG;
                 image.alt = 'Event Image';
                 image.style.borderRadius='5px';
+                image.style.boxShadow='2px 2px gray';
+                image.style.borderRadius='5px';
 
                 var title = document.createElement('h4');
                 title.innerText = event.title;
                 title.style.marginTop='0px';
                 title.style.marginBottom='12px';
-                title.style.marginLeft='5px';
+                title.style.marginLeft='8px';
+                title.style.overflow='hidden';
+                title.style.textOverflow='ellipsis';
+                title.style.whiteSpace='nowrap';
+                title.style.maxWidth='260px';
+                title.style.fontSize='17px';
 
                 var isFree = document.createElement('p');
-                isFree.innerText = event.is_FREE ? '무료' : '유료';
+                isFree.innerText = event.is_FREE;
                 isFree.classList.add('is-free');
-                isFree.style.margin = '5px';
+                isFree.style.marginLeft = '8px';
+                isFree.style.marginBottom = '5px';
+                isFree.style.fontSize='15px';
 
                 var imageContainer = document.createElement('div');
                 imageLink.appendChild(image);
                 imageContainer.appendChild(imageLink);
-                imageContainer.style.width='80px';
-                imageContainer.style.height='120px';
-                imageContainer.style.boxShadow='2px 2px gray';
-                imageContainer.style.borderRadius='5px';
+                imageContainer.style.width='100px';
+                imageContainer.style.height='140px';
 
                 var eventdate = document.createElement('p');
                 eventdate.innerText = event.date;
-                eventdate.style.margin = '5px';
+                eventdate.style.marginLeft = '8px';
+                eventdate.style.marginBottom = '5px';
+                eventdate.style.fontSize='15px';
 
                 var place = document.createElement('p');
                 place.innerText = event.place;
-                place.style.margin = '5px';
+                place.style.marginLeft= '8px';
+                place.style.overflow='hidden';
+                place.style.textOverflow='ellipsis';
+                place.style.whiteSpace='nowrap';
+                place.style.maxWidth='260px';
+                place.style.marginBottom = '5px';
+                place.style.fontSize='15px';
 
                 var titleContainer = document.createElement('div');
                 titleContainer.appendChild(title);
@@ -1007,7 +1041,7 @@
                 locationButton.appendChild(locationImage);
                 locationButton.style.position = 'absolute';
                 locationButton.style.right = '15px';
-                locationButton.style.bottom = '5px';
+                locationButton.style.bottom = '50px';
                 locationButton.style.width = '25px';
                 locationButton.style.height = '25px';
                 locationButton.style.background = 'transparent';
@@ -1032,20 +1066,20 @@
         }
         function moveToLocation(lat, lng) {
             var moveLatLon = new kakao.maps.LatLng(lng, lat);
-
-            map.panTo(moveLatLon); // 지정한 위치로 지도 중심 이동
+            map.panTo(moveLatLon);
 
             // 지도 레벨 조정을 위한 함수
             function adjustLevel() {
                 var currentLevel = map.getLevel();
                 if (currentLevel > 3) {
-                    map.setLevel(currentLevel - 2, {animate: {duration: 300}}); // 레벨 조정
-                    setTimeout(adjustLevel, 300); // 500ms 후에 다시 레벨 조정
+                    map.setLevel(currentLevel - 2, {animate: {duration: 300}});
+                    setTimeout(adjustLevel, 350);
                 }
             }
 
             // 최초의 레벨 조정 실행
-            setTimeout(adjustLevel, 300);
+            setTimeout(adjustLevel, 350);
+            map.panTo(moveLatLon);
         }
         var currentLocationMarker = null; // 현재 위치 마커를 저장할 전역 변수
         document.getElementById('CurrentLocation').addEventListener('click', function() {
