@@ -1072,13 +1072,13 @@
             function adjustLevel() {
                 var currentLevel = map.getLevel();
                 if (currentLevel > 3) {
-                    map.setLevel(currentLevel - 2, {animate: {duration: 300}});
-                    setTimeout(adjustLevel, 350);
+                    map.setLevel(currentLevel - 2, {animate: {duration: 500}});
+                    setTimeout(adjustLevel, 550);
                 }
             }
 
             // 최초의 레벨 조정 실행
-            setTimeout(adjustLevel, 350);
+            setTimeout(adjustLevel, 550);
             map.panTo(moveLatLon);
         }
         var currentLocationMarker = null; // 현재 위치 마커를 저장할 전역 변수
