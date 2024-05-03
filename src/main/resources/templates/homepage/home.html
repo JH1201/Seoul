@@ -106,9 +106,23 @@
             <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요. (ex: 행사명, 장소, 역 등 )" >
             <button class="search-button" type="submit">🔍︎</button>
         </form>
-        <ul id="detailSearchToggle">
+
+        <ul id="detailSearchToggle" onclick="changeBtnName()">
             상세검색 열기 &#9660;
         </ul>
+
+        <script>
+            function changeBtnName() {
+                const btnElement = document.getElementById('detailSearchToggle');
+                if (btnElement.innerText.includes('열기')) {
+                    btnElement.innerText = '상세검색 닫기 ▲';
+                } else {
+                    btnElement.innerText = '상세검색 열기 ▼';
+                }
+            }
+        </script>
+
+
 
         <div id="popupDetail">
             <br><br>
@@ -361,11 +375,11 @@
 
 
 
-<div class="sort-part">
-    <!-- 옵션들이 담길 드롭다운 컨테이너, 기본적으로 숨겨져 있습니다 -->
+<!--<div class="sort-part">
+
     <select id="sortOptions" onchange="sort()">
         <option value="전체" th:selected="${selectedMonth == '전체'}">전체</option>
-        <!--<option value="즐겨찾기" th:selected="${selectedMonth == '즐겨찾기'}">즐겨찾기</option>-->
+
         <option value="1" th:selected="${selectedMonth == '1'}">1월</option>
         <option value="2" th:selected="${selectedMonth == '2'}">2월</option>
         <option value="3" th:selected="${selectedMonth == '3'}">3월</option>
@@ -383,7 +397,7 @@
     </select>
 
 
-</div>
+</div>-->
 <br>
 <div id="eventsContainer">
     <!-- 검색 결과 표시 -->
