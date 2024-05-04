@@ -73,7 +73,7 @@ public class HomeController {
         model.addAttribute("items", selectedItems); // 모델에 아이템들을 추가
         model.addAttribute("lists", eventPaging);
 
-        return "/homepage/home";
+        return "homepage/home";
     }
 
 

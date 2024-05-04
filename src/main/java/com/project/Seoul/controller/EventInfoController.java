@@ -43,7 +43,7 @@ public class EventInfoController {
 
 
 
-        return "/homepage/eventInfo";
+        return "homepage/eventInfo";
     }
 
 
