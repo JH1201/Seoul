@@ -6,9 +6,9 @@
     font-style: normal;
 }
 @font-face {
-    font-family: 'EF_watermelonSalad';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2210-EF@1.0/EF_watermelonSalad.woff2') format('woff2');
-    font-weight: normal;
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
     font-style: normal;
 }
 
@@ -129,7 +129,7 @@ a {text-decoration: none;}
 
 
 * { box-sizing: border-box; }
-body { font-family: 'EF_watermelonSalad'; }
+body { font-family: 'Pretendard-Regular'; }
 
 
 #date1 {
@@ -140,7 +140,7 @@ body { font-family: 'EF_watermelonSalad'; }
     height: 60px;
     font-size: 20px;
     color: darkgray;
-    font-family: 'EF_watermelonSalad';
+    font-family: 'Pretendard-Regular';
 }
 
 #date2 {
@@ -151,7 +151,7 @@ body { font-family: 'EF_watermelonSalad'; }
     height: 60px;
     font-size: 20px;
     color: darkgray;
-    font-family: 'EF_watermelonSalad';
+    font-family: 'Pretendard-Regular';
 }
 
 .search-container {
@@ -232,7 +232,7 @@ body { font-family: 'EF_watermelonSalad'; }
     height: 60px;
     border-radius:10px;
     border: 2px solid darkgray;
-    font-family: 'EF_watermelonSalad';
+    font-family: 'Pretendard-Regular';
     width: 100%;
 }
 
@@ -307,7 +307,7 @@ input[type="checkbox"]:checked + label {
     border-radius: 20px;
     cursor: pointer;
     border: 0;
-    font-family: 'EF_watermelonSalad';
+    font-family: 'Pretendard-Regular';
     font-size: 20px;
     font-weight: bold;
     margin-right: 10px;

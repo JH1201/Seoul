@@ -5,9 +5,9 @@
     font-style: normal;
 }
 @font-face {
-    font-family: 'EF_watermelonSalad';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2210-EF@1.0/EF_watermelonSalad.woff2') format('woff2');
-    font-weight: normal;
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
     font-style: normal;
 }
 
@@ -34,7 +34,7 @@ html, body {
 }
 
 body {
-    font-family: 'EF_watermelonSalad';
+    font-family: 'Pretendard-Regular';
 }
 
 .dateSearch {
@@ -52,7 +52,7 @@ body {
     height: 20px;
     font-size: 15px;
     color: darkgray;
-    font-family: 'EF_watermelonSalad';
+    font-family: 'Pretendard-Regular';
 }
 
 #date2 {
@@ -62,7 +62,7 @@ body {
     height: 20px;
     font-size: 15px;
     color: darkgray;
-    font-family: 'EF_watermelonSalad';
+    font-family: 'Pretendard-Regular';
 }
 
 .searchUpPart {
@@ -100,7 +100,7 @@ body {
     width: 100%;
     border-radius: 10px;
     border: 2px solid black;
-    font-family: 'EF_watermelonSalad';
+    font-family: 'Pretendard-Regular';
 }
 
 .search-button {
@@ -192,7 +192,7 @@ input[type="checkbox"]:checked + label {
     border-radius: 20px;
     cursor: pointer;
     border: 0;
-    font-family: 'EF_watermelonSalad';
+    font-family: 'Pretendard-Regular';
     font-size: 15px;
     font-weight: bold;
     margin-right: 5px;
