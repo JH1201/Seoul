@@ -46,15 +46,23 @@ a {text-decoration: none;}
     right: 2%;
 }
 
+
+
 .ToMAP img {
-    width: 65px; /* 원하는 너비로 설정 */
-    height: 65px; /* 이미지의 비율을 유지하기 위해 'auto'로 설정 */
-    padding-bottom: 15px;
+    width: 60px; /* 원하는 너비로 설정 */
+    height: 60px; /* 이미지의 비율을 유지하기 위해 'auto'로 설정 */
+    padding-bottom: 5px;
+    border-radius: 5px;
 }
 
-.ToMAP {
-    margin-left: 20px;
-    margin-top: 13px;
+.ToMAP img:hover {
+    box-shadow: 4px 4px 10px gray;
+    transform: scale(1.03); /* 이미지를 1.03배 확대 */
+}
+
+.ToMAP a {
+    display: block; /* 블록 요소로 설정하여 줄 바꿈이 일어나도록 합니다 */
+    text-align: center; /* 텍스트를 가운데 정렬합니다 */
 }
 
 .weather {
