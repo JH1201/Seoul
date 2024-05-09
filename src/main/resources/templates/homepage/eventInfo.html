@@ -48,7 +48,10 @@
                     <a href="/home" class="button button--ujarak button--border-thin button--text-thick" style="text-decoration: none">
                         Home
                     </a>
+
+
                 </div>
+
             </div>
 
 
@@ -108,6 +111,44 @@
                 주차장
             </li>
         </ul>
+
+        <ul id="detailSearchToggle" onclick="changeBtnName()">
+            추천 관광명소 ▲
+        </ul>
+
+        <script>
+            function changeBtnName() {
+                const btnElement = document.getElementById('detailSearchToggle');
+                if (btnElement.innerText.includes('▲')) {
+                    btnElement.innerText = '추천 관광명소 ▼';
+                } else {
+                    btnElement.innerText = '추천 관광명소 ▲';
+                }
+            }
+        </script>
+
+        <div id="popupDetail">
+            <li th:each="attraction : ${attractionsList}">
+                <span th:text="${attraction}"></span>
+            </li>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var popup = document.getElementById('popupDetail');
+                popup.style.display = 'none'; // 초기에 팝업을 숨깁니다.
+            });
+
+            document.getElementById('detailSearchToggle').addEventListener('click', function() {
+                var popup = document.getElementById('popupDetail');
+                if (popup.style.display === 'none') {
+                    popup.style.display = 'block'; // 팝업을 보여줍니다.
+                } else {
+                    popup.style.display = 'none'; // 팝업을 숨깁니다.
+                }
+            });
+
+        </script>
     </div>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=33db73c119b1dea112b5e9038fd6ef2a&libraries=services"></script>
     <script>

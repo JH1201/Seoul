@@ -65,6 +65,34 @@ h1 {
 
 }
 
+#detailSearchToggle {
+    cursor: pointer; /* 마우스 오버 시 커서 변경 */
+    position:absolute;
+    bottom:4%;
+    left:1%;
+    padding: 12px;
+    border-radius: 10px;
+    border:1px solid #909090;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+    background: #fff;
+    overflow: hidden;
+    z-index: 9;
+}
+
+#popupDetail {
+    display: none; /* 기본적으로는 숨김 처리 */
+    position: absolute; /* 화면에 고정 x */
+    left: 1%; /* 중앙 정렬을 위한 설정 */
+    bottom: 12%; /* 화면의 상단으로부터 20% 떨어진 위치에 표시 */
+    z-index: 100; /* 다른 요소들 위에 표시 */
+    background-color: white; /* 배경색 */
+    border: 1px solid #ccc; /* 테두리 */
+    border-radius: 10px;
+    padding: 10px; /* 내부 여백 */
+    width: 300px;
+}
+
+
 
 /* 지도 섹션 스타일 설정 */
 .map_wrap {
