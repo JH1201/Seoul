@@ -46,7 +46,11 @@ a {text-decoration: none;}
     right: 2%;
 }
 
-
+.CurrIcon {
+    font-size: 40px;
+    color: gray;
+    margin-left: 5px;
+}
 
 .ToMAP img {
     width: 60px; /* 원하는 너비로 설정 */

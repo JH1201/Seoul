@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <link rel="stylesheet" type="text/css" href="/homeCss/css.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
@@ -26,7 +26,6 @@
 
         <div class="weather-toMap-container">
             <div class="weather">
-
                 <div class="ToMAP">
                     <a href="/mapPage" style="text-decoration: none">
                         <img src="image/map.png" alt="지도 보기">
@@ -37,30 +36,105 @@
                 </div>
 
                 <div class='CurrIcon'></div>
-                <div class="weather-info" style="display: flex; flex-direction: column; align-items: flex-start; position: relative; right: 10px;">
-                    <div class='CurrTemp' style="text-align: center; font-size: 30px; font-weight: bold;"></div>
-                    <div class='City' style="text-align: center; font-size: 30px; font-weight: bold;"></div>
+                <div class="weather-info" style="display: flex; flex-direction: column; align-items: flex-start; position: relative;">
+                    <div class='CurrTemp' style="text-align: center; font-size: 25px; font-weight: bold; margin-left: 10px;"></div>
+                    <div class='City' style="text-align: center; font-size: 25px; font-weight: bold; margin-left: 10px;"></div>
                 </div>
             </div>
 
 
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <script>
-                $(document).ready(function (){
-                    $.ajax({
-                        url: 'https://api.openweathermap.org/data/2.5/weather?q=Seoul&appid=5d9b3b800dfed24a20f68eeb480f5d9d&units=metric',
-                        dataType:'json',
-                        type:'GET',
-                        success: function (data){
-                            var iconUrl = 'http://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png';
-                            var temperature = Math.floor(data.main.temp) + '°C';
-                            var city = data.name;
-
-                            $('.CurrIcon').html('<img src="' + iconUrl + '">');
-                            $('.CurrTemp').text(temperature);
-                            $('.City').text(city);
+                $(document).ready(function () {
+                    function fetchWeather() {
+                        var xhr = new XMLHttpRequest();
+                        var today = new Date();
+                        var baseDate = today.toISOString().slice(0, 10).replace(/-/g, "");
+                        var hour = today.getHours();
+                        var minute = today.getMinutes();
+                        var times = [2, 5, 8, 11, 14, 17, 20, 23]; // 기상청 데이터 업데이트 시간
+                        var baseHour = times.find(t => (hour > t || (hour === t && minute >= 10)) && hour < t + 3);
+                        if (baseHour === undefined) {
+                            baseHour = 23;
+                            today.setDate(today.getDate() - 1);
+                            baseDate = today.toISOString().slice(0, 10).replace(/-/g, "");
                         }
-                    })
+                        var baseTime = (baseHour < 10 ? '0' : '') + baseHour + '00';
+
+                        var url = 'https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst';
+                        var queryParams = '?' + encodeURIComponent('serviceKey') + '=wAukBtbrtnNpAh0dhrtDoQ4fq9G2wk%2BfRPF88i%2F2s%2Famkqdbaj5cjYN%2BEBLubGz0V5nPVzqD7BdprXtWZ8cBUw%3D%3D';
+                        queryParams += '&' + encodeURIComponent('pageNo') + '=1';
+                        queryParams += '&' + encodeURIComponent('numOfRows') + '=10';
+                        queryParams += '&' + encodeURIComponent('dataType') + '=XML';
+                        queryParams += '&' + encodeURIComponent('base_date') + '=' + baseDate;
+                        queryParams += '&' + encodeURIComponent('base_time') + '=' + baseTime;
+                        queryParams += '&' + encodeURIComponent('nx') + '=60';
+                        queryParams += '&' + encodeURIComponent('ny') + '=127';
+
+                        xhr.open('GET', url + queryParams);
+                        xhr.onreadystatechange = function () {
+                            if (this.readyState == 4) {
+                                console.log('Status:', this.status);
+                                console.log('Response:', this.responseText);
+                                if (this.status == 200) {
+                                    var xmlDoc = this.responseXML;
+                                    console.log(xmlDoc);
+                                    var items = xmlDoc.getElementsByTagName('item');
+                                    if (items.length === 0) {
+                                        console.log("No weather data available.");
+                                        return;
+                                    }
+                                    var temperature = 'N/A';
+                                    var skyCode = 0;
+                                    var ptyCode = 0;
+
+                                    Array.from(items).forEach(function(item) {
+                                        var category = item.getElementsByTagName('category')[0].childNodes[0].nodeValue;
+                                        var value = item.getElementsByTagName('fcstValue')[0].childNodes[0].nodeValue;
+                                        switch (category) {
+                                            case 'TMP':
+                                                temperature = value + '°C';
+                                                break;
+                                            case 'SKY':
+                                                skyCode = parseInt(value);
+                                                break;
+                                            case 'PTY':
+                                                ptyCode = parseInt(value);
+                                                break;
+                                        }
+                                    });
+
+                                    var iconClass = 'fas fa-cloud'; // Default icon
+                                    if (skyCode === 1) {
+                                        iconClass = "fas fa-sun"; // 맑음
+                                    } else if (skyCode === 3) {
+                                        iconClass = "fas fa-cloud-sun"; // 구름많음
+                                    } else if (skyCode === 4) {
+                                        iconClass = "fas fa-cloud"; // 흐림
+                                    }
+
+                                    if (ptyCode === 1) {
+                                        iconClass = "fas fa-cloud-rain"; // 비
+                                    } else if (ptyCode === 2) {
+                                        iconClass = "fas fa-cloud-showers-heavy"; // 비/눈
+                                    } else if (ptyCode === 3) {
+                                        iconClass = "fas fa-snowflake"; // 눈
+                                    } else if (ptyCode === 4) {
+                                        iconClass = "fas fa-poo-storm"; // 소나기
+                                    }
+
+                                    $('.CurrIcon').html('<i class="weather-icon ' + iconClass + '"></i>');
+                                    $('.CurrTemp').text(temperature);
+                                    $('.City').text('서울');
+                                } else {
+                                    console.error('API call failed:', this.responseText);
+                                }
+                            }
+                        };
+                        xhr.send();
+                    }
+                    fetchWeather();
+                    setInterval(fetchWeather, 60000); // 날씨 정보 60초마다 업데이트
                 });
             </script>
 
