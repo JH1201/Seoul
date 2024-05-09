@@ -1,7 +1,6 @@
 package com.project.Seoul.controller;
 
 import com.project.Seoul.domain.CultureInfo;
-import com.project.Seoul.domain.SubwayInfo;
 import com.project.Seoul.repository.EventsRepository;
 import com.project.Seoul.service.HomeService;
 import com.project.Seoul.service.MapPageService;
@@ -39,12 +38,14 @@ public class MapPageController {
 
         model.addAttribute("lists", cultureInfoList); // 행사 정보 추가
 
+        /*
         List<SubwayInfo> subwayInfos = mapPageService.getSubway();
         for (SubwayInfo subwayInfo : subwayInfos) {
             mapPageService.saveSubway(subwayInfo);
             System.out.print("swNm = " + subwayInfo.getSW_NM() + ", ");
             System.out.println("NODE_WKT = " + subwayInfo.getNODE_WKT());
         }
+         */
 
         return "homepage/mapPage"; // 맵 페이지 템플릿 반환
     }

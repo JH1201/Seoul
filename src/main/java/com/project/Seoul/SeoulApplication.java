@@ -1,6 +1,7 @@
 package com.project.Seoul;
 
 import com.project.Seoul.domain.CultureInfo;
+import com.project.Seoul.service.EventInfoService;
 import com.project.Seoul.service.HomeService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
