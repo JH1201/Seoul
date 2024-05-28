@@ -35,13 +35,13 @@ public class CultureInfo {
     @Column(length = 500)
     private String PLAYER; //출연자정보
 
-    @Column(length = 1500)
+    @Column(length = 4000)
     private String PROGRAM; //프로그램소개
 
     @Column(length = 1000)
     private String ETC_DESC; //기타내용
 
-    @Column(length = 500)
+    @Column(length = 1000)
     private String ORG_LINK; //홈페이지 주소
 
     private String MAIN_IMG; //메인 이미지
