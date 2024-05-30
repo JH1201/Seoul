@@ -10,5 +10,4 @@ import lombok.Setter;
 public class CulturalEventInfoWrapper {
     private CulturalEventInfo culturalEventInfo;
 
-    // getters and setters
 }

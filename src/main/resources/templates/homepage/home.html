@@ -3,126 +3,749 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seoul Event</title>
-    <style>
-        * { box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; }
+    <title>서울은 지금</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link rel="stylesheet" type="text/css" href="/homeCss/css.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
 
-        .search-container {
-
-            display: flex;
-            justify-content: center; /* 검색창을 중앙으로 */
-            margin-bottom: 20px;
-        }
-
-        .search-part {
-            padding-top: 100px;
-            flex-basis: 70%;
-        }
-
-        .search-bar {
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-        }
-
-        .sort-part {
-            flex-basis: 30%;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            padding: 10px 50px;
-        }
-
-        .items-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            padding: 0 50px; /* 위아래로는 0, 좌우로는 20px의 패딩을 추가 */
-
-        }
-
-        .item {
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            padding: 5px;
-            text-align: center;
-            position: relative;
-        }
-
-        .star {
-            position: absolute;
-            top: 3px;
-            right: 2px;
-            cursor: pointer;
-            font-size: 18px;
-        }
-
-        .star.active {
-            color: gold;
-        }
-    </style>
 </head>
 <body>
+<div id="content">
 
-<div class="search-container">
-    <form class="search-part" action="/search" method="get">
-        <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요." required>
-        <button type="submit">Search</button>
-    </form>
+    <div class="header">
+        <h1>
+            <a href="home">
+                서울은 지금
+            </a>
+        </h1>
 
-</div>
+        <div class="weather-toMap-container">
+            <div class="weather">
+                <div class="ToMAP">
+                    <a href="/mapPage" style="text-decoration: none">
+                        <img src="image/map.png" alt="지도 보기">
+                    </a>
+                    <a href="/mapPage" style="text-decoration: none; color: black">
+                        지도로 보기
+                    </a>
+                </div>
 
-<div class="sort-part">
-    <!-- 옵션들이 담길 드롭다운 컨테이너, 기본적으로 숨겨져 있습니다 -->
-    <select id="sortOptions" onchange="sort()">
-        <option value="favorites">전체</option>
-        <option value="all">즐겨찾기</option>
-        <option value="1">1월</option>
-        <option value="2">2월</option>
-        <option value="1">3월</option>
-        <option value="2">4월</option>
-        <option value="1">5월</option>
-        <option value="2">6월</option>
-        <option value="1">7월</option>
-        <option value="2">8월</option>
-        <option value="1">9월</option>
-        <option value="2">10월</option>
-        <option value="1">11월</option>
-        <option value="12">12월</option>
+                <div class='CurrIcon'></div>
+                <div class="weather-info" style="display: flex; flex-direction: column; align-items: flex-start; position: relative;">
+                    <div class='CurrTemp' style="text-align: center; font-size: 25px; font-weight: bold; margin-left: 10px;"></div>
+                    <div class='City' style="text-align: center; font-size: 25px; font-weight: bold; margin-left: 10px;"></div>
+                </div>
+            </div>
 
-    </select>
 
-    <script>
-        // 사용자가 드롭다운에서 옵션을 선택하면 이 함수가 호출됩니다.
-        function sort() {
-            var selectedOption = document.getElementById('sortOptions').value;
-            // 여기에 선택된 옵션에 따라 처리할 로직을 구현하세요.
-            console.log("선택된 정렬 옵션:", selectedOption);
-            // 예: 서버에 요청을 보내거나, 페이지의 내용을 정렬할 수 있습니다.
-        }
-    </script>
-</div>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script>
+                $(document).ready(function () {
+                    function fetchWeather() {
+                        var xhr = new XMLHttpRequest();
+                        var today = new Date();
+                        var baseDate = today.toISOString().slice(0, 10).replace(/-/g, "");
+                        var hour = today.getHours();
+                        var minute = today.getMinutes();
+                        var times = [2, 5, 8, 11, 14, 17, 20, 23]; // 기상청 데이터 업데이트 시간
+                        var baseHour = times.find(t => (hour > t || (hour === t && minute >= 10)) && hour < t + 3);
+                        if (baseHour === undefined) {
+                            baseHour = 23;
+                            today.setDate(today.getDate() - 1);
+                            baseDate = today.toISOString().slice(0, 10).replace(/-/g, "");
+                        }
+                        var baseTime = (baseHour < 10 ? '0' : '') + baseHour + '00';
 
-<div class="items-grid">
-    <div th:each="cultureInfo : ${list}" class="item">
-        <div class="star">★</div>
-        <!--<span th:text="${cultureInfo.getTITLE()}"></span>-->
-        <a th:href="@{/eventInfo(title=${cultureInfo.getTITLE()})}">
-            <img th:src="${cultureInfo.getMAIN_IMG()}" alt="Cultural Event Image" width="150" height="170">
-        </a>
+                        var url = 'https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst';
+                        var queryParams = '?' + encodeURIComponent('serviceKey') + '=wAukBtbrtnNpAh0dhrtDoQ4fq9G2wk%2BfRPF88i%2F2s%2Famkqdbaj5cjYN%2BEBLubGz0V5nPVzqD7BdprXtWZ8cBUw%3D%3D';
+                        queryParams += '&' + encodeURIComponent('pageNo') + '=1';
+                        queryParams += '&' + encodeURIComponent('numOfRows') + '=10';
+                        queryParams += '&' + encodeURIComponent('dataType') + '=XML';
+                        queryParams += '&' + encodeURIComponent('base_date') + '=' + baseDate;
+                        queryParams += '&' + encodeURIComponent('base_time') + '=' + baseTime;
+                        queryParams += '&' + encodeURIComponent('nx') + '=60';
+                        queryParams += '&' + encodeURIComponent('ny') + '=127';
 
+                        xhr.open('GET', url + queryParams);
+                        xhr.onreadystatechange = function () {
+                            if (this.readyState == 4) {
+                                console.log('Status:', this.status);
+                                console.log('Response:', this.responseText);
+                                if (this.status == 200) {
+                                    var xmlDoc = this.responseXML;
+                                    console.log(xmlDoc);
+                                    var items = xmlDoc.getElementsByTagName('item');
+                                    if (items.length === 0) {
+                                        console.log("No weather data available.");
+                                        return;
+                                    }
+                                    var temperature = 'N/A';
+                                    var skyCode = 0;
+                                    var ptyCode = 0;
+
+                                    Array.from(items).forEach(function(item) {
+                                        var category = item.getElementsByTagName('category')[0].childNodes[0].nodeValue;
+                                        var value = item.getElementsByTagName('fcstValue')[0].childNodes[0].nodeValue;
+                                        switch (category) {
+                                            case 'TMP':
+                                                temperature = value + '°C';
+                                                break;
+                                            case 'SKY':
+                                                skyCode = parseInt(value);
+                                                break;
+                                            case 'PTY':
+                                                ptyCode = parseInt(value);
+                                                break;
+                                        }
+                                    });
+
+                                    var iconClass = 'fas fa-cloud'; // Default icon
+                                    if (skyCode === 1) {
+                                        iconClass = "fas fa-sun"; // 맑음
+                                    } else if (skyCode === 3) {
+                                        iconClass = "fas fa-cloud-sun"; // 구름많음
+                                    } else if (skyCode === 4) {
+                                        iconClass = "fas fa-cloud"; // 흐림
+                                    }
+
+                                    if (ptyCode === 1) {
+                                        iconClass = "fas fa-cloud-rain"; // 비
+                                    } else if (ptyCode === 2) {
+                                        iconClass = "fas fa-cloud-showers-heavy"; // 비/눈
+                                    } else if (ptyCode === 3) {
+                                        iconClass = "fas fa-snowflake"; // 눈
+                                    } else if (ptyCode === 4) {
+                                        iconClass = "fas fa-poo-storm"; // 소나기
+                                    }
+
+                                    $('.CurrIcon').html('<i class="weather-icon ' + iconClass + '"></i>');
+                                    $('.CurrTemp').text(temperature);
+                                    $('.City').text('서울');
+                                } else {
+                                    console.error('API call failed:', this.responseText);
+                                }
+                            }
+                        };
+                        xhr.send();
+                    }
+                    fetchWeather();
+                    setInterval(fetchWeather, 60000); // 날씨 정보 60초마다 업데이트
+                });
+            </script>
+
+        </div>
     </div>
 </div>
 
-<script>
-    // 모든 별을 선택합니다.
-    document.querySelectorAll('.star').forEach(function(star) {
-        star.addEventListener('click', function(e) {
-            // 클릭된 별에 'active' 클래스를 토글합니다.
-            e.target.classList.toggle('active');
+<div class="background-image-container">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div th:each="item : ${items}" class="swiper-slide">
+                <div class="image-container">
+                    <a th:href="@{/eventInfo(title=${item.TITLE})}">
+                        <img th:src="${item.MAIN_IMG}" alt="Image"/>
+                    </a>
+                </div>
+                <div class="title">
+                    <h3 th:text="${item.TITLE}">Item Title</h3>
+                </div>
+            </div>
+        </div>
+        <div class="swiper-pagination"></div>
+        <!--<div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>-->
+    </div>
+</div>
+
+<div class="search-container">
+    <div class="searchUpPart">
+        <form class="dateSearch" id="dateSearchForm" action="/submit-date-range" method="post">
+            <div class="date" style="padding-right: 10px">
+                <label for="date1">
+                    <input type="date" id="date1" name="startDate"></input>
+                </label>
+            </div>
+            <div class="date" style="display: flex; align-items: center; height: 60px; padding-right: 10px; padding-left: 10px "> ~ </div>
+            <div class="date" style="padding-left: 10px">
+                <label for="date2">
+                    <input type="date" id="date2" name="endDate" value="2024-12-31"></input>
+                </label>
+            </div>
+        </form>
+
+
+        <form class="search-part" id="searchForm" action="/search" method="post">
+            <input type="text" name="keyword" class="search-bar" placeholder="키워드를 입력하세요. (ex: 행사명, 장소, 역 등 )" >
+            <button class="search-button" type="submit">🔍︎</button>
+        </form>
+
+        <ul id="detailSearchToggle" onclick="changeBtnName()">
+            상세검색 열기 &#9660;
+        </ul>
+
+        <script>
+            function changeBtnName() {
+                const btnElement = document.getElementById('detailSearchToggle');
+                if (btnElement.innerText.includes('열기')) {
+                    btnElement.innerText = '상세검색 닫기 ▲';
+                } else {
+                    btnElement.innerText = '상세검색 열기 ▼';
+                }
+            }
+        </script>
+
+
+
+        <div id="popupDetail">
+            <br><br>
+            <div class="searchDownPart">
+                <div class="eventType">
+                    <input type="checkbox" id="select0" name="eventType" value="전체"><label for="select0" id="select0Label"> 전체</label>
+                    <input type="checkbox" id="select1" name="eventType" value="뮤지컬/오페라"><label for="select1" id="select1Label"> 뮤지컬/오페라</label>
+                    <input type="checkbox" id="select2" name="eventType" value="연극"><label for="select2" id="select2Label"> 연극</label>
+                    <input type="checkbox" id="select3" name="eventType" value="무용"><label for="select3" id="select3Label"> 무용</label>
+                    <input type="checkbox" id="select4" name="eventType" value="국악"><label for="select4" id="select4Label"> 국악</label>
+                    <input type="checkbox" id="select5" name="eventType" value="클래식"><label for="select5" id="select5Label"> 클래식</label>
+                    <input type="checkbox" id="select6" name="eventType" value="전시/미술"><label for="select6" id="select6Label"> 전시/미술</label>
+                    <input type="checkbox" id="select7" name="eventType" value="교육/체험"><label for="select7" id="select7Label"> 교육/체험</label>
+                    <input type="checkbox" id="select8" name="eventType" value="콘서트"><label for="select8" id="select8Label"> 콘서트</label>
+                    <input type="checkbox" id="select9" name="eventType" value="영화"><label for="select9" id="select9Label"> 영화</label>
+                    <input type="checkbox" id="select10" name="eventType" value="독주/독창회"><label for="select10" id="select10Label"> 독주/독창회</label>
+                    <input type="checkbox" id="select11" name="eventType" value="축제"><label for="select11" id="select11Label"> 축제</label>
+                    <input type="checkbox" id="select12" name="eventType" value="기타"><label for="select12" id="select12Label"> 기타</label>
+                </div><br><br>
+
+                <div class="locationName">
+                    <input type="checkbox" id="location0" name="location" value="전체"><label for="location0" id="location0Label"> 전체</label>
+                    <input type="checkbox" id="location1" name="location" value="강남구"><label for="location1" id="location1Label"> 강남구</label>
+                    <input type="checkbox" id="location2" name="location" value="강동구"><label for="location2" id="location2Label"> 강동구</label>
+                    <input type="checkbox" id="location3" name="location" value="강북구"><label for="location3" id="location3Label"> 강북구</label>
+                    <input type="checkbox" id="location4" name="location" value="강서구"><label for="location4" id="location4Label"> 강서구</label>
+                    <input type="checkbox" id="location5" name="location" value="관악구"><label for="location5" id="location5Label"> 관악구</label>
+                    <input type="checkbox" id="location6" name="location" value="광진구"><label for="location6" id="location6Label"> 광진구</label>
+                    <input type="checkbox" id="location7" name="location" value="구로구"><label for="location7" id="location7Label"> 구로구</label>
+                    <input type="checkbox" id="location8" name="location" value="금천구"><label for="location8" id="location8Label"> 금천구</label>
+                    <input type="checkbox" id="location9" name="location" value="노원구"><label for="location9" id="location9Label"> 노원구</label>
+                    <input type="checkbox" id="location10" name="location" value="도봉구"><label for="location10" id="location10Label"> 도봉구</label>
+                    <input type="checkbox" id="location11" name="location" value="동대문구"><label for="location11" id="location11Label"> 동대문구</label>
+                    <input type="checkbox" id="location12" name="location" value="동작구"><label for="location12" id="location12Label"> 동작구</label>
+                    <input type="checkbox" id="location13" name="location" value="마포구"><label for="location13" id="location13Label"> 마포구</label>
+                    <input type="checkbox" id="location14" name="location" value="서대문구"><label for="location14" id="location14Label"> 서대문구</label>
+                    <input type="checkbox" id="location15" name="location" value="서초구"><label for="location15" id="location15Label"> 서초구</label>
+                    <input type="checkbox" id="location16" name="location" value="성동구"><label for="location16" id="location16Label"> 성동구</label>
+                    <input type="checkbox" id="location17" name="location" value="성북구"><label for="location17" id="location17Label"> 성북구</label>
+                    <input type="checkbox" id="location18" name="location" value="송파구"><label for="location18" id="location18Label"> 송파구</label>
+                    <input type="checkbox" id="location19" name="location" value="양천구"><label for="location19" id="location19Label"> 양천구</label>
+                    <input type="checkbox" id="location20" name="location" value="영등포구"><label for="location20" id="location20Label"> 영등포구</label>
+                    <input type="checkbox" id="location21" name="location" value="용산구"><label for="location21" id="location21Label"> 용산구</label>
+                    <input type="checkbox" id="location22" name="location" value="은평구"><label for="location22" id="location22Label"> 은평구</label>
+                    <input type="checkbox" id="location23" name="location" value="종로구"><label for="location23" id="location23Label"> 종로구</label>
+                    <input type="checkbox" id="location24" name="location" value="중구"><label for="location24" id="location24Label"> 중구</label>
+                    <input type="checkbox" id="location25" name="location" value="중랑구"><label for="location25" id="location25Label"> 중랑구</label>
+
+
+                </div><br>
+                <div class="detailButton">
+                    <button id="detailSearch"> 검색하기 </button>
+                    <button id="resetButton"> 선택 초기화 </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var popup = document.getElementById('popupDetail');
+            popup.style.display = 'none'; // 초기에 팝업을 숨깁니다.
         });
+
+        document.getElementById('detailSearchToggle').addEventListener('click', function() {
+            var popup = document.getElementById('popupDetail');
+            if (popup.style.display === 'none') {
+                popup.style.display = 'block'; // 팝업을 보여줍니다.
+            } else {
+                popup.style.display = 'none'; // 팝업을 숨깁니다.
+            }
+        });
+
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // eventType과 locationName 섹션의 모든 체크박스 처리
+            document.querySelectorAll('.eventType input[type="checkbox"], .locationName input[type="checkbox"]').forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    const parentDiv = this.closest('div'); // 현재 체크박스의 부모 div
+                    const allCheckbox = parentDiv.querySelector('input[type="checkbox"][value="전체"]'); // 현재 섹션의 '전체' 체크박스
+
+                    if (this.value === "전체") {
+                        // '전체' 체크박스가 선택된 경우, 다른 모든 체크박스 해제
+                        if (this.checked) {
+                            parentDiv.querySelectorAll('input[type="checkbox"]:not([value="전체"])').forEach(cb => cb.checked = false);
+
+                        }
+                    } else {
+                        // '전체'가 아닌 체크박스 선택 시 '전체' 체크박스 해제
+                        allCheckbox.checked = false;
+
+                        // 다른 체크박스가 하나라도 선택된 경우 '전체' 체크박스 유지를 해제
+                        const anyChecked = Array.from(parentDiv.querySelectorAll('input[type="checkbox"]:not([value="전체"])')).some(cb => cb.checked);
+                        if (!anyChecked) {
+                            // 모든 체크박스가 해제되면 '전체' 체크박스를 자동으로 선택하지 않음
+                            allCheckbox.checked = false;
+                        }
+                    }
+                });
+            });
+
+            // '선택 초기화' 버튼 클릭 이벤트
+            document.getElementById('resetButton').addEventListener('click', function() {
+                document.querySelectorAll('.searchDownPart input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
+            });
+
+            document.getElementById('detailSearch').addEventListener('click', function(event) {
+                event.preventDefault(); // 기본 동작 방지
+                searchEvents(1); // 항상 첫 페이지로부터 검색 시작
+            });
+
+            document.getElementById('searchForm').addEventListener('click', function(event) {
+                event.preventDefault(); // 기본 동작 방지
+                searchEvents(1); // 항상 첫 페이지로부터 검색 시작
+            });
+
+            let currentPage = 1;
+            const pageSize = 20; // Set the page size here
+
+            function searchEvents(page) {
+                currentPage = page || 1;
+
+                var eventTypes = Array.from(document.querySelectorAll('.eventType input[type="checkbox"]:checked')).map(checkbox => checkbox.value).join(",");
+                var locations = Array.from(document.querySelectorAll('.locationName input[type="checkbox"]:checked')).map(checkbox => checkbox.value).join(",");
+                var keyword = document.querySelector('.search-bar').value.trim();
+                var startDate = document.getElementById('date1').value;
+                var endDate = document.getElementById('date2').value;
+
+                fetch(`/searchEvents?keyword=${encodeURIComponent(keyword)}&startDate=${startDate}&endDate=${endDate}&eventTypes=${eventTypes}&locations=${locations}&page=${currentPage}&size=${pageSize}`, {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        updateEventsContainer(data.data);
+                        detatilUpdatePagination(data.currentPage, data.totalPages);
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+
+            function detatilUpdatePagination(currentPage, totalPages) {
+                // 기존에 존재하는 .button_number 및 .row 요소를 찾거나 새로 생성합니다.
+                const paginationContainer = document.getElementById('pagination');
+                let buttonNumberDiv = paginationContainer.querySelector('.button_number');
+                let rowDiv = buttonNumberDiv ? buttonNumberDiv.querySelector('.row') : null;
+
+                // .button_number나 .row가 없다면 새로 만듭니다.
+                if (!buttonNumberDiv) {
+                    buttonNumberDiv = document.createElement('div');
+                    buttonNumberDiv.className = 'button_number';
+                    paginationContainer.appendChild(buttonNumberDiv);
+                }
+                if (!rowDiv) {
+                    rowDiv = document.createElement('div');
+                    rowDiv.className = 'row';
+                    buttonNumberDiv.appendChild(rowDiv);
+                }
+
+                // .row 내부를 초기화합니다.
+                rowDiv.innerHTML = '';
+
+                const pagesPerGroup = 10;
+                const currentGroup = Math.ceil(currentPage / pagesPerGroup);
+                const groupStartPage = (currentGroup - 1) * pagesPerGroup + 1;
+                const groupEndPage = Math.min(groupStartPage + pagesPerGroup - 1, totalPages);
+
+                // 첫 페이지 버튼
+                if (currentPage > 1) {
+                    rowDiv.appendChild(detailCreatePageButton(1, '<<'));
+                }
+
+                // 이전 페이지 그룹 버튼
+                if (currentGroup > 1) {
+                    rowDiv.appendChild(detailCreatePageButton(groupStartPage - 1, '<'));
+                }
+
+                // 페이지 번호 버튼
+                // 페이지 버튼들을 .row에 추가합니다.
+                for (let i = groupStartPage; i <= groupEndPage; i++) {
+                    rowDiv.appendChild(detailCreatePageButton(i, i.toString(), currentPage === i));
+                }
+
+                // 다음 페이지 그룹 버튼
+                if (currentGroup < Math.ceil(totalPages / pagesPerGroup)) {
+                    rowDiv.appendChild(detailCreatePageButton(groupEndPage + 1, '>'));
+                }
+
+                // 마지막 페이지 버튼
+                if (currentPage < totalPages) {
+                    rowDiv.appendChild(detailCreatePageButton(totalPages, '>>'));
+                }
+            }
+
+            function detailCreatePageButton(page, text, isActive) {
+                const button = document.createElement('button');
+
+                button.textContent = text;
+                button.style.backgroundColor = isActive ? '#C5D7A4' : '기본 버튼 색상'; // 활성화 상태일 때 색상을 적용하기 위해 삼항 연산자 사용
+                button.style.color = 'white'; // 모든 버튼의 글자 색상을 하얗게 가정
+
+                button.disabled = isActive; // 현재 페이지는 비활성화
+                button.onclick = function() { searchEvents(page); };
+
+                // 이미 존재하는 .row div에 접근
+                const rowDiv = document.querySelector('#pagination .button_number .row');
+
+                // rowDiv 안에 버튼 추가
+                rowDiv.appendChild(button);
+
+                return button;
+            }
+
+        });
+
+    </script>
+
+</div>
+
+<script>
+    // 현재 날짜를 가져오는 함수
+    function getCurrentDate() {
+        const today = new Date();
+        const year = today.getFullYear();
+        let month = today.getMonth() + 1;
+        let day = today.getDate();
+
+        // 월과 일이 한 자리 숫자인 경우 앞에 0을 추가해줍니다.
+        if (month < 10) {
+            month = '0' + month;
+        }
+        if (day < 10) {
+            day = '0' + day;
+        }
+
+        return `${year}-${month}-${day}`;
+    }
+
+    // input 요소의 value 속성에 현재 날짜를 설정합니다.
+    document.getElementById('date1').value = getCurrentDate();
+</script>
+
+
+
+<!--<div class="sort-part">
+
+    <select id="sortOptions" onchange="sort()">
+        <option value="전체" th:selected="${selectedMonth == '전체'}">전체</option>
+
+        <option value="1" th:selected="${selectedMonth == '1'}">1월</option>
+        <option value="2" th:selected="${selectedMonth == '2'}">2월</option>
+        <option value="3" th:selected="${selectedMonth == '3'}">3월</option>
+        <option value="4" th:selected="${selectedMonth == '4'}">4월</option>
+        <option value="5" th:selected="${selectedMonth == '5'}">5월</option>
+        <option value="6" th:selected="${selectedMonth == '6'}">6월</option>
+        <option value="7" th:selected="${selectedMonth == '7'}">7월</option>
+        <option value="8" th:selected="${selectedMonth == '8'}">8월</option>
+        <option value="9" th:selected="${selectedMonth == '9'}">9월</option>
+        <option value="10" th:selected="${selectedMonth == '10'}">10월</option>
+        <option value="11" th:selected="${selectedMonth == '11'}">11월</option>
+        <option value="12" th:selected="${selectedMonth == '12'}">12월</option>
+
+
+    </select>
+
+
+</div>-->
+<br>
+<div id="eventsContainer">
+    <!-- 검색 결과 표시 -->
+    <div th:if="${lists != null}" th:unless="${lists.isEmpty()}">
+        <div class="items-grid">
+            <div  th:each="event : ${lists}" class="item">
+                <div style="padding: 10px">
+                    <!--<div class="star" th:data-culture-info-id="${event.Id}">★</div>-->
+                    <a th:href="@{/eventInfo(title=${event.TITLE})}">
+                        <img th:src="${event.MAIN_IMG}" alt="Event Image" width="200" height="280">
+                    </a>
+                    <div class="gridText">
+                        <span th:text="${event.TITLE}" ></span>
+                    </div>
+                    <p class="eventdate" th:text="${event.getDATE()}"></p>
+                    <p class="place" th:text="${event.getPLACE()}"></p>
+                    <br><br>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${lists == null || lists.isEmpty()}">
+        <p>검색 결과가 없습니다.</p>
+    </div>
+</div>
+
+<!-- 페이지 버튼 -->
+<div id="pagination" th:if="${totalPages > 1}">
+    <div class="button_number">
+        <div class="row">
+            <button style="display: inline-block">
+                <a class="page-link" th:href="@{${'/home'}}">«</a>
+            </button>
+
+            <button th:if="${currentPage > 1}" style="display: inline-block">
+                <a class="page-link" th:href="@{${'/home?page=' + (startPage - 1)}}"><</a>
+            </button>
+
+
+            <button th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}"
+                    th:classappend="${pageNumber == currentPage} ? 'current-page'">
+                <a class="page-link" th:href="@{${'/home?page=' + pageNumber}}" th:text="${pageNumber}"></a>
+            </button>
+
+
+
+            <button th:if="${currentPage < totalPages}" style="display: inline-block">
+                <a class="page-link" th:href="@{${'/home?page=' + (endPage + 1)}}">>︎</a>
+            </button>
+
+            <button style="display: inline-block">
+                <a class="page-link" th:href="@{${'/home?page=' + totalPages}}">»︎</a>
+            </button>
+        </div>
+    </div>
+</div> <br>
+
+
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+<script>
+    const swiper = new Swiper('.swiper-container', {
+        autoplay: {
+            delay:3000 },
+        centeredSlide:true,
+        loop: true,
+        debugger: true,
+        slideToClickedSlide: true,
+        pagination: {
+            el: '.swiper-pagination',
+            type: 'bullets',
+            clickable: true},
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        scrollbar:{
+            el:'.swiper-scrollbar',},
+        slidesPerView: 5,
+        slidesPerGroup: 1,
+        spaceBetween:10,
+        breakpoints: {
+            300: {
+                slidesPerView: 1,
+                spaceBetween: 10
+            },
+            670: {
+                slidesPerView: 2,
+                spaceBetween: 20
+            },
+            1000: {
+                slidesPerView: 3,
+                spaceBetween: 30
+            },
+            1370: {
+                slidesPerView: 4,
+                spaceBetween: 40
+            },
+            1700: {
+                slidesPerView: 5,
+                spaceBetween: 50
+            }
+        }
     });
+</script>
+
+
+<script>
+
+    let currentPage = 1;
+    const pageSize = 20; // Set the page size here
+
+    function sort(page) {
+        currentPage = page || 1; // Use the provided page or the current page if not provided
+        var selectedOption = document.getElementById('sortOptions').value;
+
+
+        // "전체"가 선택되었을 때 홈페이지로 리다이렉트
+        if (selectedOption === "전체") {
+            window.location.href = '/home'; // 페이지 이동
+            return; // 함수를 여기서 종료하여 더 이상 실행하지 않음
+        }
+
+        // 서버로 드롭박스에서 선택된 월과 페이징 정보를 넘김
+        fetch(`/monthlySort?month=${selectedOption}&page=${currentPage}&size=${pageSize}`)
+            .then(response => response.json())
+            .then(data => {
+                updateEventsContainer(data.data); // 화면 업데이트
+                updatePagination(data.currentPage, data.totalPages); // 페이지 번호 업데이트
+
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function updatePagination(currentPage, totalPages) {
+        // 기존에 존재하는 .button_number 및 .row 요소를 찾거나 새로 생성합니다.
+        const paginationContainer = document.getElementById('pagination');
+        let buttonNumberDiv = paginationContainer.querySelector('.button_number');
+        let rowDiv = buttonNumberDiv ? buttonNumberDiv.querySelector('.row') : null;
+
+        // .button_number나 .row가 없다면 새로 만듭니다.
+        if (!buttonNumberDiv) {
+            buttonNumberDiv = document.createElement('div');
+            buttonNumberDiv.className = 'button_number';
+            paginationContainer.appendChild(buttonNumberDiv);
+        }
+        if (!rowDiv) {
+            rowDiv = document.createElement('div');
+            rowDiv.className = 'row';
+            buttonNumberDiv.appendChild(rowDiv);
+        }
+
+        // .row 내부를 초기화합니다.
+        rowDiv.innerHTML = '';
+
+        const pagesPerGroup = 10;
+        const currentGroup = Math.ceil(currentPage / pagesPerGroup);
+        const groupStartPage = (currentGroup - 1) * pagesPerGroup + 1;
+        const groupEndPage = Math.min(groupStartPage + pagesPerGroup - 1, totalPages);
+
+        // 첫 페이지 버튼
+        if (currentPage > 1) {
+            rowDiv.appendChild(createPageButton(1, '<<'));
+        }
+
+        // 이전 페이지 그룹 버튼
+        if (currentGroup > 1) {
+            rowDiv.appendChild(createPageButton(groupStartPage - 1, '<'));
+        }
+
+        // 페이지 번호 버튼
+        // 페이지 버튼들을 .row에 추가합니다.
+        for (let i = groupStartPage; i <= groupEndPage; i++) {
+            rowDiv.appendChild(createPageButton(i, i.toString(), currentPage === i));
+        }
+
+        // 다음 페이지 그룹 버튼
+        if (currentGroup < Math.ceil(totalPages / pagesPerGroup)) {
+            rowDiv.appendChild(createPageButton(groupEndPage + 1, '>'));
+        }
+
+        // 마지막 페이지 버튼
+        if (currentPage < totalPages) {
+            rowDiv.appendChild(createPageButton(totalPages, '>>'));
+        }
+    }
+
+    function createPageButton(page, text, isActive) {
+        const button = document.createElement('button');
+
+        button.textContent = text;
+        button.style.backgroundColor = isActive ? '#C5D7A4' : '기본 버튼 색상'; // 활성화 상태일 때 색상을 적용하기 위해 삼항 연산자 사용
+        button.style.color = 'white'; // 모든 버튼의 글자 색상을 하얗게 가정
+
+        button.disabled = isActive; // 현재 페이지는 비활성화
+        button.onclick = function() { sort(page); };
+
+        // 이미 존재하는 .row div에 접근
+        const rowDiv = document.querySelector('#pagination .button_number .row');
+
+        // rowDiv 안에 버튼 추가
+        rowDiv.appendChild(button);
+
+        return button;
+    }
+
+
+
+    function updateEventsContainer(data) {
+        var eventsContainer = document.getElementById('eventsContainer');
+        eventsContainer.innerHTML = ''; // 기존 내용 지우기
+
+        if (data && data.length > 0) {
+            var itemsGrid = document.createElement('div');
+            itemsGrid.classList.add('items-grid');
+
+            data.forEach(event => {
+                var item = document.createElement('div');
+                item.classList.add('item');
+
+                var imageContainer = document.createElement('div');
+                imageContainer.style.paddingTop = '10px';
+                imageContainer.style.paddingLeft = '10px';
+                imageContainer.style.paddingRight = '10px';
+
+                var imageLink = document.createElement('a');
+                imageLink.href = `/eventInfo?title=${encodeURIComponent(event.title)}`;
+                imageContainer.appendChild(imageLink);
+
+                var image = document.createElement('img');
+                image.src = event.main_IMG;
+                image.alt = 'Event Image';
+                image.width = 200;
+                image.height = 280;
+                imageLink.appendChild(image);
+
+                var titleContainer = document.createElement('div');
+                titleContainer.classList.add('gridText');
+                var title = document.createElement('span');
+                title.innerText = event.title;
+                title.style.marginLeft = '10px';
+                titleContainer.appendChild(title);
+
+                var date = document.createElement('p');
+                date.innerText = event.date;
+                date.classList.add('eventdate');
+                date.style.marginLeft ='20px';
+
+                var place = document.createElement('p');
+                place.innerText = event.place;
+                place.classList.add('place');
+                place.style.marginBottom = '50px';
+                place.style.marginLeft = '20px';
+
+                item.appendChild(imageContainer);
+                item.appendChild(titleContainer);
+                item.appendChild(date);
+                item.appendChild(place);
+                itemsGrid.appendChild(item);
+            });
+
+            eventsContainer.appendChild(itemsGrid);
+        } else {
+            var noResultMessage = document.createElement('p');
+            noResultMessage.innerText = '검색 결과가 없습니다.';
+            eventsContainer.appendChild(noResultMessage);
+        }
+    }
+
+
 </script>
 
 </body>
