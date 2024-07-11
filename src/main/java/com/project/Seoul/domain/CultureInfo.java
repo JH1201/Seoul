@@ -32,10 +32,10 @@ public class CultureInfo {
     @Column(length = 500)
     private String USE_FEE; //이용요금
 
-    @Column(length = 500)
+    @Column(length = 1000)
     private String PLAYER; //출연자정보
 
-    @Column(length = 4000)
+    @Column(length = 5000)
     private String PROGRAM; //프로그램소개
 
     @Column(length = 1000)
