@@ -35,17 +35,7 @@ public class MapPageController {
     public String eventListMapPage(Model model) {
 
         List<CultureInfo> cultureInfoList = homeService.getAllCultureInfoApiSortedByMonth();
-
         model.addAttribute("lists", cultureInfoList); // 행사 정보 추가
-
-        /*
-        List<SubwayInfo> subwayInfos = mapPageService.getSubway();
-        for (SubwayInfo subwayInfo : subwayInfos) {
-            mapPageService.saveSubway(subwayInfo);
-            System.out.print("swNm = " + subwayInfo.getSW_NM() + ", ");
-            System.out.println("NODE_WKT = " + subwayInfo.getNODE_WKT());
-        }
-         */
 
         return "homepage/mapPage"; // 맵 페이지 템플릿 반환
     }
@@ -66,7 +56,6 @@ public class MapPageController {
         private List<CultureInfo> markersInfo;
         private Map<String, Double> bounds;
 
-        // getters and setters
     }
 
     @GetMapping("/mapSearchEvents")

@@ -35,6 +35,7 @@ public class HomeController {
                            @RequestParam(defaultValue = "1", name = "page") int page,
                            @RequestParam(defaultValue = "20", name = "size") int size) {
 
+        // 한 페이지에 나타나는 행사의 갯수는 20개이다.
 
         // 페이징을 처리하기 전에 총 페이지 수를 미리 계산해야 합니다.
         List<CultureInfo> allCultureInfoApi = homeService.getAllCultureInfoApiSortedByMonth();
@@ -44,7 +45,7 @@ public class HomeController {
         int totalPageCount = homeService.getTotalPages(size, eventSize);
 
         // 페이지 번호 조정 로직을 여기로 이동
-        int blockLimit = 10;
+        int blockLimit = 10; // 페이징 했을 때 보여지는 번호의 개수
         int startPage = Math.max(1, (((int) Math.ceil(((double) page / blockLimit))) - 1) * blockLimit + 1);
         int endPage = Math.min(totalPageCount, startPage + blockLimit - 1);
 
@@ -77,6 +78,43 @@ public class HomeController {
     }
 
 
+    //검색 기능
+    @GetMapping("/searchEvents")
+    public ResponseEntity<Map<String, Object>> searchEvents(
+            @RequestParam String keyword,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam List<String> eventTypes,
+            @RequestParam List<String> locations,
+            @RequestParam("page") int page,
+            @RequestParam("size") int size) {
+
+        List<CultureInfo> events = homeService.comprehensiveSearch(keyword, startDate, endDate, eventTypes, locations);
+
+        int totalItems = events.size();
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        // 페이지 시작과 끝 계산
+        int start = (page - 1) * size;
+        int end = Math.min(start + size, totalItems);
+
+        // 인덱스가 경계를 넘어갔을 때 응답
+        if (start > end || start < 0 || end > totalItems) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        List<CultureInfo> paginatedList = events.subList(start, end);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", paginatedList);
+        response.put("currentPage", page);
+        response.put("totalItems", totalItems);
+        response.put("totalPages", totalPages);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /*
     @GetMapping("/monthlySort")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> sort(
@@ -109,7 +147,7 @@ public class HomeController {
 
         return ResponseEntity.ok(response);
     }
-
+    */
 
     @GetMapping("/detailfilterEvents")
     @ResponseBody
@@ -150,39 +188,5 @@ public class HomeController {
     }
 
 
-    @GetMapping("/searchEvents")
-    public ResponseEntity<Map<String, Object>> searchEvents(
-            @RequestParam String keyword,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            @RequestParam List<String> eventTypes,
-            @RequestParam List<String> locations,
-            @RequestParam("page") int page,
-            @RequestParam("size") int size) {
 
-        List<CultureInfo> events = homeService.comprehensiveSearch(keyword, startDate, endDate, eventTypes, locations);
-
-        int totalItems = events.size();
-        int totalPages = (int) Math.ceil((double) totalItems / size);
-
-        // 페이지 시작과 끝 계산
-        int start = (page - 1) * size;
-        int end = Math.min(start + size, totalItems);
-
-        // Check for index out of bounds
-        if (start > end || start < 0 || end > totalItems) {
-            // Respond with a BAD_REQUEST or any other appropriate status
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-
-        List<CultureInfo> paginatedList = events.subList(start, end);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("data", paginatedList);
-        response.put("currentPage", page);
-        response.put("totalItems", totalItems);
-        response.put("totalPages", totalPages);
-
-        return ResponseEntity.ok(response);
-    }
 }

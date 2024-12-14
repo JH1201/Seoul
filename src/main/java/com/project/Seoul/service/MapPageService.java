@@ -22,6 +22,7 @@ public class MapPageService {
     }
 
 
+    //자도 경계 안에 있는 행사 찾기
     public List<CultureInfo> filterEventsByBounds(List<CultureInfo> markersInfo, Map<String, Double> bounds) {
         if (bounds.get("southWestLat") == null || bounds.get("southWestLng") == null ||
                 bounds.get("northEastLat") == null || bounds.get("northEastLng") == null) {

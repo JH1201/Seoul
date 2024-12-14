@@ -41,7 +41,7 @@ public class HomeService {
         List<CultureInfo> cultureInfoList = wrapper.getCulturalEventInfo().getRow();
 
 
-        // Remove items where the start date is in 2023 or the end date is not in 2024
+        // 2023으로 시작하거나 2024로 끝나지 않는 행사 삭제
         cultureInfoList.removeIf(info -> {
             String date = info.getDATE();
             if (date.contains(" ~ ")) {
@@ -117,7 +117,7 @@ public class HomeService {
     }
 
 
-
+    //검색 기능(기간, 키워드, 상세검색)
     public List<CultureInfo> comprehensiveSearch(String keyword, LocalDate startDate, LocalDate endDate, List<String> eventTypes, List<String> locations) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
         LocalDate today = LocalDate.now();
@@ -148,7 +148,20 @@ public class HomeService {
                 .collect(Collectors.toList());
     }
 
-    //선택된 드롭박스에 해당되는 데이터
+    // 페이징
+    public Page<CultureInfo> paging (int pageNumber, int pageSize) {
+
+        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+        return eventsRepository.findAll(pageable);
+
+    }
+
+    public int getTotalPages(int size, int eventSize) {
+
+        return (int) Math.ceil((double) eventSize /size);
+    }
+
+    //선택된 드롭박스에 해당되는 데이터(월별분류 때 사용)
     public List<CultureInfo> getDropBoxData(String mon) {
 
 
@@ -250,18 +263,6 @@ public class HomeService {
                 .sorted(Comparator.comparing(CultureInfo::getDATE))
                 .collect(Collectors.toList());
 
-    }
-
-    public Page<CultureInfo> paging (int pageNumber, int pageSize) {
-
-        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
-        return eventsRepository.findAll(pageable);
-
-    }
-
-    public int getTotalPages(int size, int eventSize) {
-
-        return (int) Math.ceil((double) eventSize /size);
     }
 
 
